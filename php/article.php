@@ -87,7 +87,8 @@ function vpacl_print_article_part($res) {
   $author = (isset($data['rePseudo']) && ($data['utStatut'] == 1 || $data['utStatut'] == 3) ? "<a href='../php/redaction.php#{$data['utPseudo']}'>$authorName</a>" : $authorName);
 
   // BBCode
-  $data['arTexte'] = vpacl_parse_bbcode($data['arTexte']);
+  vpacl_parse_bbcode($data['arTexte']);
+  vpacl_parse_bbcode_unicode($data['arTexte']);
 
   // Affichage
   echo '<article>',
@@ -116,7 +117,7 @@ function vpacl_print_comments($res) {
     echo '<ul>';
     while($comment = mysqli_fetch_assoc($res)) {
       vpac_protect_array($comment);
-      $comment['coTexte'] = vpacl_parse_bbcode($comment['coTexte']);
+      vpacl_parse_bbcode_unicode($comment['coTexte']);
 
       echo '<li>',
             '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vpac_time_to_string($comment['coDate']),'</p>',
@@ -148,27 +149,20 @@ function vpacl_print_error($content) {
  * Transformation du BBCode en HTML
  * 
  * @param string $text Texte à transformer
- * @return string BBCode transformé en HTML
  */
-function vpacl_parse_bbcode($text) {
+function vpacl_parse_bbcode(&$text) {
   // balise [p] -> <p>
-  $text = preg_replace('/\[p\]/', '<p>', $text);
-  $text = preg_replace('/\[\/p\]/', '</p>', $text);
+  $text = preg_replace('/\[(\/?)p\]/', '<\1p>', $text);
   // balise [gras] -> <strong>
-  $text = preg_replace('/\[gras\]/', '<strong>', $text);
-  $text = preg_replace('/\[\/gras\]/', '</strong>', $text);
+  $text = preg_replace('/\[(\/?)gras\]/', '<\1strong>', $text);
   // balise [it] -> <em>
-  $text = preg_replace('/\[it\]/', '<em>', $text);
-  $text = preg_replace('/\[\/it\]/', '</em>', $text);
+  $text = preg_replace('/\[(\/?)it\]/', '<\1em>', $text);
   // balise [citation] -> <blockquote>
-  $text = preg_replace('/\[citation\]/', '<blockquote>', $text);
-  $text = preg_replace('/\[\/citation\]/', '</blockquote>', $text);
+  $text = preg_replace('/\[(\/?)citation\]/', '<\1blockquote>', $text);
   // balise [liste] -> <ul>
-  $text = preg_replace('/\[liste\]/', '<ul>', $text);
-  $text = preg_replace('/\[\/liste\]/', '</ul>', $text);
+  $text = preg_replace('/\[(\/?)liste\]/', '<\1ul>', $text);
   // balise [item] -> <li>
-  $text = preg_replace('/\[item\]/', '<li>', $text);
-  $text = preg_replace('/\[\/item\]/', '</li>', $text);
+  $text = preg_replace('/\[(\/?)item\]/', '<\1li>', $text);
   // balise [a:url] -> <a>
   $text = preg_replace('/\[a:([^]]+)\]/', '<a href="\1">', $text);
   $text = preg_replace('/\[\/a\]/', '</a>', $text);
@@ -180,6 +174,15 @@ function vpacl_parse_bbcode($text) {
   // balise [youtube:w:h:url] -> <figure><iframe width="w" height="h" src="url" allowfullscreen></iframe><figcaption>f<figcaption></figure>
   $text = preg_replace('/\[youtube:([^:]+):([^:]+):([^ ]+) ([^]]+)\]/', '<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\4<figcaption></figure>', $text);
 
+  return $text;
+}
+
+/**
+ * Transformation du BBCode en HTML, uniquement pour les éléments unicode
+ * 
+ * @param string $text Texte à transformer
+ */
+function vpacl_parse_bbcode_unicode(&$text) {
   // balise [#NNN] -> &#NNN ou [#xNNN] -> &#xNNN
   $text = preg_replace('/\[#([^]]+)\]/', '&#\1', $text);
 
