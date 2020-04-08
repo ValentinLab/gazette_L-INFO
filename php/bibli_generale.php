@@ -13,7 +13,7 @@ require_once 'bibli_user.php';
  * @param string $nb Valeur à vérifier
  * @return bool true si la variable ne contient qu'un nombre
  */
-function vp_is_number($nb) {
+function vpac_is_number($nb) {
   return is_numeric($nb) && $nb == (int)$nb;
 }
 
@@ -22,7 +22,7 @@ function vp_is_number($nb) {
  * 
  * @param array $datas Tableau à protéger
  */
-function vp_protect_array(&$datas) {
+function vpac_protect_array(&$datas) {
   foreach($datas as &$data) {
     if(isset($data)) {
       $data = htmlentities($data);
@@ -43,7 +43,7 @@ function vp_protect_array(&$datas) {
  * @global array $_POST
  * @return bool  true si les paramètres sont corrects, false sinon
  */
-function vp_parametres_controle($tab_global, $cles_obligatoires, $cles_facultatives = array()){
+function vpac_parametres_controle($tab_global, $cles_obligatoires, $cles_facultatives = array()){
   $x = strtolower($tab_global) == 'post' ? $_POST : $_GET;
 
   $x = array_keys($x);
@@ -64,7 +64,7 @@ function vp_parametres_controle($tab_global, $cles_obligatoires, $cles_facultati
  * 
  * @return array Nom de tous les mois
  */
-function vp_get_months() {
+function vpac_get_months() {
   $months = array(1 => 'janvier');
   array_push($months, 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aôut', 'septembre', 'octobre', 'novembre', 'décembre');
   return $months;
@@ -77,7 +77,7 @@ function vp_get_months() {
  * @param string $str Chaîne de caractères
  * @return string La chaîne modifiée
  */
-function vp_mb_ucfirst($str) {
+function vpac_mb_ucfirst($str) {
   $str = mb_strtolower($str, 'UTF-8');
   $start = mb_strtoupper(mb_substr($str, 0, 1, 'UTF-8'), 'UTF-8');
 

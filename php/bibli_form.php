@@ -15,7 +15,7 @@
  * @param string  $type        Type d'input
  * @param string  $placeholder Placeholder de l'input
  */
-function vp_print_table_form_input($label, $name, $value, $required = false, $type = 'text', $placeholder = '') {
+function vpac_print_table_form_input($label, $name, $value, $required = false, $type = 'text', $placeholder = '') {
   $placeholder_val = (!empty($placeholder)) ? " placeholder=\"{$placeholder}\"" : '';
   $required_val = ($required) ?  ' required' : '';
 
@@ -38,9 +38,9 @@ function vp_print_table_form_input($label, $name, $value, $required = false, $ty
  * @param int    $default_year  Année sélectionnée par défaut (l'année actuelle pour 0)
  * @param int    $step          Pas d'incrément pour l'année
  */
-function vp_print_table_form_date($label, $name, $start_year, $end_year, $default_day = 0, $default_month = 0, $default_year  = 0, $step = -1) {
+function vpac_print_table_form_date($label, $name, $start_year, $end_year, $default_day = 0, $default_month = 0, $default_year  = 0, $step = -1) {
   echo  '<tr><td>', $label, ' :</td><td>';
-  vp_print_list_date($name, $start_year, $end_year, $default_day, $default_month, $default_year, $step);
+  vpac_print_list_date($name, $start_year, $end_year, $default_day, $default_month, $default_year, $step);
   echo '</td></tr>';
 }
 
@@ -53,11 +53,11 @@ function vp_print_table_form_date($label, $name, $start_year, $end_year, $defaul
  * @param array   $labels   Tableau contenant les labels des checkboxs
  * @param boolean $required Champ obligatoire ou non
  */
-function  vp_print_table_form_checkbox($names, $values, $checked, $labels, $required) {
+function  vpac_print_table_form_checkbox($names, $values, $checked, $labels, $required) {
   $radio_numbers = count($names);
 
   echo '<tr><td colspan="', $radio_numbers, '">';
-    vp_print_checkbox($radio_numbers, $names, $values, $checked, $labels, $required);
+    vpac_print_checkbox($radio_numbers, $names, $values, $checked, $labels, $required);
   echo '</td></tr>';
 }
 
@@ -71,11 +71,11 @@ function  vp_print_table_form_checkbox($names, $values, $checked, $labels, $requ
  * @param array   $labels   Tableau contenant les labels des boutons radio
  * @param boolean $required Champ obligatoire ou non
  */
-function vp_print_table_form_radio($main_label, $name, $values, $checked, $labels, $required) {
+function vpac_print_table_form_radio($main_label, $name, $values, $checked, $labels, $required) {
   echo '<tr>',
           '<td>', $main_label, '</td>',
           '<td>';
-            vp_print_radio($name, $values, $checked, $labels, $required);
+            vpac_print_radio($name, $values, $checked, $labels, $required);
   echo '</td></tr>';
 }
 
@@ -86,11 +86,11 @@ function vp_print_table_form_radio($main_label, $name, $values, $checked, $label
  * @param array $values Tableau contenant les valeurs des boutons
  * @param array $names  Tableau contenant le nom des boutons
  */
-function vp_print_table_form_button($types, $values, $names) {
+function vpac_print_table_form_button($types, $values, $names) {
   $button_number = count($types);
 
   echo '<tr><td colspan="', $button_number, '">';
-    vp_print_input_btn($button_number, $types, $values, $names);
+    vpac_print_input_btn($button_number, $types, $values, $names);
   echo '</td></tr>';
 }
 
@@ -103,7 +103,7 @@ function vp_print_table_form_button($types, $values, $names) {
  * @param array  $values      Valeurs du select
  * @param mixed  $default_day Valeur sélectionnée par défaut
  */
-function vp_print_list($name, $values, $default_value) {
+function vpac_print_list($name, $values, $default_value) {
   echo '<select name="', $name, '">';
     foreach($values as $key => $val) {
       $selected = ($default_value == $val) ? ' selected' : '';
@@ -121,9 +121,9 @@ function vp_print_list($name, $values, $default_value) {
  * @param int    $step        Pas d'incrémentation
  * @param int    $default_day Nombre sélectionné par défaut
  */
-function vp_print_list_number($name, $start, $end, $step, $default_value) { 
+function vpac_print_list_number($name, $start, $end, $step, $default_value) { 
   $arr = range($start, $end, $step);
-  vp_print_list($name, array_combine($arr, $arr), $default_value);
+  vpac_print_list($name, array_combine($arr, $arr), $default_value);
 }
 
 /**
@@ -132,9 +132,9 @@ function vp_print_list_number($name, $start, $end, $step, $default_value) {
  * @param string $name        Nom du select
  * @param string $default_day Mois sélectionné par défaut
  */
-function vp_print_list_months($name, $default_value) {
-  $arr = vp_get_months();
-  vp_print_list($name, $arr, $arr[$default_value]);
+function vpac_print_list_months($name, $default_value) {
+  $arr = vpac_get_months();
+  vpac_print_list($name, $arr, $arr[$default_value]);
 }
 
 /**
@@ -148,7 +148,7 @@ function vp_print_list_months($name, $default_value) {
  * @param int    $default_year  Année sélectionnée par défaut (l'année actuelle pour 0)
  * @param int    $step          Pas d'incrément pour l'année
  */
-function vp_print_list_date($name, $start_year, $end_year, $default_day = 0, $default_month = 0, $default_year  = 0, $step = -1) {
+function vpac_print_list_date($name, $start_year, $end_year, $default_day = 0, $default_month = 0, $default_year  = 0, $step = -1) {
   if($default_day == 0 || $default_month == 0 || $default_year == 0) {
     $current_date = getdate();
     if($default_day == 0) {
@@ -162,9 +162,9 @@ function vp_print_list_date($name, $start_year, $end_year, $default_day = 0, $de
     }
   }
 
-  vp_print_list_number("{$name}_j", 1, 31, 1, $default_day);
-  vp_print_list_months("{$name}_m", $default_month);
-  vp_print_list_number("{$name}_a", $start_year, $end_year, -1, $default_year);
+  vpac_print_list_number("{$name}_j", 1, 31, 1, $default_day);
+  vpac_print_list_months("{$name}_m", $default_month);
+  vpac_print_list_number("{$name}_a", $start_year, $end_year, -1, $default_year);
 }
 
 /**
@@ -177,7 +177,7 @@ function vp_print_list_date($name, $start_year, $end_year, $default_day = 0, $de
  * @param array $labels           Tableau contenant les labels des checkboxs
  * @param array $required         Tableau indiquant si une checkbox est obligatoire ou non
  */
-function vp_print_checkbox($radio_numbers, $names, $values, $checked, $labels, $required) {
+function vpac_print_checkbox($radio_numbers, $names, $values, $checked, $labels, $required) {
   $check_val = '';
   for($i = 0; $i < $radio_numbers; ++$i) {
     $check_val = ($checked[$i]) ? ' checked' : '';
@@ -195,7 +195,7 @@ function vp_print_checkbox($radio_numbers, $names, $values, $checked, $labels, $
  * @param array   $labels   Tableau contenant les labels des boutons radio
  * @param boolean $required Champ obligatoire ou non
  */
-function vp_print_radio($name, $values, $checked, $labels, $required) {
+function vpac_print_radio($name, $values, $checked, $labels, $required) {
   $checkbox_numbers = count($values);
   $check_val = '';
   $required_val = ($required) ? ' required' : '';
@@ -213,7 +213,7 @@ function vp_print_radio($name, $values, $checked, $labels, $required) {
  * @param array $values     Tableau contenant les valeurs des boutons
  * @param array $names      Tableau contenant le nom des boutons
  */
-function vp_print_input_btn($btn_number, $types, $values, $names) {
+function vpac_print_input_btn($btn_number, $types, $values, $names) {
   $name_val = '';
   for($i = 0; $i < $btn_number; ++$i) {
     $name_val = (!empty($names[$i])) ? " name=\"$names[$i]\"" : '';
@@ -227,7 +227,7 @@ function vp_print_input_btn($btn_number, $types, $values, $names) {
  * @param array  $errors Tableau contenant les erreurs du formulaire
  * @param string $text   Message à afficher avant les erreurs
  */
-function vp_print_form_errors($errors, $text = '') {
+function vpac_print_form_errors($errors, $text = '') {
   $text = (!empty($text)) ? "<p>$text</p>" : '';
 
   if(!empty($errors)) {

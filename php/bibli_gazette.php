@@ -18,7 +18,7 @@ define('BD_PASS', 'perignon_p');
  * @param string $title Ttre de la page
  * @param string $path  Chemin des fichiers ('.' ou '..')
  */
-function vp_get_head($title, $path = '..') {
+function vpac_get_head($title, $path = '..') {
   $page_title = (!empty($title)) ? "$title | La gazette de L-INFO" : 'La gazette de L-INFO';
 
   echo '<!doctype html>',
@@ -36,7 +36,7 @@ function vp_get_head($title, $path = '..') {
  * 
  * @param string $path Chemin des fichiers ('.' ou '..')
  */
-function vp_get_nav($path = '..') {
+function vpac_get_nav($path = '..') {
   echo '<nav>',
           '<ul>',
               '<li><a href="', $path, '/">Accueil</a></li>',
@@ -65,7 +65,7 @@ function vp_get_nav($path = '..') {
  * 
  * @param string $path Chemin des fichiers ('.' ou '..')
  */
-function vp_get_header($title, $path = '..') {
+function vpac_get_header($title, $path = '..') {
   echo '<header>',
           '<img src="', $path, '/images/titre.png" alt="La gazette de L-INFO" width="780" height="83">',
           '<h1>', $title, '</h1>',
@@ -79,7 +79,7 @@ function vp_get_header($title, $path = '..') {
 /**
  * Afficher le footer de la page html
  */
-function vp_get_footer() {
+function vpac_get_footer() {
   echo '</main><footer>&copy; Licence Informatique - Janvier 2020 - Tous droits réservés</footer>';
 }
 
@@ -95,7 +95,7 @@ function vp_get_footer() {
  * @param string $path Chemin des fichiers ('.' ou '..')
  * @return string Chemin vers l'image
  */
-function vp_get_article_image($id, $path = '..') {
+function vpac_get_article_image($id, $path = '..') {
   $image = "{$path}/upload/{$id}.jpg";
   if(!file_exists($image)) {
     $image = "{$path}/images/none.jpg";

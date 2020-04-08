@@ -9,7 +9,7 @@ require_once 'bibli_gazette.php';
 // Vérification de l'URL
 // ----------------------------------------
 
-if(!vp_parametres_controle('get', array(), array('id'))) {
+if(!vpac_parametres_controle('get', array(), array('id'))) {
   header('Location: ../index.php');
   exit;
 }
@@ -19,15 +19,15 @@ if(!vp_parametres_controle('get', array(), array('id'))) {
 // ----------------------------------------
 
 // Header
-vp_get_head('L\'actu');
-vp_get_nav();
-vp_get_header('L\'actu');
+vpac_get_head('L\'actu');
+vpac_get_nav();
+vpac_get_header('L\'actu');
 
 // Article et commentaires
-vpl_print_article();
+vpacl_print_article();
 
 // Footer
-vp_get_footer();
+vpac_get_footer();
 
 // ----------------------------------------
 // Fonctions
@@ -36,35 +36,35 @@ vp_get_footer();
 /**
  * Afficher un article et ses commentaires
  */
-function vpl_print_article() {
+function vpacl_print_article() {
   // Vérifier le paramètre id dans l'URL
   if(!isset($_GET['id'])) {
-    vpl_print_error('Identifiant d\'article non fourni.');
+    vpacl_print_error('Identifiant d\'article non fourni.');
     return;
   }
-  if(!vp_is_number($_GET['id']) || $_GET['id'] <= 0) {
-    vpl_print_error('Identifiant d\'article invalide.');
+  if(!vpac_is_number($_GET['id']) || $_GET['id'] <= 0) {
+    vpacl_print_error('Identifiant d\'article invalide.');
     return;
   }
 
   $id = (int)$_GET['id'];
 
   // Requête pour obtenir l'article et les commentaires
-  $bd = vp_bd_connecter();
+  $bd = vpac_bd_connecter();
   $sql = "SELECT * FROM ((article INNER JOIN utilisateur ON arAuteur = utPseudo) LEFT OUTER JOIN redacteur ON utPseudo = rePseudo) LEFT OUTER JOIN commentaire ON arID = coArticle WHERE arID = $id ORDER BY coDate DESC, coID DESC";
-  $res = mysqli_query($bd, $sql) or vp_bd_erreur($bd, $sql);
+  $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
 
   // Vérifier le nombre de résultats
   if(mysqli_num_rows($res) == 0) {
-    vpl_print_error('Identifiant d\'article non reconnu.');
+    vpacl_print_error('Identifiant d\'article non reconnu.');
     mysqli_free_result($res);
     mysqli_close($bd);
     return;
   }
 
   // Afficher l'article et les commentaires
-  vpl_print_article_part($res);
-  vpl_print_comments($res);
+  vpacl_print_article_part($res);
+  vpacl_print_comments($res);
 
   mysqli_free_result($res);
   mysqli_close($bd);
@@ -75,28 +75,28 @@ function vpl_print_article() {
  * 
  * @param object $res Résultat d'une requête sql permettant d'obtenir l'article
  */
-function vpl_print_article_part($res) {
+function vpacl_print_article_part($res) {
   $data = mysqli_fetch_assoc($res);
-  vp_protect_array($data);
+  vpac_protect_array($data);
 
   // Image
   $image = (file_exists("../upload/{$data['arID']}.jpg")) ? "<img src=\"../upload/{$data['arID']}.jpg\" alt=\"{$data['arTitre']}\">" : '';
 
   // Auteur
-  $authorName = vp_mb_ucfirst(mb_substr($data['utPrenom'], 0, 1, 'UTF-8')) . '. ' . vp_mb_ucfirst($data['utNom']);
+  $authorName = vpac_mb_ucfirst(mb_substr($data['utPrenom'], 0, 1, 'UTF-8')) . '. ' . vpac_mb_ucfirst($data['utNom']);
   $author = (isset($data['rePseudo']) && ($data['utStatut'] == 1 || $data['utStatut'] == 3) ? "<a href='../php/redaction.php#{$data['utPseudo']}'>$authorName</a>" : $authorName);
 
   // BBCode
-  $data['arTexte'] = vpl_parse_bbcode($data['arTexte']);
+  $data['arTexte'] = vpacl_parse_bbcode($data['arTexte']);
 
   // Affichage
   echo '<article>',
           '<h3>', $data['arTitre'],'</h3>',
             $image,
             $data['arTexte'],
-            '<footer>Par ', $author, '. Publié le ', vp_time_to_string($data['arDatePublication']);
+            '<footer>Par ', $author, '. Publié le ', vpac_time_to_string($data['arDatePublication']);
   if(isset($data['arDateModification'])) {
-    echo ', modifié le ', vp_time_to_string($data['arDateModification']);
+    echo ', modifié le ', vpac_time_to_string($data['arDateModification']);
   }
    echo '</footer></article>';
 }
@@ -106,7 +106,7 @@ function vpl_print_article_part($res) {
  * 
  * @param object $res Résultat d'une requête sql permettant d'obtenir les commentaires
  */
-function vpl_print_comments($res) {
+function vpacl_print_comments($res) {
   echo '<section><h2>Réactions</h2>';
 
   // Vérifier s'il y a des commentaires
@@ -115,11 +115,11 @@ function vpl_print_comments($res) {
     mysqli_data_seek($res, 0);
     echo '<ul>';
     while($comment = mysqli_fetch_assoc($res)) {
-      vp_protect_array($comment);
-      $comment['coTexte'] = vpl_parse_bbcode($comment['coTexte']);
+      vpac_protect_array($comment);
+      $comment['coTexte'] = vpacl_parse_bbcode($comment['coTexte']);
 
       echo '<li>',
-            '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vp_time_to_string($comment['coDate']),'</p>',
+            '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vpac_time_to_string($comment['coDate']),'</p>',
             '<blockquote>', $comment['coTexte'],'</blockquote>',
           '</li>';
     }
@@ -136,7 +136,7 @@ function vpl_print_comments($res) {
  * 
  * @param string $array Message d'erreur
  */
-function vpl_print_error($content) {
+function vpacl_print_error($content) {
   echo '<section>',
          '<h2>Oups, il y a une erreur ...</h2>',
          '<p>La page que vous avez demandée a terminé son exécution avec le message d\'erreur suivant :',
@@ -150,7 +150,7 @@ function vpl_print_error($content) {
  * @param string $text Texte à transformer
  * @return string BBCode transformé en HTML
  */
-function vpl_parse_bbcode($text) {
+function vpacl_parse_bbcode($text) {
   // balise [p] -> <p>
   $text = preg_replace('/\[p\]/', '<p>', $text);
   $text = preg_replace('/\[\/p\]/', '</p>', $text);
@@ -192,14 +192,14 @@ function vpl_parse_bbcode($text) {
  * 
  * @param int $time Heure à transformer
  */
-function vp_time_to_string($date) {
+function vpac_time_to_string($date) {
   $min = substr($date, -2);
   $hour = (int)substr($date, -4, 2);
   $day = (int)substr($date, -6, 2);
   $month = substr($date, -8, 2);
   $year = substr($date, 0, -8);
 
-  $months = vp_get_months();
+  $months = vpac_get_months();
 
   return $day . ' ' . mb_strtolower($months[$month - 1], 'UTF-8') . ' ' . $year . ' à ' . $hour . 'h' . $min;
 }

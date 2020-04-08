@@ -10,21 +10,21 @@ require_once 'php/bibli_gazette.php';
 // ----------------------------------------
 
 // Header
-vp_get_head('', '.');
-vp_get_nav('.');
-vp_get_header('Le site de désinformation n°1 des étudiants en Licence Info', '.');
+vpac_get_head('', '.');
+vpac_get_nav('.');
+vpac_get_header('Le site de désinformation n°1 des étudiants en Licence Info', '.');
 
 // Trois sections d'articles
-$articles = vpl_extract_articles();
-vpl_print_articles_section('À la Une', $articles[0]);
-vpl_print_articles_section('L\'info brûlante', $articles[1]);
-vpl_print_articles_section('Les incontournables', $articles[2]);
+$articles = vpacl_extract_articles();
+vpacl_print_articles_section('À la Une', $articles[0]);
+vpacl_print_articles_section('L\'info brûlante', $articles[1]);
+vpacl_print_articles_section('Les incontournables', $articles[2]);
 
 // Horoscope
-vpl_print_horoscope();
+vpacl_print_horoscope();
 
 // Footer
-vp_get_footer();
+vpac_get_footer();
 
 // ----------------------------------------
 // Fonctions
@@ -39,9 +39,9 @@ vp_get_footer();
  * 
  * @return array Articles des trois zones
  */
-function vpl_extract_articles() {
+function vpacl_extract_articles() {
   // Connexion à la bd et requête
-  $bd = vp_bd_connecter();
+  $bd = vpac_bd_connecter();
   $sql = '(SELECT arID, arTitre, 1 AS type
           FROM article
           ORDER BY arDatePublication DESC
@@ -58,7 +58,7 @@ function vpl_extract_articles() {
           FROM article
           ORDER BY rand()
           LIMIT 0, 9)';
-  $res = mysqli_query($bd,$sql) or vp_bd_erreur($bd,$sql);
+  $res = mysqli_query($bd,$sql) or vpac_bd_erreur($bd,$sql);
 
   // Extraction des résultats
   $result = array();
@@ -94,11 +94,11 @@ function vpl_extract_articles() {
  * @param string $title    Titre de la section
  * @param array  $articles Articles à afficher
  */
-function vpl_print_articles_section($title, $articles) {
+function vpacl_print_articles_section($title, $articles) {
   echo '<section class="centre">',
           '<h2>',$title, '</h2>';
             foreach($articles as $article) {
-              vpl_print_article($article);
+              vpacl_print_article($article);
             }
   echo '</section>';
 }
@@ -108,10 +108,10 @@ function vpl_print_articles_section($title, $articles) {
  * 
  * @param array $article Informations de l'article
  */
-function vpl_print_article($article) {
-  vp_protect_array($article);
+function vpacl_print_article($article) {
+  vpac_protect_array($article);
   echo '<a href="./php/article.php?id=', $article['arID'], '">',
-          '<img src="', vp_get_article_image($article['arID'], '.'), '" alt="', $article['arTitre'] ,'"><br>',
+          '<img src="', vpac_get_article_image($article['arID'], '.'), '" alt="', $article['arTitre'] ,'"><br>',
           $article['arTitre'],
        '</a>';
 }
@@ -119,7 +119,7 @@ function vpl_print_article($article) {
 /**
  * Afficher l'horoscope
  */
-function vpl_print_horoscope() {
+function vpacl_print_horoscope() {
   echo '<section>',
           '<h2>Horoscope de la semaine</h2>',
           '<p>Vous l\'attendiez tous, voici l\'horoscope du semestre pair de l\'année 2019-2020. Sans surprise, il n\'est pas terrible...</p>',

@@ -9,13 +9,13 @@
  *
  *  @return object Connecteur à la base de données
  */
-function vp_bd_connecter() {
+function vpac_bd_connecter() {
   $conn = mysqli_connect(BD_SERVER, BD_USER, BD_PASS, BD_NAME);
   if ($conn !== FALSE) {
       //mysqli_set_charset() définit le jeu de caractères par défaut à utiliser lors de l'envoi
       //de données depuis et vers le serveur de base de données.
       mysqli_set_charset($conn, 'utf8') 
-      or vp_bd_erreur_exit('<h4>Erreur lors du chargement du jeu de caractères utf8</h4>');
+      or vpac_bd_erreur_exit('<h4>Erreur lors du chargement du jeu de caractères utf8</h4>');
       return $conn;     // ===> Sortie connexion OK
   }
   // Erreur de connexion
@@ -30,7 +30,7 @@ function vp_bd_connecter() {
           //appel de htmlentities() pour que les éventuels accents s'affiche correctement
           .'<br>'.htmlentities(mysqli_connect_error(), ENT_QUOTES, 'ISO-8859-1')  
           .'</div>';
-  vp_bd_erreur_exit($msg);
+  vpac_bd_erreur_exit($msg);
 }
 
 /**
@@ -43,7 +43,7 @@ function vp_bd_connecter() {
  *
  * @param string $msg Message d'erreur à afficher
  */
-function vp_bd_erreur_exit($msg) {
+function vpac_bd_erreur_exit($msg) {
   ob_end_clean();	// Suppression de tout ce qui a pu être déja généré
 
   echo    '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">',
@@ -66,7 +66,7 @@ function vp_bd_erreur_exit($msg) {
  * @param object $bd  Connecteur sur la bd ouverte
  * @param string $sql Requête SQL provoquant l'erreur
  */
-function vp_bd_erreur($bd, $sql) {
+function vpac_bd_erreur($bd, $sql) {
   $errNum = mysqli_errno($bd);
   $errTxt = mysqli_error($bd);
 
@@ -92,7 +92,7 @@ function vp_bd_erreur($bd, $sql) {
 
   $msg .= '</table>';
 
-  vp_bd_erreur_exit($msg);	// ==> ARRET DU SCRIPT
+  vpac_bd_erreur_exit($msg);	// ==> ARRET DU SCRIPT
 }
 
 /**
@@ -101,8 +101,8 @@ function vp_bd_erreur($bd, $sql) {
  * @param string $sql Requête SQL
  * @param object $bd  Connecteur sur la bd ouverte
  */
-function vp_get_array_from_sql($sql, $bd) {
-  $res = mysqli_query($bd,$sql) or vp_bd_erreur($bd,$sql);
+function vpac_get_array_from_sql($sql, $bd) {
+  $res = mysqli_query($bd,$sql) or vpac_bd_erreur($bd,$sql);
   $all_results = array();
   while($datas_res = mysqli_fetch_assoc($res)) {
     $all_results[] = $datas_res;

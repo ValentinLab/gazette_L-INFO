@@ -25,19 +25,19 @@ $errors = array();
 // ----------------------------------------
 
 // Header
-vp_get_head('Connexion');
-vp_get_nav();
-vp_get_header('Connexion');
+vpac_get_head('Connexion');
+vpac_get_nav();
+vpac_get_header('Connexion');
 
 // Formulaire
 if(isset($_POST['btnConnexion'])) {
-  vpl_form_processing($values, $errors);
+  vpacl_form_processing($values, $errors);
 } else {
-  vpl_print_form($values, $errors);
+  vpacl_print_form($values, $errors);
 }
 
 // Footer
-vp_get_footer();
+vpac_get_footer();
 
 // ----------------------------------------
 // Fonctions
@@ -49,9 +49,9 @@ vp_get_footer();
  * @param array $values Tableau à remplir avec les valeurs du formulaire
  * @param array $errors Tableau à remplir avec les erreurs de saisie
  */
-function vpl_form_processing($values, $errors) {
+function vpacl_form_processing($values, $errors) {
   // Vérifier les clés présentes dans $_POST
-  if(!vp_parametres_controle('post', array('pseudo', 'passe', 'btnConnexion'))) {
+  if(!vpac_parametres_controle('post', array('pseudo', 'passe', 'btnConnexion'))) {
     header('Location: ../index.php');
     exit();
   }
@@ -68,13 +68,13 @@ function vpl_form_processing($values, $errors) {
   }
 
   if(empty($errors)) {
-    $bd = vp_bd_connecter();
+    $bd = vpac_bd_connecter();
     $utPseudo = mysqli_real_escape_string($bd, $_POST['pseudo']);
     $sql = "SELECT utPseudo, utStatut
             FROM utilisateur
             WHERE utPseudo='{$utPseudo}'";
 
-    $res = mysqli_query($bd, $sql) or vp_bd_erreur($bd, $sql);
+    $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
     $data = mysqli_fetch_assoc($res);
     mysqli_free_result($res);
     mysqli_close($bd);
@@ -87,7 +87,7 @@ function vpl_form_processing($values, $errors) {
 
   // Affichage du formulaire
   if(!empty($errors)) {
-    vpl_print_form($values, $errors);
+    vpacl_print_form($values, $errors);
     exit();
   }
 
@@ -104,19 +104,19 @@ function vpl_form_processing($values, $errors) {
  * @param array $values Tableau avec les valeurs du formulaire
  * @param array $errors Tableau avec les erreurs de saisie
  */
-function vpl_print_form($values, $errors) {
+function vpacl_print_form($values, $errors) {
   echo '<section>',
     '<h2>Formulaire de connexion</h2>',
       '<p>Pour vous identifier, remplissez le formulaire ci-dessous.</p>';
 
       // Affichage des erreurs
-      vp_print_form_errors($errors);
+      vpac_print_form_errors($errors);
 
       echo '<form action="connexion.php" method="post">',
         '<table>';
-          vp_print_table_form_input('Pseudo', 'pseudo', htmlentities($values['utPseudo']), true);
-          vp_print_table_form_input('Mot de passe', 'passe', '', true, 'password');
-          vp_print_table_form_button(array('submit', 'reset'), array('Se connecter', 'Annuler'), array('btnConnexion', ''));
+          vpac_print_table_form_input('Pseudo', 'pseudo', htmlentities($values['utPseudo']), true);
+          vpac_print_table_form_input('Mot de passe', 'passe', '', true, 'password');
+          vpac_print_table_form_button(array('submit', 'reset'), array('Se connecter', 'Annuler'), array('btnConnexion', ''));
         echo '</table>',
       '</form>',
       '<p>Pas encore inscrit ? N\'attendez pas, <a href="inscription.php">inscrivez-vous</a> !</p>',

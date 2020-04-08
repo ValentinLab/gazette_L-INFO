@@ -8,7 +8,7 @@
  * 
  * @param string $redirection Page vers laquelle l'utilisateur sera redirigé
  */
-function vp_session_exit($redirection = '../index.php') {
+function vpac_session_exit($redirection = '../index.php') {
   session_destroy();
   session_unset();
 
@@ -22,9 +22,9 @@ function vp_session_exit($redirection = '../index.php') {
 /**
  * Vérifier qu'un utilisateur est authentifié
  */
-function vp_check_authentication() {
+function vpac_check_authentication() {
   if(!isset($_SESSION['utPseudo'])) {
-    vp_session_exit();
+    vpac_session_exit();
   }
 }
 ?>
