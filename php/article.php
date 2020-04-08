@@ -196,11 +196,11 @@ function vpac_time_to_string($date) {
   $min = substr($date, -2);
   $hour = (int)substr($date, -4, 2);
   $day = (int)substr($date, -6, 2);
-  $month = substr($date, -8, 2);
+  $month = (int)substr($date, -8, 2);
   $year = substr($date, 0, -8);
 
   $months = vpac_get_months();
 
-  return $day . ' ' . mb_strtolower($months[$month - 1], 'UTF-8') . ' ' . $year . ' à ' . $hour . 'h' . $min;
+  return $day . ' ' . mb_strtolower($months[$month], 'UTF-8') . ' ' . $year . ' à ' . $hour . 'h' . $min;
 }
 ?>
