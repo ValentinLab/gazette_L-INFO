@@ -1,0 +1,561 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+/************************************************************************
+        DEBUT DE LA FEUILLE DE STYLE POUR LE SITE
+************************************************************************/
+
+body {
+    font-family: Trebuchet, arial, verdana, sans-serif;
+    line-height: 1.2;
+    background: #EEE; 
+    background: linear-gradient(to bottom right, #E0E0E0, #909090);
+}
+
+i, em {
+    font-style: italic;
+}
+
+strong {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+h4 {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+a[href], a[href]:visited {
+    color: #0000DD;
+    text-decoration: none;
+}
+
+a[href]:hover {
+    text-decoration: underline;
+}
+
+a[href^=http]:hover {
+    padding-right: 20px;
+    background: url(../images/lien_externe.gif) right center no-repeat;
+}
+
+a[href^=http]:hover::after {
+    content: "\00A0(" attr(href) ")";
+}
+
+body > header, main, body > footer {
+    width: 900px;
+    margin: 0px auto;
+    background-color: transparent;
+}
+
+p, blockquote {
+    text-align: justify;
+    margin: 10px auto;
+}
+
+blockquote {
+    font-style: italic;
+    padding: 5px 30px; 
+}
+
+blockquote::before {
+    content: "«\00A0";
+    font-size: 18px;
+}
+blockquote::after {
+    content: "\00A0»";
+    font-size: 18px;
+}
+
+ul {
+    list-style: circle;
+    margin-left: 30px;
+}
+
+/** Style des figures (avec iframe) */
+figure {
+    display: inline-block;
+    margin: 10px 16px;
+}
+
+figure > iframe {
+    width: 250px;
+    margin: 0 auto;
+}
+
+figcaption {
+    text-align: center;   
+}
+
+/** ajout TP2 (appliquée aux 3 premières sections de la page index.html) **/
+.centre {
+    text-align: center;
+}
+
+
+/************************************************************************
+                        Menu de navigation
+*************************************************************************/
+
+nav {
+    position: fixed;
+    z-index: 1000;
+    top: 0px;
+    width: 100%;
+    height: 40px;
+}
+
+nav > ul {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+    transition: background 0.4s linear 0s;
+    background: rgba(255, 255, 255, 0.8);
+    text-align: right;
+}
+
+nav > ul:hover {
+    background: rgb(255, 255, 255);
+}
+
+nav > ul > li {
+    text-align: left;
+    display: inline-block;
+    width: 150px;
+}
+
+nav > ul > li:first-child {
+    float: left;
+}
+
+nav > ul > li:last-of-type > a::before {
+    content: "\2630\00A0";
+}
+
+nav a[href], nav a[href]:visited {
+    display: block;
+    font-weight: bold;
+    color: black;
+    transition: background 0.4s linear 0s;
+    padding: 10px 5px 10px 20px;
+}
+
+nav a[href]:hover {
+    text-decoration: none;
+    color: #FFF;
+    background: #333;
+    cursor: pointer;
+}
+
+/* TP2 : ajouts  pour le sous-menu */
+nav > ul > li > ul {
+    position: absolute;
+    display: none;
+    width: 100%;
+    margin-top: 0px;
+    margin-left: 0px;
+    list-style: none;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+nav > ul > li:hover > ul {
+    display: block;
+}
+
+/**********************************************************************
+                        EN-TETE 
+**********************************************************************/
+
+body > header {
+    position: relative;
+    margin-top: 42px;
+    background:  url(../images/fond.png);
+    height: 200px;
+}
+
+header > img {
+    margin: 30px 0 0 10px;
+}
+
+header h1 {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+/****************************************************************
+                            Pied de page
+****************************************************************/
+body > footer {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/****************************************************************** 
+                        Sections
+*******************************************************************/
+section {
+    position: relative;
+    margin: 50px 0 60px 0;
+    background-color: white;    
+    padding: 10px 20px;
+    border-radius: 0 10px 10px 10px;
+    box-shadow: 10px 10px 10px #000;
+}
+
+section:last-of-type {
+    margin-bottom: 30px;   
+}
+
+section > h2 {
+    position: absolute;
+    top: -30px;
+    left: 0px;
+    height: 20px;
+    background: red;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    width: auto;
+    border-radius: 0 10px 0 0;
+    padding: 5px 10px;
+}
+
+section article h3 {
+    font-size: 16px;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+/******************************************************************************
+    Règles appliquées à la page article.html
+*******************************************************************************/
+
+main > article {
+    background-color: white;
+    box-shadow: 10px 10px 20px #000;
+    padding: 10px 20px;
+    margin: 20px 0 40px 0;
+    border-radius: 10px 0 20px 0;
+}
+
+/** Images dans l'article (taille + placement) */
+main > article img {
+    float: right;
+    margin: 0 0 10px 15px; 
+    width: 250px;
+    height: 187px;
+}
+
+main > article h3 {
+    margin: 10px 0 20px 0;
+}
+
+/** Style du pied d'article */
+main > article > footer {
+    margin-top: 20px;
+    border-top: solid 1px #333;
+    padding-top: 3px;
+    text-align: right;
+    font-size: 12px;
+}
+
+/** Style des listes dans l'article */
+main > article ul  {
+    list-style: none;
+}
+
+/** Style des items des listes dans l'article */
+main > article ul li::before {
+    content: "\2611\00A0"; 
+    font-size: 20px;
+}
+
+/** Style des items de la liste dans les commentaires de l'article */
+section > ul li {
+    margin-bottom: 20px;   
+}
+
+
+/******************************************************************************
+    Règles appliquées à la page redaction.html
+*******************************************************************************/
+
+/*  TP2 : ajout de la classe "redacteur" pour les éléments article qui décrivent des rédacteurs
+ * 
+ * Explication : il y a, sur les pages actus.html et redaction.html, des éléments article qui ont comme parent un élément section.
+ * Or, ces éléments article ont un style différent sur ces 2 pages (sauf les titres h3)
+ * On leur attribue une classe différente pour que les styles appliquées à ces éléments soient séparés.
+ * 
+ * Les éléments article, qui décrivent le résumé d'un article sur la page actus.html, ont eux la classe "resume"
+*/
+
+section article.redacteur {
+    position: relative;
+    margin: 10px auto; 
+    min-height: 200px;
+}
+
+section article.redacteur:not(:only-of-type) {
+    border-top: solid 2px #000;
+    padding-top: 20px;
+}
+
+section article.redacteur:not(:last-of-type) {
+    padding-bottom: 10px;
+}
+
+section article.redacteur img {
+    width: 150px;
+    height: 200px;
+    float: left;
+    margin-right: 20px;
+}
+
+section article.redacteur h4 {
+    position: absolute;
+    width: auto;
+    text-align: right;
+    right: 0px;
+    padding: 5px;
+    background: black;
+    color: white;
+    top: 0px;
+}
+
+section article.redacteur p {
+    padding-left: 170px;
+    margin-bottom: 0;
+}
+
+
+/****************************************************************************************
+        Règles appliquées à la page actus.html
+****************************************************************************************/
+
+section article.resume {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #E5E5E5;
+}
+
+section article.resume:first-of-type {
+    border-radius: 10px 10px 0px 0px;
+}
+
+section article.resume:last-of-type {
+    border-radius: 0 0 10px 10px;
+}
+
+section h2 + article.resume:only-of-type {
+    border-radius: 10px;
+}
+
+
+section article.resume img {
+    float: left; 
+    height: 120px;
+    width: 160px;
+    margin-right: 10px;
+    border-radius: inherit;
+}
+
+section article.resume footer {
+    text-align: right;
+    clear: left;
+}
+
+
+/****************************************************************************************
+        Règles appliquées à la page index.html
+****************************************************************************************/
+
+
+section > a[href], section > a[href]:visited{   
+    display: inline-block;
+    width: 270px;
+    vertical-align: top;
+    margin: 0;
+    padding: 10px 0 10px 0;
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+section > a[href]:hover{
+    text-decoration: none;
+}
+section > a:not(:first-of-type):not(:last-of-type) {
+    margin: 0 12px 0 12px;
+}
+
+section > a > img {   
+    border: solid 1px #000;
+    width: 250px;
+    height: 187px;
+    margin: 0 0 10px 0;
+}
+section > a:hover > img {
+    box-shadow: 0px 0px 20px red;   
+}
+
+
+/** Tableau horoscope  **/
+#horoscope {
+    width: 700px;
+    margin: 10px auto;
+    font-size: 14px;
+}
+
+#horoscope tr:first-child {
+    font-weight: bold;
+}
+
+#horoscope tr {
+    height: 30px; 
+}
+
+#horoscope td {
+    padding: 5px 10px;
+    border: solid 1px #000;
+    text-align:justify;
+}
+
+#horoscope td:nth-child(1), #horoscope td:nth-child(2) {
+    width: 100px;
+}
+
+
+/****************************************************************
+        Formulaire d'inscription
+****************************************************************/
+
+form input[type=text], form input[type=email], form input[type=password] {
+    width: 200px;
+}
+
+form select {
+    margin: 0 2px;   
+}
+
+form table {
+    min-width: 500px;
+    margin: 15px auto;
+}
+
+form table td {
+    padding: 7px;
+    width: 250px;
+}
+
+form td:first-child:not(:only-child) {
+    text-align: right;
+}
+
+form td[colspan] {
+    text-align: center;   
+}
+
+form td[colspan] label {
+    text-align: left;
+    display: block;
+    margin: 10px 10px 10px 60px;
+}
+
+
+form input[type=submit], form input[type=reset] {
+    margin: 0px 10px;
+    width: auto;
+    text-align: center;
+    height: 28px;
+    background-color: #f0f0f0;
+    font-size: 15px;
+    font-weight: bold;
+    border: solid 2px #444;
+    border-radius: 5px;
+    padding: 2px 5px;
+    min-width: 30px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover, input[type=reset]:hover {
+    background: red;
+    color: white;
+}
+
+#errors {
+  width: 705px;
+  border: 2px solid red;
+  margin: auto;
+  color: red;
+  padding: 10px 6px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+#errors p {
+  margin: 0 0;
+}
+
+#errors ul {
+  margin-top: 4px;
+}

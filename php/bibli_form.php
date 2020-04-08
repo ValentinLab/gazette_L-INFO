@@ -1,0 +1,247 @@
+<?php
+// ----------------------------------------
+// Gestion des formulaires
+// ----------------------------------------
+
+// ----- Affichage sous forme de tableau -----
+
+/**
+ * Afficher un input dans une ligne de tableau
+ * 
+ * @param string  $label       Label à afficher
+ * @param string  $name        Nom de l'input
+ * @param string  $value       Valeur de l'input
+ * @param boolean $required    Champ obligatoire ou non
+ * @param string  $type        Type d'input
+ * @param string  $placeholder Placeholder de l'input
+ */
+function vp_print_table_form_input($label, $name, $value, $required = false, $type = 'text', $placeholder = '') {
+  $placeholder_val = (!empty($placeholder)) ? " placeholder=\"{$placeholder}\"" : '';
+  $required_val = ($required) ?  ' required' : '';
+
+  echo '<tr>',
+         '<td><label for="', $name, '">', $label, ' :</label></td>',
+         '<td><input type="', $type, '" name="', $name, '" id="', $name, '" value="', $value, '"', $placeholder_val, $required_val, '></td>',
+       '</tr>';
+}
+
+/**
+ * Afficher un choix de date dans un tableau
+ * Trois select sont  affichés : jour / mois / année
+ * 
+ * @param string $label         Label à afficher
+ * @param string $name          Nom des select (suffixés par _j/_m/_a)
+ * @param int    $start_year    Année de départ à afficher
+ * @param int    $end_year      Année de fin à afficher
+ * @param int    $default_day   Jour sélectionné par défaut (le jour actuel pour 0)
+ * @param int    $default_month Mois sélectionné par défaut (le mois actuel pour 0)
+ * @param int    $default_year  Année sélectionnée par défaut (l'année actuelle pour 0)
+ * @param int    $step          Pas d'incrément pour l'année
+ */
+function vp_print_table_form_date($label, $name, $start_year, $end_year, $default_day = 0, $default_month = 0, $default_year  = 0, $step = -1) {
+  echo  '<tr><td>', $label, ' :</td><td>';
+  vp_print_list_date($name, $start_year, $end_year, $default_day, $default_month, $default_year, $step);
+  echo '</td></tr>';
+}
+
+/**
+ * Afficher plusieurs checkboxs dans un tableau
+ * 
+ * @param array   $names    Tableau contenant les noms des checkboxs
+ * @param array   $values   Tableau contenant les valeurs des checkboxs
+ * @param array   $checked  Tableau contenant des booléans pour indiquer si la checkbox est cochée
+ * @param array   $labels   Tableau contenant les labels des checkboxs
+ * @param boolean $required Champ obligatoire ou non
+ */
+function  vp_print_table_form_checkbox($names, $values, $checked, $labels, $required) {
+  $radio_numbers = count($names);
+
+  echo '<tr><td colspan="', $radio_numbers, '">';
+    vp_print_checkbox($radio_numbers, $names, $values, $checked, $labels, $required);
+  echo '</td></tr>';
+}
+
+/**
+ * Affihcer plusieurs boutons radio dans un tableau
+ * 
+ * @param string  $main_    Label principal
+ * @param string  $name     Nom des boutons radio
+ * @param array   $values   Tableau contenant les valeurs des boutons radio
+ * @param array   $checked  Tableau contenant des booléans pour indiquer si le bouton radio est coché
+ * @param array   $labels   Tableau contenant les labels des boutons radio
+ * @param boolean $required Champ obligatoire ou non
+ */
+function vp_print_table_form_radio($main_label, $name, $values, $checked, $labels, $required) {
+  echo '<tr>',
+          '<td>', $main_label, '</td>',
+          '<td>';
+            vp_print_radio($name, $values, $checked, $labels, $required);
+  echo '</td></tr>';
+}
+
+/**
+ * Afficher des boutons dans un tableau
+ * 
+ * @param array $types  Tableau contenant les types des boutons
+ * @param array $values Tableau contenant les valeurs des boutons
+ * @param array $names  Tableau contenant le nom des boutons
+ */
+function vp_print_table_form_button($types, $values, $names) {
+  $button_number = count($types);
+
+  echo '<tr><td colspan="', $button_number, '">';
+    vp_print_input_btn($button_number, $types, $values, $names);
+  echo '</td></tr>';
+}
+
+// ----- Affichage des élements -----
+
+/**
+ * Afficher un select
+ * 
+ * @param string $name        Nom du select
+ * @param array  $values      Valeurs du select
+ * @param mixed  $default_day Valeur sélectionnée par défaut
+ */
+function vp_print_list($name, $values, $default_value) {
+  echo '<select name="', $name, '">';
+    foreach($values as $key => $val) {
+      $selected = ($default_value == $val) ? ' selected' : '';
+      echo '<option value="', $key, '"', $selected, '>', $val, '</option>';
+    }
+  echo '</select>';
+}
+
+/**
+ * Afficher un select avec des nombres
+ * 
+ * @param string $name        Nom du select
+ * @param int    $start       Valeur de départt
+ * @param int    $end         Valeur de fin
+ * @param int    $step        Pas d'incrémentation
+ * @param int    $default_day Nombre sélectionné par défaut
+ */
+function vp_print_list_number($name, $start, $end, $step, $default_value) { 
+  $arr = range($start, $end, $step);
+  vp_print_list($name, array_combine($arr, $arr), $default_value);
+}
+
+/**
+ * Afficher un select avec des mois
+ * 
+ * @param string $name        Nom du select
+ * @param string $default_day Mois sélectionné par défaut
+ */
+function vp_print_list_months($name, $default_value) {
+  $arr = vp_get_months();
+  vp_print_list($name, $arr, $arr[$default_value]);
+}
+
+/**
+ * Afficher trois selects avec des jours / mois / années
+ * 
+ * @param string $name          Nom des select (suffixés par _j/_m/_a)
+ * @param int    $start_year    Année de départ à afficher
+ * @param int    $end_year      Année de fin à afficher
+ * @param int    $default_day   Jour sélectionné par défaut (le jour actuel pour 0)
+ * @param int    $default_month Mois sélectionné par défaut (le mois actuel pour 0)
+ * @param int    $default_year  Année sélectionnée par défaut (l'année actuelle pour 0)
+ * @param int    $step          Pas d'incrément pour l'année
+ */
+function vp_print_list_date($name, $start_year, $end_year, $default_day = 0, $default_month = 0, $default_year  = 0, $step = -1) {
+  if($default_day == 0 || $default_month == 0 || $default_year == 0) {
+    $current_date = getdate();
+    if($default_day == 0) {
+      $default_day = $current_date['mday'];
+    }
+    if($default_month == 0) {
+      $default_month = $current_date['mon'];
+    }
+    if($default_year == 0) {
+      $default_year = $current_date['year'];
+    }
+  }
+
+  vp_print_list_number("{$name}_j", 1, 31, 1, $default_day);
+  vp_print_list_months("{$name}_m", $default_month);
+  vp_print_list_number("{$name}_a", $start_year, $end_year, -1, $default_year);
+}
+
+/**
+ * Afficher plusieurs checkboxs
+ * 
+ * @param int   $checkbox_numbers Nombre de checkboxs à afficher
+ * @param array $names            Tableau contenant les noms des checkboxs
+ * @param array $values           Tableau contenant les valeurs des checkboxs
+ * @param array $checked          Tableau contenant des booléans pour indiquer si la checkbox est cochée
+ * @param array $labels           Tableau contenant les labels des checkboxs
+ * @param array $required         Tableau indiquant si une checkbox est obligatoire ou non
+ */
+function vp_print_checkbox($radio_numbers, $names, $values, $checked, $labels, $required) {
+  $check_val = '';
+  for($i = 0; $i < $radio_numbers; ++$i) {
+    $check_val = ($checked[$i]) ? ' checked' : '';
+    $required_val = ($required[$i]) ? ' required' : '';
+    echo '<label><input type="checkbox" name="', $names[$i], '" value="', $values[$i], '"', $check_val, $required_val, '>', $labels[$i], '</label>';
+  }
+}
+
+/**
+ * Affihcer plusieurs boutons radio
+ * 
+ * @param string  $name     Nom des boutons radio
+ * @param array   $values   Tableau contenant les valeurs des boutons radio
+ * @param array   $checked  Tableau contenant des booléans pour indiquer si le bouton radio est coché
+ * @param array   $labels   Tableau contenant les labels des boutons radio
+ * @param boolean $required Champ obligatoire ou non
+ */
+function vp_print_radio($name, $values, $checked, $labels, $required) {
+  $checkbox_numbers = count($values);
+  $check_val = '';
+  $required_val = ($required) ? ' required' : '';
+  for($i = 0; $i < $checkbox_numbers; ++$i) {
+    $check_val = ($checked[$i]) ? ' checked' : '';
+    echo '<label><input type="radio" name="', $name, '" id="', $name, $i, '" value="', $values[$i], '" ',$check_val, $required_val, '> ', $labels[$i], '</label> ';
+  }
+}
+
+/**
+ * Afficher des boutons
+ * 
+ * @param int   $btn_number Nombre de boutons à afficher
+ * @param array $types      Tableau contenant les types des boutons
+ * @param array $values     Tableau contenant les valeurs des boutons
+ * @param array $names      Tableau contenant le nom des boutons
+ */
+function vp_print_input_btn($btn_number, $types, $values, $names) {
+  $name_val = '';
+  for($i = 0; $i < $btn_number; ++$i) {
+    $name_val = (!empty($names[$i])) ? " name=\"$names[$i]\"" : '';
+    echo '<input type="', $types[$i], '" value="',  $values[$i], '"', $name_val, '>';
+  }
+}
+
+/**
+ * Afficher les erreurs d'un forrmulaire
+ * 
+ * @param array  $errors Tableau contenant les erreurs du formulaire
+ * @param string $text   Message à afficher avant les erreurs
+ */
+function vp_print_form_errors($errors, $text = '') {
+  $text = (!empty($text)) ? "<p>$text</p>" : '';
+
+  if(!empty($errors)) {
+    echo '<div id="errors">', $text;
+    if(count($errors) > 1) {
+      echo '<ul>';
+        foreach($errors as $err) {
+          echo '<li>', $err, '</li>';
+        }
+      echo '</ul>';
+    } else {
+      echo '<p>',$errors[0], '</p>';
+    }
+    echo '</div>';
+  }
+}
+?>
