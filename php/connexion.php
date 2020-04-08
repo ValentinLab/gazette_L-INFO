@@ -51,7 +51,7 @@ vpac_get_footer();
  */
 function vpacl_form_processing($values, $errors) {
   // Vérifier les clés présentes dans $_POST
-  if(!vpac_parametres_controle('post', array('pseudo', 'passe', 'btnConnexion'))) {
+  if(!vpac_parametres_controle('post', array('pseudo', 'passe', 'referer', 'btnConnexion'))) {
     header('Location: ../index.php');
     exit();
   }
@@ -65,6 +65,16 @@ function vpacl_form_processing($values, $errors) {
   // Vérification du mot de passe
   if(empty($_POST['passe'])) {
     $errors[] = "Vous devez saisir votre mot de passe";
+  }
+
+  // Vérificattion de referer
+  $values['referer'] = '../index.php';
+  if(!empty($_POST['referer'])) {
+    if(!filter_var($_POST['referer'], FILTER_VALIDATE_URL)) {
+      header('Location: ../index.php');
+      exit();
+    }
+    $values['referer'] = $_POST['referer'];
   }
 
   if(empty($errors)) {
@@ -95,7 +105,7 @@ function vpacl_form_processing($values, $errors) {
   $_SESSION['utPseudo'] = $values['utPseudo'];
   $_SESSION['utStatut'] = $data['utStatut'];
 
-  header('Location: ../index.php');
+  header("Location: {$values['referer']}");
 }
 
 /**
@@ -116,6 +126,7 @@ function vpacl_print_form($values, $errors) {
         '<table>';
           vpac_print_table_form_input('Pseudo', 'pseudo', htmlentities($values['utPseudo']), true);
           vpac_print_table_form_input('Mot de passe', 'passe', '', true, 'password');
+          vpac_print_table_form_invicible_input('referer', $_SERVER['HTTP_REFERER']);
           vpac_print_table_form_button(array('submit', 'reset'), array('Se connecter', 'Annuler'), array('btnConnexion', ''));
         echo '</table>',
       '</form>',

@@ -95,9 +95,9 @@ function vpacl_print_article_part($res) {
           '<h3>', $data['arTitre'],'</h3>',
             $image,
             $data['arTexte'],
-            '<footer>Par ', $author, '. Publié le ', vpac_time_to_string($data['arDatePublication']);
+            '<footer>Par ', $author, '. Publié le ', vpacl_time_to_string($data['arDatePublication']);
   if(isset($data['arDateModification'])) {
-    echo ', modifié le ', vpac_time_to_string($data['arDateModification']);
+    echo ', modifié le ', vpacl_time_to_string($data['arDateModification']);
   }
    echo '</footer></article>';
 }
@@ -120,7 +120,7 @@ function vpacl_print_comments($res) {
       vpacl_parse_bbcode_unicode($comment['coTexte']);
 
       echo '<li>',
-            '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vpac_time_to_string($comment['coDate']),'</p>',
+            '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vpacl_time_to_string($comment['coDate']),'</p>',
             '<blockquote>', $comment['coTexte'],'</blockquote>',
           '</li>';
     }
@@ -129,7 +129,20 @@ function vpacl_print_comments($res) {
     echo '<p>Il n\'y a pas de commentaires à cet article. </p>';
   }
 
-  echo '<p><a href="../php/connexion.php">Connectez-vous</a> ou <a href="./inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p></section>';
+  // Affichage du formulaire d'ajout de commentaire
+  if(!isset($_SESSION['utPseudo'])) {
+    echo '<p><a href="../php/connexion.php">Connectez-vous</a> ou <a href="./inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p></section>';
+  } else {
+    echo '<form action="connexion.php" method="post">',
+          '<fieldset>',
+            '<legend>Ajoutez un commentaire</legend>',
+            '<table>';
+            vpac_print_table_form_textarea('commentaire', 15, 70, true);
+            vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnPublier'));
+          echo '</table>',
+        '</table>',
+      '</form>';
+  }
 }
 
 /**
@@ -195,7 +208,7 @@ function vpacl_parse_bbcode_unicode(&$text) {
  * 
  * @param int $time Heure à transformer
  */
-function vpac_time_to_string($date) {
+function vpacl_time_to_string($date) {
   $min = substr($date, -2);
   $hour = (int)substr($date, -4, 2);
   $day = (int)substr($date, -6, 2);

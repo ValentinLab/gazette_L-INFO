@@ -25,6 +25,21 @@ function vpac_print_table_form_input($label, $name, $value, $required = false, $
        '</tr>';
 }
 
+function vpac_print_table_form_invicible_input($name, $value) {
+  echo '<tr style="display: none">',
+         '<td colspan="2"><input type="hidden" name="', $name, '" " value="', $value, '" required></td>',
+       '</tr>';
+}
+
+function vpac_print_table_form_textarea($name, $rows = 10, $cols = 50, $required = false) {
+  $required_val = ($required) ?  ' required'  : '';
+  echo '<tr>',
+          '<td colspan="2">',
+            '<textarea name="', $name, '" rows="', $rows, '" cols="', $cols,'" ', $required_val, '></textarea>',
+          '</td>',
+        '</tr>';
+}
+
 /**
  * Afficher un choix de date dans un tableau
  * Trois select sont  affichés : jour / mois / année
