@@ -62,10 +62,10 @@ function vpacl_print_form($errors) {
       $civilite = 0;
       $mails_pourris = true;
       if(isset($_POST['btnInscription'])) {
-        $pseudo = htmlentities($_POST['pseudo']);
-        $nom = htmlentities($_POST['nom']);
-        $prenom = htmlentities($_POST['prenom']);
-        $email = htmlentities($_POST['email']);
+        $pseudo = vpac_protect_data($_POST['pseudo']);
+        $nom = vpac_protect_data($_POST['nom']);
+        $prenom = vpac_protect_data($_POST['prenom']);
+        $email = vpac_protect_data($_POST['email']);
         $naissance_j = (int)$_POST['naissance_j'];
         $naissance_m = (int)$_POST['naissance_m'];
         $naissance_a = (int)$_POST['naissance_a'];
@@ -75,12 +75,12 @@ function vpacl_print_form($errors) {
 
       echo '<form action="inscription.php" method="post">',
         '<table>';
-          vpac_print_table_form_input('Choisissez un pseudo', 'pseudo', htmlentities($pseudo), true, 'text', LMIN_PSEUDO . ' caractères minimum');
+          vpac_print_table_form_input('Choisissez un pseudo', 'pseudo', vpac_protect_data($pseudo), true, 'text', LMIN_PSEUDO . ' caractères minimum');
           vpac_print_table_form_radio('Votre civilité', 'radSexe', array(1, 2), $civilite, array('Monsieur', 'Madame'), true);
-          vpac_print_table_form_input('Votre nom', 'nom', htmlentities($nom), true);
-          vpac_print_table_form_input('Votre prénom', 'prenom', htmlentities($prenom), true);
+          vpac_print_table_form_input('Votre nom', 'nom', vpac_protect_data($nom), true);
+          vpac_print_table_form_input('Votre prénom', 'prenom', vpac_protect_data($prenom), true);
           vpac_print_table_form_date('Votre date de naissance', 'naissance', $current_year, $current_year - DIFF_ANNEE, $naissance_j, $naissance_m, $naissance_a);
-          vpac_print_table_form_input('Votre email', 'email', htmlentities($email), true);
+          vpac_print_table_form_input('Votre email', 'email', vpac_protect_data($email), true);
           vpac_print_table_form_input('Choisissez un mot de passe', 'passe1', '', true, 'password');
           vpac_print_table_form_input('Répétez le  mot de passe', 'passe2', '', true, 'password');
           vpac_print_table_form_checkbox(array('cbCGU', 'cbSpam'), array(1, 1), array(0, $mails_pourris), array('J\'ai lu et j\'accepte les conditions générales d\'utilisation', 'J\'accepte de recevoir des tonnes de mails pourris'), array(true, false));

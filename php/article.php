@@ -28,6 +28,7 @@ vpacl_print_article();
 
 // Footer
 vpac_get_footer();
+ob_end_flush();
 
 // ----------------------------------------
 // Fonctions
@@ -77,7 +78,7 @@ function vpacl_print_article() {
  */
 function vpacl_print_article_part($res) {
   $data = mysqli_fetch_assoc($res);
-  vpac_protect_array($data);
+  $data = vpac_protect_data($data);
 
   // Image
   $image = (file_exists("../upload/{$data['arID']}.jpg")) ? "<img src=\"../upload/{$data['arID']}.jpg\" alt=\"{$data['arTitre']}\">" : '';
@@ -116,7 +117,7 @@ function vpacl_print_comments($res) {
     mysqli_data_seek($res, 0);
     echo '<ul>';
     while($comment = mysqli_fetch_assoc($res)) {
-      vpac_protect_array($comment);
+      $comment = vpac_protect_data($comment);
       vpacl_parse_bbcode_unicode($comment['coTexte']);
 
       echo '<li>',
