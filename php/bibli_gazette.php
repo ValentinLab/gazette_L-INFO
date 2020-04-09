@@ -1,12 +1,21 @@
 <?php
 // ----------------------------------------
-// Base de données
+// Constantes
 // ----------------------------------------
 
+// Base de données
 define('BD_SERVER','localhost');
 define('BD_NAME','gazette_bd');
 define('BD_USER','perignon_u');
 define('BD_PASS','perignon_p');
+
+//Inscription
+define('LMIN_PSEUDO', 4);
+define('LMAX_PSEUDO', 20);
+define('LMAX_PRENOM', 60);
+define('LMAX_NOM', 50);
+define('LMAX_EMAIL', 255);
+define('DIFF_ANNEE', 100);
 
 // ----------------------------------------
 // Obtenir le header de la page HTML
@@ -44,12 +53,12 @@ function vpac_get_nav($path = '..') {
               '<li><a href="', $path, '/php/recherche.php">Recherche</a></li>',
               '<li><a href="', $path, '/html/redaction.html">La rédac\'</a></li>',
               '<li>';
-              if(isset($_SESSION['utPseudo'])) {
-                echo '<a href="#">', htmlentities($_SESSION['utPseudo']), '</a>',
+              if(isset($_SESSION['user'])) {
+                echo '<a href="#">', htmlentities($_SESSION['user']['pseudo']), '</a>',
                         '<ul>',
                           '<li><a href="', $path, '/php/compte.php">Mon profil</a></li>',
-                          ($_SESSION['utStatut'] == 1 || $_SESSION['utStatut'] == 3) ? "<li><a href=\"{$path}/php/edition.php\">Nouvel article</a></li>" : '',
-                          ($_SESSION['utStatut'] == 2 || $_SESSION['utStatut'] == 3) ? "<li><a href=\"{$path}/php/admin.php\">Administration</a></li>" : '',
+                          ($_SESSION['user']['redacteur']) ? "<li><a href=\"{$path}/php/edition.php\">Nouvel article</a></li>" : '',
+                          ($_SESSION['user']['administrateur']) ? "<li><a href=\"{$path}/php/admin.php\">Administration</a></li>" : '',
                           '<li><a href="', $path, '/php/deconnexion.php">Se déconnecter</a></li>',
                         '</ul>';
               } else {

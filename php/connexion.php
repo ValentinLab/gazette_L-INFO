@@ -102,8 +102,9 @@ function vpacl_form_processing($values, $errors) {
   }
 
   // Mémoriser dans la variable de session
-  $_SESSION['utPseudo'] = $values['utPseudo'];
-  $_SESSION['utStatut'] = $data['utStatut'];
+  $redacteur = ($data['utStatut'] == 1 || $data['utStatut'] == 3);
+  $administrateur = ($data['utStatut'] == 2 || $data['utStatut'] == 3);
+  $_SESSION['user'] = array('pseudo' => $values['utPseudo'], 'redacteur' => $redacteur, 'administrateur' => $administrateur);
 
   header("Location: {$values['referer']}");
 }
