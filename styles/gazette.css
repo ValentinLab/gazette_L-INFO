@@ -47,7 +47,6 @@ table {
     border-spacing: 0;
 }
 
-
 /************************************************************************
         DEBUT DE LA FEUILLE DE STYLE POUR LE SITE
 ************************************************************************/
@@ -151,7 +150,6 @@ figcaption {
     text-align: center;
 }
 
-
 /************************************************************************
                         Menu de navigation
 *************************************************************************/
@@ -161,7 +159,6 @@ nav {
     z-index: 1000;
     top: 0px;
     width: 100%;
-    height: 40px;
 }
 
 nav > ul {
@@ -169,7 +166,7 @@ nav > ul {
     height: 100%;
     margin: 0;
     cursor: pointer;
-    transition: background 0.4s linear 0s;
+    transition: background 0.1s linear 0s;
     background: rgba(255, 255, 255, 0.8);
     text-align: right;
 }
@@ -181,11 +178,15 @@ nav > ul:hover {
 nav > ul > li {
     text-align: left;
     display: inline-block;
-    width: 150px;
 }
 
 nav > ul > li:first-child {
     float: left;
+    margin-left: 20px;
+}
+
+nav > ul > li:last-child {
+  margin-right: 20px;
 }
 
 nav > ul > li:last-of-type > a::before {
@@ -197,7 +198,7 @@ nav a[href], nav a[href]:visited {
     font-weight: bold;
     color: black;
     transition: background 0.4s linear 0s;
-    padding: 10px 5px 10px 20px;
+    padding: 12px 20px;
 }
 
 nav a[href]:hover {
@@ -207,19 +208,39 @@ nav a[href]:hover {
     cursor: pointer;
 }
 
-/* TP2 : ajouts  pour le sous-menu */
 nav > ul > li > ul {
     position: absolute;
+    top: 37px;
+    right: 20px;
     display: none;
-    width: 100%;
-    margin-top: 0px;
-    margin-left: 0px;
     list-style: none;
     background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 20px 3px rgba(27,31,35,.15);
+    border-radius: 3px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+nav > ul > li > ul:before {
+  z-index: 1;
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 22px;
+  display: block;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  transform: rotate(45deg);
 }
 
 nav > ul > li:hover > ul {
     display: block;
+}
+
+nav > ul > li:hover > ul a {
+  z-index: 2;
+  position: relative;
 }
 
 /**********************************************************************
@@ -228,7 +249,7 @@ nav > ul > li:hover > ul {
 
 body > header {
     position: relative;
-    margin-top: 42px;
+    margin-top: 41px;
     background:  url(../images/fond.png);
     height: 200px;
 }
