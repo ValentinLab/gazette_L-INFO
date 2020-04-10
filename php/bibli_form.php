@@ -25,12 +25,25 @@ function vpac_print_table_form_input($label, $name, $value, $required = false, $
        '</tr>';
 }
 
+/**
+ * Affichage d'un champ texte invisible
+ * 
+ * @param string $name  Nom de l'input
+ * @param mixed  $value Valeur de l'input
+ */
 function vpac_print_table_form_invicible_input($name, $value) {
   echo '<tr style="display: none">',
          '<td colspan="2"><input type="hidden" name="', $name, '" " value="', $value, '" required></td>',
        '</tr>';
 }
 
+/**
+ * Affichage d'un textarea dans une ligne de tableau
+ * 
+ * @param string $name NOm de l'input
+ * @param int $rows Nombre de lignes du textarea
+ * @param int $cols Nombre de lignes du  textarea
+ */
 function vpac_print_table_form_textarea($name, $rows = 10, $cols = 50, $required = false) {
   $required_val = ($required) ?  ' required'  : '';
   echo '<tr>',
@@ -102,10 +115,8 @@ function vpac_print_table_form_radio($main_label, $name, $values, $default, $lab
  * @param array $names  Tableau contenant le nom des boutons
  */
 function vpac_print_table_form_button($types, $values, $names) {
-  $button_number = count($types);
-
-  echo '<tr><td colspan="', $button_number, '">';
-    vpac_print_input_btn($button_number, $types, $values, $names);
+  echo '<tr><td colspan="2">';
+    vpac_print_input_btn($types, $values, $names);
   echo '</td></tr>';
 }
 
@@ -223,14 +234,13 @@ function vpac_print_radio($name, $values, $default, $labels, $required) {
 /**
  * Afficher des boutons
  * 
- * @param int   $btn_number Nombre de boutons à afficher
  * @param array $types      Tableau contenant les types des boutons
  * @param array $values     Tableau contenant les valeurs des boutons
  * @param array $names      Tableau contenant le nom des boutons
  */
-function vpac_print_input_btn($btn_number, $types, $values, $names) {
+function vpac_print_input_btn($types, $values, $names) {
   $name_val = '';
-  for($i = 0; $i < $btn_number; ++$i) {
+  for($i = 0, $btn_number = count($types); $i < $btn_number; ++$i) {
     $name_val = (!empty($names[$i])) ? " name=\"$names[$i]\"" : '';
     echo '<input type="', $types[$i], '" value="',  $values[$i], '"', $name_val, '>';
   }

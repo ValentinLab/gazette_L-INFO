@@ -533,7 +533,7 @@ form td:first-child:not(:only-child) {
 }
 
 form td[colspan] {
-    text-align: center;   
+    text-align: center;
 }
 
 form td[colspan] label {
@@ -563,11 +563,21 @@ input[type=submit]:hover, input[type=reset]:hover {
 }
 
 fieldset {
+  padding: 2px 5px;
   border: 1px solid grey;
 }
 
 legend {
-  margin-left: 5px;
+  margin-left: 8px;
+}
+
+
+form #form-uncentered {
+  margin: 0;
+}
+
+form #form-uncentered td[colspan] {
+  text-align: left;
 }
 
 #errors {

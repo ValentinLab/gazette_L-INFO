@@ -15,6 +15,15 @@ if(!vpac_parametres_controle('get', array(), array('id'))) {
 }
 
 // ----------------------------------------
+// Traitement du formulaire
+// ----------------------------------------
+
+$errors = array();
+if(isset($_POST['btnCommentaire'])) {
+  $errors = vpacl_form_processing();
+}
+
+// ----------------------------------------
 // Page
 // ----------------------------------------
 
@@ -24,7 +33,7 @@ vpac_get_nav();
 vpac_get_header('L\'actu');
 
 // Article et commentaires
-vpacl_print_article();
+vpacl_print_article($errors);
 
 // Footer
 vpac_get_footer();
@@ -37,7 +46,7 @@ ob_end_flush();
 /**
  * Afficher un article et ses commentaires
  */
-function vpacl_print_article() {
+function vpacl_print_article($errors) {
   // Vérifier le paramètre id dans l'URL
   if(!isset($_GET['id'])) {
     vpacl_print_error('Identifiant d\'article non fourni.');
@@ -65,7 +74,7 @@ function vpacl_print_article() {
 
   // Afficher l'article et les commentaires
   vpacl_print_article_part($res);
-  vpacl_print_comments($res);
+  vpacl_print_comments($res, $errors);
 
   mysqli_free_result($res);
   mysqli_close($bd);
@@ -108,7 +117,7 @@ function vpacl_print_article_part($res) {
  * 
  * @param object $res Résultat d'une requête sql permettant d'obtenir les commentaires
  */
-function vpacl_print_comments($res) {
+function vpacl_print_comments($res, $errors) {
   echo '<section><h2>Réactions</h2>';
 
   // Vérifier s'il y a des commentaires
@@ -131,18 +140,18 @@ function vpacl_print_comments($res) {
   }
 
   // Affichage du formulaire d'ajout de commentaire
-  if(!isset($_SESSION['utPseudo'])) {
+  if(!isset($_SESSION['user'])) {
     echo '<p><a href="../php/connexion.php">Connectez-vous</a> ou <a href="./inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p></section>';
   } else {
-    echo '<form action="connexion.php" method="post">',
+    echo '<form action="article.php?id=', $_GET['id'],'" method="post">',
           '<fieldset>',
             '<legend>Ajoutez un commentaire</legend>',
-            '<table>';
-            vpac_print_table_form_textarea('commentaire', 15, 70, true);
-            vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnPublier'));
-          echo '</table>',
-        '</table>',
-      '</form>';
+            '<table id="form-uncentered">';
+              vpac_print_table_form_textarea('commentaire', 15, 70, true);
+              vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnCommentaire'));
+            echo '</table>',
+          '</fieldset>',
+        '</form>';
   }
 }
 
@@ -201,6 +210,42 @@ function vpacl_parse_bbcode_unicode(&$text) {
   $text = preg_replace('/\[#([^]]+)\]/', '&#\1', $text);
 
   return $text;
+}
+
+/**
+ * Traitement du formulaire
+ * 
+ * @return array Tableau à remplir avec les erreurs de saisie
+ */
+function vpacl_form_processing() {
+  // Vérifier les clés présentes dans $_POST
+  if(!vpac_parametres_controle('post', array('commentaire', 'btnCommentaire'))) {
+    header('Location: ../index.php');
+    exit();
+  }
+
+  // Vérification du commentaire
+  $commentaire = trim($_POST['commentaire']);
+  if(mb_strlen($commentaire, 'UTF-8') == 0 || mb_strlen($commentaire, 'UTF-8') > LMAX_COMMENTAIRE) {
+    $errors[] = 'Le commentaire ne doit pas faire plus de ' . LMAX_COMMENTAIRE . ' caractères.';
+  }
+
+  if(!empty($errors)) {
+    return $errors;
+  }
+
+  // Requête SQL
+  $bd = vpac_bd_connecter();
+    $auteur = mysqli_real_escape_string($bd, $_SESSION['user']['pseudo']);
+    $commentaire = mysqli_real_escape_string($bd, $commentaire);
+    $date = date('YmdHi');
+    $article = (int)$_GET['id'];
+  $sql = "INSERT INTO commentaire (coAuteur, coTexte, coDate, coArticle)
+          VALUES ('{$auteur}', '{$commentaire}', {$date}, {$article})";
+  mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
+  mysqli_close($bd);
+
+  return array();
 }
 
 /**

@@ -17,6 +17,9 @@ define('LMAX_NOM', 50);
 define('LMAX_EMAIL', 255);
 define('DIFF_ANNEE', 100);
 
+// Commentaire
+define('LMAX_COMMENTAIRE', 256);
+
 // ----------------------------------------
 // Obtenir le header de la page HTML
 // ----------------------------------------
