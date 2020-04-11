@@ -60,7 +60,7 @@ function vpacl_print_form($errors) {
         '<table>';
           vpac_print_table_form_input('Pseudo', 'pseudo', vpac_protect_data($pseudo), true);
           vpac_print_table_form_input('Mot de passe', 'passe', '', true, 'password');
-          vpac_print_table_form_invicible_input('referer', $_SERVER['HTTP_REFERER']);
+          vpac_print_table_form_invisible_input('referer', $_SERVER['HTTP_REFERER']);
           vpac_print_table_form_button(array('submit', 'reset'), array('Se connecter', 'Annuler'), array('btnConnexion', ''));
         echo '</table>',
       '</form>',

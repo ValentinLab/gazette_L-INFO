@@ -1,3 +1,7 @@
+/************************************************************************
+Reset CSS
+*************************************************************************/
+
 /* http://meyerweb.com/eric/tools/css/reset/ 
 v2.0 | 20110126
 License: none (public domain)
@@ -48,7 +52,7 @@ table {
 }
 
 /************************************************************************
-DEBUT DE LA FEUILLE DE STYLE POUR LE SITE
+ Général
 ************************************************************************/
 
 body {
@@ -130,7 +134,6 @@ ul {
   margin-left: 30px;
 }
 
-/** Style des figures (avec iframe) */
 figure {
   display: inline-block;
   margin: 10px 16px;
@@ -143,11 +146,6 @@ figure > iframe {
 
 figcaption {
   text-align: center;   
-}
-
-/** ajout TP2 (appliquée aux 3 premières sections de la page index.html) **/
-.centre {
-  text-align: center;
 }
 
 /************************************************************************
@@ -244,7 +242,7 @@ nav > ul > li:hover > ul a {
 }
 
 /**********************************************************************
-EN-TETE 
+Header
 **********************************************************************/
 
 body > header {
@@ -267,6 +265,7 @@ header h1 {
 /****************************************************************
 Pied de page
 ****************************************************************/
+
 body > footer {
   text-align: center;
   margin-bottom: 10px;
@@ -275,6 +274,7 @@ body > footer {
 /****************************************************************** 
 Sections
 *******************************************************************/
+
 section {
   position: relative;
   margin: 50px 0 60px 0;
@@ -308,8 +308,74 @@ section article h3 {
   margin-bottom: 20px;
 }
 
+/****************************************************************************************
+index.php
+****************************************************************************************/
+
+section > a[href], section > a[href]:visited{   
+  display: inline-block;
+  width: 270px;
+  vertical-align: top;
+  margin: 0;
+  padding: 10px 0 10px 0;
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+}
+
+section > a[href]:hover{
+  text-decoration: none;
+}
+
+section > a:not(:first-of-type):not(:last-of-type) {
+  margin: 0 12px 0 12px;
+}
+
+section > a > img {   
+  border: solid 1px #000;
+  width: 250px;
+  height: 187px;
+  margin: 0 0 10px 0;
+}
+
+section > a:hover > img {
+  box-shadow: 0px 0px 20px red;   
+}
+
+/* Affichage des images d'articles */
+
+.centre {
+  text-align: center;
+}
+
+/* Horoscope */
+
+#horoscope {
+  width: 700px;
+  margin: 10px auto;
+  font-size: 14px;
+}
+
+#horoscope tr:first-child {
+  font-weight: bold;
+}
+
+#horoscope tr {
+  height: 30px; 
+}
+
+#horoscope td {
+  padding: 5px 10px;
+  border: solid 1px #000;
+  text-align:justify;
+}
+
+#horoscope td:nth-child(1), #horoscope td:nth-child(2) {
+  width: 100px;
+}
+
 /******************************************************************************
-Règles appliquées à la page article.php
+article.php
 *******************************************************************************/
 
 main > article {
@@ -320,7 +386,6 @@ main > article {
   border-radius: 10px 0 20px 0;
 }
 
-/** Images dans l'article (taille + placement) */
 main > article img {
   float: right;
   margin: 0 0 10px 15px; 
@@ -332,7 +397,6 @@ main > article h3 {
   margin: 10px 0 20px 0;
 }
 
-/** Style du pied d'article */
 main > article > footer {
   margin-top: 20px;
   border-top: solid 1px #333;
@@ -341,18 +405,16 @@ main > article > footer {
   font-size: 12px;
 }
 
-/** Style des listes dans l'article */
 main > article ul {
   list-style: none;
 }
 
-/** Style des items des listes dans l'article */
 main > article ul li::before {
   content: "\2611\00A0"; 
   font-size: 20px;
 }
 
-/** Style des items de la liste dans les commentaires de l'article */
+/* Commentaires */
 
 section > ul {
   list-style: none;
@@ -366,18 +428,6 @@ section > ul li {
 section > ul > li:before {
   content: '\25CB\2002';
   margin-left: 10px;
-}
-
-li#comment-mine:hover {
-  background: #f0f0f0;
-}
-
-li#comment-mine > form {
-  display: none;
-}
-
-li#comment-mine:hover > form {
-  display: block;
 }
 
 section > ul > li > p {
@@ -394,18 +444,23 @@ section > ul > li > blockquote {
   margin-top: 0;
 }
 
-/******************************************************************************
-Règles appliquées à la page redaction.html
-*******************************************************************************/
+/* Commentaires de l'utilisateur */
 
-/*  TP2 : ajout de la classe "redacteur" pour les éléments article qui décrivent des rédacteurs
-* 
-* Explication : il y a, sur les pages actus.html et redaction.html, des éléments article qui ont comme parent un élément section.
-* Or, ces éléments article ont un style différent sur ces 2 pages (sauf les titres h3)
-* On leur attribue une classe différente pour que les styles appliquées à ces éléments soient séparés.
-* 
-* Les éléments article, qui décrivent le résumé d'un article sur la page actus.html, ont eux la classe "resume"
-*/
+li#comment-mine:hover {
+  background: #f0f0f0;
+}
+
+li#comment-mine > form {
+  display: none;
+}
+
+li#comment-mine:hover > form {
+  display: block;
+}
+
+/******************************************************************************
+redaction.php
+*******************************************************************************/
 
 section article.redacteur {
   position: relative;
@@ -447,7 +502,7 @@ section article.redacteur p {
 
 
 /****************************************************************************************
-Règles appliquées à la page actus.html
+actus.php
 ****************************************************************************************/
 
 section article.resume {
@@ -468,7 +523,6 @@ section h2 + article.resume:only-of-type {
   border-radius: 10px;
 }
 
-
 section article.resume img {
   float: left; 
   height: 120px;
@@ -482,68 +536,8 @@ section article.resume footer {
   clear: left;
 }
 
-
-/****************************************************************************************
-Règles appliquées à la page index.html
-****************************************************************************************/
-
-
-section > a[href], section > a[href]:visited{   
-  display: inline-block;
-  width: 270px;
-  vertical-align: top;
-  margin: 0;
-  padding: 10px 0 10px 0;
-  text-decoration: none;
-  color: #000;
-  font-weight: bold;
-}
-section > a[href]:hover{
-  text-decoration: none;
-}
-section > a:not(:first-of-type):not(:last-of-type) {
-  margin: 0 12px 0 12px;
-}
-
-section > a > img {   
-  border: solid 1px #000;
-  width: 250px;
-  height: 187px;
-  margin: 0 0 10px 0;
-}
-section > a:hover > img {
-  box-shadow: 0px 0px 20px red;   
-}
-
-
-/** Tableau horoscope  **/
-#horoscope {
-  width: 700px;
-  margin: 10px auto;
-  font-size: 14px;
-}
-
-#horoscope tr:first-child {
-  font-weight: bold;
-}
-
-#horoscope tr {
-  height: 30px; 
-}
-
-#horoscope td {
-  padding: 5px 10px;
-  border: solid 1px #000;
-  text-align:justify;
-}
-
-#horoscope td:nth-child(1), #horoscope td:nth-child(2) {
-  width: 100px;
-}
-
-
 /****************************************************************
-Formulaire
+Formulaires
 ****************************************************************/
 
 form input[type=text], form input[type=email], form input[type=password] {
@@ -551,7 +545,7 @@ form input[type=text], form input[type=email], form input[type=password] {
 }
 
 form select {
-  margin: 0 2px;   
+  margin: 0 2px;
 }
 
 form table {
@@ -615,6 +609,8 @@ form #form-uncentered {
 form #form-uncentered td[colspan] {
   text-align: left;
 }
+
+/* Erreurs du formulaire */
 
 #errors, #errors-full-size {
   border: 2px solid red;

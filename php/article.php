@@ -15,12 +15,14 @@ if(!vpac_parametres_controle('get', array(), array('id'))) {
 }
 
 // ----------------------------------------
-// Traitement du formulaire
+// Traitement des formulaires
 // ----------------------------------------
 
 $errors = array();
-if(isset($_POST['btnCommentaire'])) {
-  $errors = vpacl_form_processing();
+if(isset($_POST['btnAjouterCommentaire'])) {
+  $errors = vpacl_form_processing_add();
+} else if(isset($_POST['btnSupprimerCommentaire'])) {
+  $errors = vpacl_form_processing_remove();
 }
 
 // ----------------------------------------
@@ -138,6 +140,7 @@ function vpacl_print_comments($res, $errors) {
             '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vpacl_time_to_string($comment['coDate']), '</p>';
             if(!empty($my_comment_id)) {
               echo '<form action="" method="post">';
+                vpac_print_invisible_input('commentaire_id', $comment['coID']);
                 vpac_print_input_btn('submit', 'Supprimer le commentaire', 'btnSupprimerCommentaire');
               echo '</form>';
             }
@@ -162,7 +165,7 @@ function vpacl_print_comments($res, $errors) {
             '<legend>Ajoutez un commentaire</legend>',
             '<table id="form-uncentered">';
               vpac_print_table_form_textarea('commentaire', 15, 70, true);
-              vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnCommentaire'));
+              vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnAjouterCommentaire'));
             echo '</table>',
           '</fieldset>',
         '</form>';
@@ -227,18 +230,18 @@ function vpacl_parse_bbcode_unicode(&$text) {
 }
 
 /**
- * Traitement du formulaire
+ * Traitement du formulaire pour l'ajout d'un commentaire
  * 
- * @return array Tableau à remplir avec les erreurs de saisie
+ * @return array Tableau contenant les erreurs de saisie
  */
-function vpacl_form_processing() {
+function vpacl_form_processing_add() {
   // Vérifier les clés présentes dans $_POST
-  if(!vpac_parametres_controle('post', array('commentaire', 'btnCommentaire'))) {
+  if(!vpac_parametres_controle('post', array('commentaire', 'btnAjouterCommentaire'))) {
     header('Location: ../index.php');
     exit();
   }
 
-  // Vérification de l'ID
+  // Vérification de l'id de l'article
   if(!isset($_GET['id']) || !vpac_is_number($_GET['id']) || $_GET['id'] <= 0) {
     header('Location: ../index.php');
     exit();
@@ -269,6 +272,41 @@ function vpacl_form_processing() {
   mysqli_close($bd);
 
   return array();
+}
+
+/**
+ * Traitement du formulaire pour la suppression d'un commentaire
+ * 
+ * @return array Tableau contenant les erreurs de saisie
+ */
+function vpacl_form_processing_remove() {
+  // Vérifier les clés présentes dans $_POST
+  if(!vpac_parametres_controle('post', array('commentaire_id', 'btnSupprimerCommentaire'))) {
+    header('Location: ../index.php');
+    exit();
+  }
+
+  // Vérification de l'id de l'article
+  if(!isset($_GET['id']) || !vpac_is_number($_GET['id']) || $_GET['id'] <= 0) {
+    header('Location: ../index.php');
+    exit();
+  }
+
+  // Vérification de l'id du commentaire
+  $id = $_POST['commentaire_id'];
+  if(!vpac_is_number($id) || $id <= 0) {
+    header('Location: ../index.php');
+    exit();
+  }
+
+  // Requête SQL
+  $bd = vpac_bd_connecter();
+    $auteur = mysqli_real_escape_string($bd, $_SESSION['user']['pseudo']);
+  $sql = "DELETE FROM commentaire
+          WHERE coAuteur = '{$auteur}'
+            AND coID = $id";
+  mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
+  mysqli_close($bd);
 }
 
 /**

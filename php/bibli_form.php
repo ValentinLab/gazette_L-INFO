@@ -26,14 +26,16 @@ function vpac_print_table_form_input($label, $name, $value, $required = false, $
 }
 
 /**
- * Affichage d'un champ texte invisible
+ * Affichage d'un champ texte invisible dans une ligne de tableau
  * 
  * @param string $name  Nom de l'input
  * @param mixed  $value Valeur de l'input
  */
-function vpac_print_table_form_invicible_input($name, $value) {
+function vpac_print_table_form_invisible_input($name, $value) {
   echo '<tr style="display: none">',
-         '<td colspan="2"><input type="hidden" name="', $name, '" " value="', $value, '" required></td>',
+         '<td colspan="2">';
+           vpac_print_invisible_input($name, $value);
+         echo '</td>',
        '</tr>';
 }
 
@@ -231,6 +233,16 @@ function vpac_print_radio($name, $values, $default, $labels, $required) {
     $check_val = ($values[$i] == $default) ? ' checked' : '';
     echo '<label><input type="radio" name="', $name, '" id="', $name, $i, '" value="', $values[$i], '" ',$check_val, $required_val, '> ', $labels[$i], '</label> ';
   }
+}
+
+/**
+ * Affichage d'un champ texte invisible dans une ligne de tableau
+ * 
+ * @param string $name  Nom de l'input
+ * @param mixed  $value Valeur de l'input
+ */
+function vpac_print_invisible_input($name, $value) {
+  echo '<input type="hidden" name="', $name, '" value="', $value, '" required></td>';
 }
 
 /**
