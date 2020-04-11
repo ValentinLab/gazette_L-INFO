@@ -126,12 +126,20 @@ function vpacl_print_comments($res, $errors) {
     mysqli_data_seek($res, 0);
     echo '<ul>';
     while($comment = mysqli_fetch_assoc($res)) {
+      //Protéger et parser le texte
       $comment = vpac_protect_data($comment);
       vpacl_parse_bbcode_unicode($comment['coTexte']);
 
-      echo '<li>',
-            '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vpacl_time_to_string($comment['coDate']),'</p>',
-            '<blockquote>', $comment['coTexte'],'</blockquote>',
+      //Vérifier si la personne connectée est l'auteur du message
+      $my_comment_id = (isset($_SESSION['user']) && $_SESSION['user']['pseudo'] == $comment['coAuteur']) ? ' id="comment-mine"' : '';
+
+      // Afficher le commentaire
+      echo '<li', $my_comment_id, '>',
+            '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vpacl_time_to_string($comment['coDate']), '</p>';
+            if(!empty($my_comment_id)) {
+              vpac_print_input_btn('submit', 'Supprimer le commentaire', 'btnSupprimerCommentaire');
+            }
+            echo '<blockquote>', $comment['coTexte'],'</blockquote>',
           '</li>';
     }
     echo '</ul>';
@@ -139,11 +147,15 @@ function vpacl_print_comments($res, $errors) {
     echo '<p>Il n\'y a pas de commentaires à cet article. </p>';
   }
 
-  // Affichage du formulaire d'ajout de commentaire
   if(!isset($_SESSION['user'])) {
+    // Connexion ou inscription
     echo '<p><a href="../php/connexion.php">Connectez-vous</a> ou <a href="./inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p></section>';
   } else {
-    echo '<form action="article.php?id=', $_GET['id'],'" method="post">',
+    // Affichage des erreurs
+    vpac_print_form_errors($errors, '', true);
+
+    // Affichage du formulaire
+    echo '<form action="" method="post">',
           '<fieldset>',
             '<legend>Ajoutez un commentaire</legend>',
             '<table id="form-uncentered">';
@@ -224,9 +236,18 @@ function vpacl_form_processing() {
     exit();
   }
 
+  // Vérification de l'ID
+  if(!isset($_GET['id']) || !vpac_is_number($_GET['id']) || $_GET['id'] <= 0) {
+    header('Location: ../index.php');
+    exit();
+  }
+
   // Vérification du commentaire
   $commentaire = trim($_POST['commentaire']);
-  if(mb_strlen($commentaire, 'UTF-8') == 0 || mb_strlen($commentaire, 'UTF-8') > LMAX_COMMENTAIRE) {
+  $commentaire_len = mb_strlen($commentaire, 'UTF-8');
+  if($commentaire_len == 0) {
+    $errors[] = 'Le commentaire ne peut pas être vide.';
+  } else if($commentaire_len > LMAX_COMMENTAIRE) {
     $errors[] = 'Le commentaire ne doit pas faire plus de ' . LMAX_COMMENTAIRE . ' caractères.';
   }
 

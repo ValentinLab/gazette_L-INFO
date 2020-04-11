@@ -116,7 +116,9 @@ function vpac_print_table_form_radio($main_label, $name, $values, $default, $lab
  */
 function vpac_print_table_form_button($types, $values, $names) {
   echo '<tr><td colspan="2">';
-    vpac_print_input_btn($types, $values, $names);
+    for($i = 0, $btn_number = count($types); $i < $btn_number; ++$i) {
+      vpac_print_input_btn($types[$i], $values[$i], $names[$i]);
+    }
   echo '</td></tr>';
 }
 
@@ -234,29 +236,28 @@ function vpac_print_radio($name, $values, $default, $labels, $required) {
 /**
  * Afficher des boutons
  * 
- * @param array $types      Tableau contenant les types des boutons
- * @param array $values     Tableau contenant les valeurs des boutons
- * @param array $names      Tableau contenant le nom des boutons
+ * @param string $type      Type du bouton
+ * @param mixed  $value     Valeur du boutons
+ * @param string $name      Nom du bouton
  */
-function vpac_print_input_btn($types, $values, $names) {
-  $name_val = '';
-  for($i = 0, $btn_number = count($types); $i < $btn_number; ++$i) {
-    $name_val = (!empty($names[$i])) ? " name=\"$names[$i]\"" : '';
-    echo '<input type="', $types[$i], '" value="',  $values[$i], '"', $name_val, '>';
-  }
+function vpac_print_input_btn($type, $value, $name) {
+  $name = (!empty($name)) ? " name=\"$name\"" : '';
+  echo '<input type="', $type, '" value="',  $value, '"', $name, '>';
 }
 
 /**
  * Afficher les erreurs d'un forrmulaire
  * 
- * @param array  $errors Tableau contenant les erreurs du formulaire
- * @param string $text   Message à afficher avant les erreurs
+ * @param array  $errors    Tableau contenant les erreurs du formulaire
+ * @param string $text      Message à afficher avant les erreurs
+ * @param bool   $full_size Le message aura une taille de 100% et non 705px
  */
-function vpac_print_form_errors($errors, $text = '') {
+function vpac_print_form_errors($errors, $text = '', $full_size = false) {
   $text = (!empty($text)) ? "<p>$text</p>" : '';
+  $errors_id = ($full_size) ? 'errors-full-size' : 'errors';
 
   if(!empty($errors)) {
-    echo '<div id="errors">', $text;
+    echo '<div id="', $errors_id, '">', $text;
     if(count($errors) > 1) {
       echo '<ul>';
         foreach($errors as $err) {
