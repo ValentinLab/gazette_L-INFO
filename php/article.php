@@ -137,7 +137,9 @@ function vpacl_print_comments($res, $errors) {
       echo '<li', $my_comment_id, '>',
             '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vpacl_time_to_string($comment['coDate']), '</p>';
             if(!empty($my_comment_id)) {
-              vpac_print_input_btn('submit', 'Supprimer le commentaire', 'btnSupprimerCommentaire');
+              echo '<form action="" method="post">';
+                vpac_print_input_btn('submit', 'Supprimer le commentaire', 'btnSupprimerCommentaire');
+              echo '</form>';
             }
             echo '<blockquote>', $comment['coTexte'],'</blockquote>',
           '</li>';

@@ -309,7 +309,7 @@ section article h3 {
 }
 
 /******************************************************************************
-Règles appliquées à la page article.html
+Règles appliquées à la page article.php
 *******************************************************************************/
 
 main > article {
@@ -342,7 +342,7 @@ main > article > footer {
 }
 
 /** Style des listes dans l'article */
-main > article ul  {
+main > article ul {
   list-style: none;
 }
 
@@ -353,10 +353,46 @@ main > article ul li::before {
 }
 
 /** Style des items de la liste dans les commentaires de l'article */
-section > ul li {
-  margin-bottom: 20px;   
+
+section > ul {
+  list-style: none;
+  margin-left: 5px;
 }
 
+section > ul li {
+  margin-bottom: 20px;
+}
+
+section > ul > li:before {
+  content: '\25CB\2002';
+  margin-left: 10px;
+}
+
+li#comment-mine:hover {
+  background: #f0f0f0;
+}
+
+li#comment-mine > form {
+  display: none;
+}
+
+li#comment-mine:hover > form {
+  display: block;
+}
+
+section > ul > li > p {
+  display: inline-block;
+  margin-top: 6px;
+}
+
+section > ul > li > form {
+  margin-top: 10px;
+  float: right;
+}
+
+section > ul > li > blockquote {
+  margin-top: 0;
+}
 
 /******************************************************************************
 Règles appliquées à la page redaction.html
@@ -571,7 +607,6 @@ fieldset {
 legend {
   margin-left: 8px;
 }
-
 
 form #form-uncentered {
   margin: 0;
