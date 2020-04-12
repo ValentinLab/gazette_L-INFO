@@ -74,12 +74,41 @@ function vpacl_print_article($errors) {
     return;
   }
 
+  // Affichage de l'édition
+  vpacl_print_edit($res);
   // Afficher l'article et les commentaires
   vpacl_print_article_part($res);
   vpacl_print_comments($res, $errors);
 
   mysqli_free_result($res);
   mysqli_close($bd);
+}
+
+/**
+ * Afficher un bandeau proposant l'édition de l'article
+ * 
+ * @param object $res Résultat d'une requête sql permettant d'obtenir l'article
+ */
+function vpacl_print_edit($res) {
+  // Vérifier que l'utilisateur est connectés
+  if(!isset($_SESSION['user'])) {
+    return;
+  }
+
+  // Récupérer les résultats depuis la base de données
+  $data = mysqli_fetch_assoc($res);
+  if($data == null) {
+    return;
+  }
+
+  // Vérifier que l'utilisateur connecté estt l'auteur de l'article
+  if($data['utPseudo'] != $_SESSION['user']['pseudo'] || !$_SESSION['user']['redacteur']) {
+    return;
+  }
+
+  echo '<section id="banner">',
+    '<p>Vous êtes l\'auteur de cet article, <a href="edition.php">cliquez ici pour le modifier ou le supprimer</a></p>',
+  '</section>';
 }
 
 /**
@@ -120,7 +149,7 @@ function vpacl_print_article_part($res) {
  * @param object $res Résultat d'une requête sql permettant d'obtenir les commentaires
  */
 function vpacl_print_comments($res, $errors) {
-  echo '<section><h2>Réactions</h2>';
+  echo '<section id="commentaires"><h2>Réactions</h2>';
 
   // Vérifier s'il y a des commentaires
   $data = mysqli_fetch_assoc($res);
@@ -271,7 +300,8 @@ function vpacl_form_processing_add() {
   mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
   mysqli_close($bd);
 
-  return array();
+  header("Location: article.php?id=$article#commentaires");
+  exit();
 }
 
 /**
@@ -291,6 +321,7 @@ function vpacl_form_processing_remove() {
     header('Location: ../index.php');
     exit();
   }
+  $article = (int)$_GET['id'];
 
   // Vérification de l'id du commentaire
   $id = $_POST['commentaire_id'];
@@ -307,6 +338,9 @@ function vpacl_form_processing_remove() {
             AND coID = $id";
   mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
   mysqli_close($bd);
+
+  header("Location: article.php?id=$article#commentaires");
+  exit();
 }
 
 /**

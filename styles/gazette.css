@@ -414,6 +414,15 @@ main > article ul li::before {
   font-size: 20px;
 }
 
+/* Bandeau */
+
+#banner {
+  padding: 4px 20px;
+  border-radius: 10px;
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
 /* Commentaires */
 
 section > ul {
