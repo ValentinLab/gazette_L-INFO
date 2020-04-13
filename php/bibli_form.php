@@ -25,6 +25,21 @@ function vpac_print_table_form_input($label, $name, $value, $required = false, $
        '</tr>';
 }
 
+function vpac_print_table_form_invicible_input($name, $value) {
+  echo '<tr style="display: none">',
+         '<td colspan="2"><input type="hidden" name="', $name, '" " value="', $value, '" required></td>',
+       '</tr>';
+}
+
+function vpac_print_table_form_textarea($name, $rows = 10, $cols = 50, $required = false) {
+  $required_val = ($required) ?  ' required'  : '';
+  echo '<tr>',
+          '<td colspan="2">',
+            '<textarea name="', $name, '" rows="', $rows, '" cols="', $cols,'" ', $required_val, '></textarea>',
+          '</td>',
+        '</tr>';
+}
+
 /**
  * Afficher un choix de date dans un tableau
  * Trois select sont  affichés : jour / mois / année
@@ -67,15 +82,15 @@ function  vpac_print_table_form_checkbox($names, $values, $checked, $labels, $re
  * @param string  $main_    Label principal
  * @param string  $name     Nom des boutons radio
  * @param array   $values   Tableau contenant les valeurs des boutons radio
- * @param array   $checked  Tableau contenant des booléans pour indiquer si le bouton radio est coché
+ * @param mixed   $default  Valeur par défaut
  * @param array   $labels   Tableau contenant les labels des boutons radio
  * @param boolean $required Champ obligatoire ou non
  */
-function vpac_print_table_form_radio($main_label, $name, $values, $checked, $labels, $required) {
+function vpac_print_table_form_radio($main_label, $name, $values, $default, $labels, $required) {
   echo '<tr>',
           '<td>', $main_label, '</td>',
           '<td>';
-            vpac_print_radio($name, $values, $checked, $labels, $required);
+            vpac_print_radio($name, $values, $default, $labels, $required);
   echo '</td></tr>';
 }
 
@@ -191,16 +206,16 @@ function vpac_print_checkbox($radio_numbers, $names, $values, $checked, $labels,
  * 
  * @param string  $name     Nom des boutons radio
  * @param array   $values   Tableau contenant les valeurs des boutons radio
- * @param array   $checked  Tableau contenant des booléans pour indiquer si le bouton radio est coché
+ * @param mixed   $default  Valeur par défaut
  * @param array   $labels   Tableau contenant les labels des boutons radio
  * @param boolean $required Champ obligatoire ou non
  */
-function vpac_print_radio($name, $values, $checked, $labels, $required) {
+function vpac_print_radio($name, $values, $default, $labels, $required) {
   $checkbox_numbers = count($values);
   $check_val = '';
   $required_val = ($required) ? ' required' : '';
   for($i = 0; $i < $checkbox_numbers; ++$i) {
-    $check_val = ($checked[$i]) ? ' checked' : '';
+    $check_val = ($values[$i] == $default) ? ' checked' : '';
     echo '<label><input type="radio" name="', $name, '" id="', $name, $i, '" value="', $values[$i], '" ',$check_val, $required_val, '> ', $labels[$i], '</label> ';
   }
 }

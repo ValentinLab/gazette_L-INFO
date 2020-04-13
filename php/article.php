@@ -28,6 +28,7 @@ vpacl_print_article();
 
 // Footer
 vpac_get_footer();
+ob_end_flush();
 
 // ----------------------------------------
 // Fonctions
@@ -77,7 +78,7 @@ function vpacl_print_article() {
  */
 function vpacl_print_article_part($res) {
   $data = mysqli_fetch_assoc($res);
-  vpac_protect_array($data);
+  $data = vpac_protect_data($data);
 
   // Image
   $image = (file_exists("../upload/{$data['arID']}.jpg")) ? "<img src=\"../upload/{$data['arID']}.jpg\" alt=\"{$data['arTitre']}\">" : '';
@@ -87,16 +88,17 @@ function vpacl_print_article_part($res) {
   $author = (isset($data['rePseudo']) && ($data['utStatut'] == 1 || $data['utStatut'] == 3) ? "<a href='../php/redaction.php#{$data['utPseudo']}'>$authorName</a>" : $authorName);
 
   // BBCode
-  $data['arTexte'] = vpacl_parse_bbcode($data['arTexte']);
+  vpacl_parse_bbcode($data['arTexte']);
+  vpacl_parse_bbcode_unicode($data['arTexte']);
 
   // Affichage
   echo '<article>',
           '<h3>', $data['arTitre'],'</h3>',
             $image,
             $data['arTexte'],
-            '<footer>Par ', $author, '. Publié le ', vpac_time_to_string($data['arDatePublication']);
+            '<footer>Par ', $author, '. Publié le ', vpacl_time_to_string($data['arDatePublication']);
   if(isset($data['arDateModification'])) {
-    echo ', modifié le ', vpac_time_to_string($data['arDateModification']);
+    echo ', modifié le ', vpacl_time_to_string($data['arDateModification']);
   }
    echo '</footer></article>';
 }
@@ -115,11 +117,11 @@ function vpacl_print_comments($res) {
     mysqli_data_seek($res, 0);
     echo '<ul>';
     while($comment = mysqli_fetch_assoc($res)) {
-      vpac_protect_array($comment);
-      $comment['coTexte'] = vpacl_parse_bbcode($comment['coTexte']);
+      $comment = vpac_protect_data($comment);
+      vpacl_parse_bbcode_unicode($comment['coTexte']);
 
       echo '<li>',
-            '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vpac_time_to_string($comment['coDate']),'</p>',
+            '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vpacl_time_to_string($comment['coDate']),'</p>',
             '<blockquote>', $comment['coTexte'],'</blockquote>',
           '</li>';
     }
@@ -128,7 +130,20 @@ function vpacl_print_comments($res) {
     echo '<p>Il n\'y a pas de commentaires à cet article. </p>';
   }
 
-  echo '<p><a href="../php/connexion.php">Connectez-vous</a> ou <a href="./inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p></section>';
+  // Affichage du formulaire d'ajout de commentaire
+  if(!isset($_SESSION['utPseudo'])) {
+    echo '<p><a href="../php/connexion.php">Connectez-vous</a> ou <a href="./inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p></section>';
+  } else {
+    echo '<form action="connexion.php" method="post">',
+          '<fieldset>',
+            '<legend>Ajoutez un commentaire</legend>',
+            '<table>';
+            vpac_print_table_form_textarea('commentaire', 15, 70, true);
+            vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnPublier'));
+          echo '</table>',
+        '</table>',
+      '</form>';
+  }
 }
 
 /**
@@ -145,12 +160,56 @@ function vpacl_print_error($content) {
 }
 
 /**
+ * Transformation du BBCode en HTML
+ * 
+ * @param string $text Texte à transformer
+ */
+function vpacl_parse_bbcode(&$text) {
+  // balise [p] -> <p>
+  $text = preg_replace('/\[(\/?)p\]/', '<\1p>', $text);
+  // balise [gras] -> <strong>
+  $text = preg_replace('/\[(\/?)gras\]/', '<\1strong>', $text);
+  // balise [it] -> <em>
+  $text = preg_replace('/\[(\/?)it\]/', '<\1em>', $text);
+  // balise [citation] -> <blockquote>
+  $text = preg_replace('/\[(\/?)citation\]/', '<\1blockquote>', $text);
+  // balise [liste] -> <ul>
+  $text = preg_replace('/\[(\/?)liste\]/', '<\1ul>', $text);
+  // balise [item] -> <li>
+  $text = preg_replace('/\[(\/?)item\]/', '<\1li>', $text);
+  // balise [a:url] -> <a>
+  $text = preg_replace('/\[a:([^]]+)\]/', '<a href="\1">', $text);
+  $text = preg_replace('/\[\/a\]/', '</a>', $text);
+
+  // balise [br] -> <br>
+  $text = preg_replace('/\[br\]/', '<br>', $text);
+  // balise [youtube:w:h:url] -> <iframe width='w' height='h' src='url' allowfullscreen></iframe>
+  $text = preg_replace('/\[youtube:([^:]+):([^:]+):([^(\]| )]+)\]/', '<iframe width="\1" height="\1" src="\3" allowfullscreen></iframe>', $text);
+  // balise [youtube:w:h:url] -> <figure><iframe width="w" height="h" src="url" allowfullscreen></iframe><figcaption>f<figcaption></figure>
+  $text = preg_replace('/\[youtube:([^:]+):([^:]+):([^ ]+) ([^]]+)\]/', '<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\4<figcaption></figure>', $text);
+
+  return $text;
+}
+
+/**
+ * Transformation du BBCode en HTML, uniquement pour les éléments unicode
+ * 
+ * @param string $text Texte à transformer
+ */
+function vpacl_parse_bbcode_unicode(&$text) {
+  // balise [#NNN] -> &#NNN ou [#xNNN] -> &#xNNN
+  $text = preg_replace('/\[#([^]]+)\]/', '&#\1', $text);
+
+  return $text;
+}
+
+/**
  * Transformation d'une date dans le format
  * dd MMM YYYY à HHhMM
  * 
  * @param int $time Heure à transformer
  */
-function vpac_time_to_string($date) {
+function vpacl_time_to_string($date) {
   $min = substr($date, -2);
   $hour = (int)substr($date, -4, 2);
   $day = (int)substr($date, -6, 2);

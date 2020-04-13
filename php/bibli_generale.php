@@ -18,17 +18,22 @@ function vpac_is_number($nb) {
 }
 
 /**
- * Protéger les chaînes de caractères d'un tableau
+ * Protéger les chaînes de caractères
  * 
- * @param array $datas Tableau à protéger
+ * @param mixed $datas Valeur à proteger
  */
-function vpac_protect_array(&$datas) {
-  foreach($datas as &$data) {
-    if(isset($data)) {
-      $data = htmlentities($data);
+function vpac_protect_data($data) {
+  if(is_array($data)) {
+    foreach($data as &$val) {
+      $val = vpac_protect_data($val);
     }
+    unset($val);
+    return $data;
   }
-  unset($data);
+  if(is_string($data)) {
+    return htmlentities($data, ENT_QUOTES, 'UTF-8');
+  }
+  return $data;
 }
 
 /**

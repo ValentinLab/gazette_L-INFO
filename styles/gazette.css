@@ -521,7 +521,6 @@ form td[colspan] label {
     margin: 10px 10px 10px 60px;
 }
 
-
 form input[type=submit], form input[type=reset] {
     margin: 0px 10px;
     width: auto;
@@ -540,6 +539,14 @@ form input[type=submit], form input[type=reset] {
 input[type=submit]:hover, input[type=reset]:hover {
     background: red;
     color: white;
+}
+
+fieldset {
+  border: 1px solid grey;
+}
+
+legend {
+  margin-left: 5px;
 }
 
 #errors {

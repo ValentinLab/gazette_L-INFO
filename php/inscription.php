@@ -12,20 +12,13 @@ if(isset($_SESSION['utPseudo'])) {
 }
 
 // ----------------------------------------
-// Valeur du formulaire
+// Traitement du formulaire
 // ----------------------------------------
 
-$values = array(
-  'utPseudo'        => '',
-  'utCivilite'      => '',
-  'utNom'           => '',
-  'utPrenom'        => '',
-  'UtDateNaissance' => 0,
-  'utEmail'         => '',
-  'utPasse'         => '',
-  'utMailsPourris'  => true,
-  );
 $errors = array();
+if(isset($_POST['btnInscription'])) {
+  $errors = vpacl_form_processing();
+}
 
 // ----------------------------------------
 // Page
@@ -37,26 +30,72 @@ vpac_get_nav();
 vpac_get_header('Inscription');
 
 // Formulaire
-if(isset($_POST['btnInscription'])) {
-  vpacl_form_processing($values, $errors);
-} else {
-  vpacl_print_form($values, $errors);
-}
+vpacl_print_form($errors);
 
 // Footer
 vpac_get_footer();
+ob_end_flush();
 
 // ----------------------------------------
 // Fonctions
 // ----------------------------------------
 
 /**
+ * Affichage du formulaire
+ * 
+ * @param array $errors Tableau avec les erreurs de saisie
+ */
+function vpacl_print_form($errors) {
+  echo '<section>',
+    '<h2>Formulaire d\'inscription</h2>',
+      '<p>Pour vous inscrire, remplissez le formulaire ci-dessous.</p>';
+
+      vpac_print_form_errors($errors, 'Les erreurs suivantes ont été relevées lors de votre inscription :');
+
+      // Année actuelle
+      $current_year = date('Y');
+
+      // Valeurs du formulaire
+      $pseudo = $nom = $prenom = $email = '';
+      $naissance_j = $naissance_m = 1;
+      $naissance_a = $current_year;
+      $civilite = 0;
+      $mails_pourris = true;
+      if(isset($_POST['btnInscription'])) {
+        $pseudo = vpac_protect_data($_POST['pseudo']);
+        $nom = vpac_protect_data($_POST['nom']);
+        $prenom = vpac_protect_data($_POST['prenom']);
+        $email = vpac_protect_data($_POST['email']);
+        $naissance_j = (int)$_POST['naissance_j'];
+        $naissance_m = (int)$_POST['naissance_m'];
+        $naissance_a = (int)$_POST['naissance_a'];
+        $civilite = (isset($_POST['radSexe'])) ? $_POST['radSexe'] : 0;
+        $mails_pourris = isset($_POST['cbSpam']);
+      }
+
+      echo '<form action="inscription.php" method="post">',
+        '<table>';
+          vpac_print_table_form_input('Choisissez un pseudo', 'pseudo', vpac_protect_data($pseudo), true, 'text', LMIN_PSEUDO . ' caractères minimum');
+          vpac_print_table_form_radio('Votre civilité', 'radSexe', array(1, 2), $civilite, array('Monsieur', 'Madame'), true);
+          vpac_print_table_form_input('Votre nom', 'nom', vpac_protect_data($nom), true);
+          vpac_print_table_form_input('Votre prénom', 'prenom', vpac_protect_data($prenom), true);
+          vpac_print_table_form_date('Votre date de naissance', 'naissance', $current_year, $current_year - DIFF_ANNEE, $naissance_j, $naissance_m, $naissance_a);
+          vpac_print_table_form_input('Votre email', 'email', vpac_protect_data($email), true);
+          vpac_print_table_form_input('Choisissez un mot de passe', 'passe1', '', true, 'password');
+          vpac_print_table_form_input('Répétez le  mot de passe', 'passe2', '', true, 'password');
+          vpac_print_table_form_checkbox(array('cbCGU', 'cbSpam'), array(1, 1), array(0, $mails_pourris), array('J\'ai lu et j\'accepte les conditions générales d\'utilisation', 'J\'accepte de recevoir des tonnes de mails pourris'), array(true, false));
+          vpac_print_table_form_button(array('submit', 'reset'), array('S\'inscrire', 'Réinitialiser'), array('btnInscription', ''));
+        echo '</table>',
+      '</form>',
+    '</section>';
+}
+
+/**
  * Traitement du formulaire
  * 
- * @param array $values Tableau à remplir avec les valeurs du formulaire
- * @param array $errors Tableau à remplir avec les erreurs de saisie
+ * @return array Tableau à remplir avec les erreurs de saisie
  */
-function vpacl_form_processing($values, $errors) {
+function vpacl_form_processing() {
   // Vérifier les clés présentes dans $_POST
   if(!vpac_parametres_controle(
     'post', 
@@ -66,61 +105,70 @@ function vpacl_form_processing($values, $errors) {
     vpac_session_exit();
   }
 
+  // Valeurs à récuperer dans le formulaire
+  $pseudo = $civilite = $nom = $prenom = $email = $passe = '';
+  $naissance = '';
+  $mails_pourris = true;
+
   // Vérification du pseudo
-  $values['utPseudo'] = trim($_POST['pseudo']);
-  if(!preg_match('/^[a-z0-9]{4,20}$/', $values['utPseudo'])) {
+  $pseudo = trim($_POST['pseudo']);
+  if(!preg_match('/^[a-z0-9]{' . LMIN_PSEUDO . ',' . LMAX_PSEUDO . '}$/', $pseudo)) {
     $errors[] = 'Le pseudo doit contenir entre 4 et 20 caractères minuscules (sans accent) ou chiffres.';
   }
 
   // Vérification de la civilité
   if(!isset($_POST['radSexe'])) {
     $errors[] = 'Vous devez choisir une civilité.';
-  } else if(!in_array($_POST['radSexe'], array('Mr', 'Mme'))) {
+  } else if(!vpac_is_number($_POST['radSexe']) || !vpacl_check_between($_POST['radSexe'], 1, 2)) {
     vpac_session_exit();
   }
   switch($_POST['radSexe']) {
-    case 'Mr':
-      $values['utCivilite'] = 'h';
+    case 1:
+      $civilite = 'h';
       break;
-    case 'Mme';
-    $values['utCivilite'] = 'f';
-    break;
+    case 2;
+      $civilite = 'f';
+      break;
   }
 
   // Vérification du nom et du prénom
-  $values['utNom'] = trim($_POST['nom']);
-  vpacl_check_name($errors, $values['utNom'], 'prenom', 50);
-  $values['utPrenom'] = trim($_POST['prenom']);
-  vpacl_check_name($errors, $values['utPrenom'], 'nom', 50);
+  $nom = trim($_POST['nom']);
+  vpacl_check_name($errors, $nom, 'prenom', LMAX_PRENOM);
+  $prenom = trim($_POST['prenom']);
+  vpacl_check_name($errors, $prenom, 'nom', LMAX_NOM);
 
   // Vérification du jour/mois/année de naissance
-  vpacl_check_select($_POST['naissance_j'], 1, 31);
-  vpacl_check_select($_POST['naissance_m'], 1, 12);
-  vpacl_check_select($_POST['naissance_a'], 1920, 2020);
+  $current_year = date('Y');
+  $day = (int)$_POST['naissance_j'];
+  $month = (int)$_POST['naissance_m'];
+  $year = (int)$_POST['naissance_a'];
+  vpacl_check_between($day, 1, 31);
+  vpacl_check_between($month, 1, 12);
+  vpacl_check_between($year, $current_year - DIFF_ANNEE, $current_year);
   // Vérification de l'âge
-  $current_date = getdate();
-  $cdate = $current_date['year'] * 10000 + $current_date['mon'] * 100 + $current_date['mday'];
-  $values['utDateNaissance'] = $_POST['naissance_a'] * 10000 + $_POST['naissance_m'] * 100 + $_POST['naissance_j'];
-  if($cdate - 180000 < $values['utDateNaissance']) {
+  if(!checkdate($month, $day, $year)) {
+    $errors[] = 'La date de naissance n\'est pas valide.';
+  } elseif(mktime(0, 0, 0, $month, $day, $year+18) > time()) {
     $errors[] = 'Vous devez avoir au moins 18 ans pour vous inscrire.';
   }
+  $naissance = "{$year}{$month}{$day}";
 
   // Vérification de l'adresse mail
-  $values['utEmail'] = trim($_POST['email']);
-  $email_len = strlen($values['utEmail']);
+  $email = trim($_POST['email']);
+  $email_len = mb_strlen($email, 'UTF-8');
   if($email_len == 0) {
     $errors[] = 'L\'adresse mail ne peut pas être vide.';
-  } elseif($email_len > 255) {
+  } elseif($email_len > LMAX_EMAIL) {
     $errors[] = 'L\'adresse mail ne peut pas contenir plus de 255 caractères.';
   }
   // Vérification de la validité de l'adresse mail
-  if(filter_var($values['utEmail'], FILTER_VALIDATE_EMAIL) === false) {
+  if(filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
     $errors[] = 'L\'adresse mail n\'est pas valide.';
   }
 
   // Vérification du mot de passe 1
-  $values['utPasse'] = $_POST['passe1'];
-  $passe_len = strlen($values['utPasse']);
+  $passe = $_POST['passe1'];
+  $passe_len = mb_strlen($passe, 'UTF-8');
   if($passe_len == 0) {
     $errors[] = 'Le mot de passe ne peut pas être vide.';
   } elseif($passe_len > 255) {
@@ -128,7 +176,7 @@ function vpacl_form_processing($values, $errors) {
   }
 
   // Vérification du mot de passe 2
-  if($values['utPasse'] != $_POST['passe2']) {
+  if($passe !== $_POST['passe2']) {
     $errors[] = 'Les mots de passe doivent être identiques.';
   }
 
@@ -137,9 +185,8 @@ function vpacl_form_processing($values, $errors) {
     if($_POST['cbSpam'] != 1) {
       vpac_session_exit();
     }
-    $values['utMailsPourris'] = true;
   } else {
-    $values['utMailsPourris'] = false;
+    $mails_pourris = false;
   }
 
   // Vérification des CGU
@@ -149,110 +196,47 @@ function vpacl_form_processing($values, $errors) {
     vpac_session_exit();
   }
 
-  if(empty($errors)) {
-    $bd = vpac_bd_connecter();
-
-    $utPseudo = mysqli_real_escape_string($bd, $values['utPseudo']);
-    $utEmail = mysqli_real_escape_string($bd, $values['utEmail']);
-    $sql = "SELECT utPseudo, utEmail
-          FROM utilisateur
-          WHERE utPseudo='$utPseudo'
-            OR utEmail='$utEmail'";
-
-    $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
-
-    if(mysqli_num_rows($res) > 0) {
-      $data = mysqli_fetch_assoc($res);
-      if($data['utPseudo'] == $values['utPseudo']) {
-        $errors[] = 'Ce pseudo existe déjà.';
-      } else {
-        $errors[] = 'Un compte est déjà lié à cet email.';
-      }
-      mysqli_close($bd);
-    }
-
-    mysqli_free_result($res);
+  if(!empty($errors)) {
+    return $errors;
   }
 
-  // Affichage des erreurs
+  // Requête à la bd
+  $bd = vpac_bd_connecter();
+  $pseudo_e = mysqli_real_escape_string($bd, $pseudo);
+  $email = mysqli_real_escape_string($bd, $email);
+  $sql = "SELECT utPseudo, utEmail
+          FROM utilisateur
+          WHERE utPseudo='{$pseudo}'
+             OR utEmail='{$email}'";
+  $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
+  if(mysqli_num_rows($res) > 0) {
+    $data = mysqli_fetch_assoc($res);
+    if($data['utPseudo'] == $pseudo) {
+      $errors[] = 'Ce pseudo existe déjà.';
+    } else {
+      $errors[] = 'Un compte est déjà lié à cet email.';
+    }
+    mysqli_close($bd);
+  }
+  mysqli_free_result($res);
+
   if(!empty($errors)) {
-    vpacl_print_form($values, $errors);
     exit();
   }
 
   // Inscription d'un nouvel utilisateur
-  $values['utPseudo'] = mysqli_real_escape_string($bd, $values['utPseudo']);
-  $values['utNom'] = mysqli_real_escape_string($bd, $values['utNom']);
-  $values['utPrenom'] = mysqli_real_escape_string($bd, $values['utPrenom']);
-  $values['utEmail'] = mysqli_real_escape_string($bd, $values['utEmail']);
-  $values['utPasse'] = password_hash($values['utPasse'], PASSWORD_DEFAULT);
+  $nom = mysqli_real_escape_string($bd, $nom);
+  $prenom = mysqli_real_escape_string($bd, $prenom);
+  $passe = password_hash($passe, PASSWORD_DEFAULT);
   $sql = "INSERT INTO utilisateur
-      VALUES ('{$values['utPseudo']}',
-              '{$values['utNom']}',
-              '{$values['utPrenom']}',
-              '{$values['utEmail']}',
-              '{$values['utPasse']}',
-              {$values['utDateNaissance']},
-              0,
-              '{$values['utCivilite']}',
-              {$values['utMailsPourris']}
-            )";
-  $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
+          VALUES ('{$pseudo_e}', '{$nom}', '{$prenom}', '{$email}', '{$passe}', {$naissance}, 0, '{$civilite}', {$mails_pourris})";
+  mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
   mysqli_close($bd);
 
   // Mémoriser dans la variable de session
-  $_SESSION['utPseudo'] = $values['utPseudo'];
-  $_SESSION['utStatut'] = 0;
+  $_SESSION['user'] = array('pseudo' => $pseudo, 'redacteur' => false, 'administrateur' => false);
 
   header('Location: ../index.php');
-}
-
-/**
- * Affichage du formulaire
- * 
- * @param array $values Tableau avec les valeurs du formulaire
- * @param array $errors Tableau avec les erreurs de saisie
- */
-function vpacl_print_form($values, $errors) {
-  echo '<section>',
-    '<h2>Formulaire d\'inscription</h2>',
-      '<p>Pour vous inscrire, remplissez le formulaire ci-dessous.</p>';
-
-      vpac_print_form_errors($errors, 'Les erreurs suivantes ont été relevées lors de votre inscription :');
-
-      // Date de naissance
-      $naissance_j = $naissance_m = 1;
-      $naissance_a = 2020;
-      if($values['utDateNaissance'] != 0) {
-        $naissance_j = (int)substr($values['utDateNaissance'], 6);
-        $naissance_m = (int)substr($values['utDateNaissance'], 4, 2);
-        $naissance_a = (int)substr($values['utDateNaissance'], 0, 4);
-      }
-      // Civilité
-      $civilite = array(false, false);
-      if(!empty($values['utCivilite'])) {
-        if($values['utCivilite'] == 'h') {
-          $civilite[0] = true;
-        } else {
-          $civilite[1] = true;
-        }
-      }
-
-      echo '<form action="inscription.php" method="post">',
-        '<table>';
-          vpac_print_table_form_input('Choisissez un pseudo', 'pseudo', htmlentities($values['utPseudo']), true, 'text', '4 caractères minimum');
-          vpac_print_table_form_radio('Votre civilité', 'radSexe', array('Mr', 'Mme'), $civilite, array('Monsieur', 'Madame'), true);
-          vpac_print_table_form_input('Votre nom', 'nom', htmlentities($values['utNom']), true);
-          vpac_print_table_form_input('Votre prénom', 'prenom', htmlentities($values['utPrenom']), true);
-          vpac_print_table_form_date('Votre date de naissance', 'naissance', 2020, 1920, $naissance_j, $naissance_m, $naissance_a);
-          vpac_print_table_form_input('Votre email', 'email', htmlentities($values['utEmail']), true);
-          vpac_print_table_form_input('Choisissez un mot de passe', 'passe1', '', true, 'password');
-          vpac_print_table_form_input('Répétez le  mot de passe', 'passe2', '', true, 'password');
-          vpac_print_table_form_checkbox(array('cbCGU', 'cbSpam'), array(1, 1), array(0, $values['utMailsPourris']), array('J\'ai lu et j\'accepte les conditions générales d\'utilisation', 'J\'accepte de recevoir des tonnes de mails pourris'), array(true, false));
-          vpac_print_table_form_button(array('submit', 'reset'), array('S\'inscrire', 'Réinitialiser'), array('btnInscription', ''));
-        echo '</table>',
-      '</form>',
-    '</section>';
 }
 
 /**
@@ -272,13 +256,13 @@ function vpacl_check_name(&$errors, $value, $field_name, $length) {
 }
 
 /**
- * Vérifier la validité d'un champ de type select
+ * Vérifier la validité d'un champ numérique
  * 
  * @param int    $value  Valeur à vérifier
  * @param int    $min    Valeur minimum possible
  * @param int    $max    Valeur maximum possible
  */
-function vpacl_check_select($value, $min, $max) {
+function vpacl_check_between($value, $min, $max) {
   if($value < $min || $value > $max) {
     header('Location: ../index.php');
     exit();

@@ -25,6 +25,7 @@ vpacl_print_horoscope();
 
 // Footer
 vpac_get_footer();
+ob_end_flush();
 
 // ----------------------------------------
 // Fonctions
@@ -109,7 +110,7 @@ function vpacl_print_articles_section($title, $articles) {
  * @param array $article Informations de l'article
  */
 function vpacl_print_article($article) {
-  vpac_protect_array($article);
+  $article = vpac_protect_data($article);
   echo '<a href="./php/article.php?id=', $article['arID'], '">',
           '<img src="', vpac_get_article_image($article['arID'], '.'), '" alt="', $article['arTitre'] ,'"><br>',
           $article['arTitre'],
