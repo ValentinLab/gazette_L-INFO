@@ -104,8 +104,11 @@ function vpac_print_articles(array $data_by_month){
  * @param $article Tableau contenant les informations de l'article en question
  */
 function vpac_print_article(array $article){
+    $image = (file_exists("../upload/{$article['arID']}.jpg")) ? "<img src=\"../upload/{$article['arID']}.jpg\" alt=\"{$article['arTitre']}\">" : '';
+    $article['arResume'] = vpacl_parse_bbcode($article['arResume']);
+    $article['arTitre'] = vpacl_parse_bbcode($article['arTitre']);
     echo'<article class="resume">',
-            '<img src="../upload/',$article['arID'],'.jpg" alt="Photo d\'illustration | ',$article['arTitre'],'"',
+            $image,
             '<h3>',$article['arTitre'],'</h3>',
             '<p>',
             $article['arResume'],

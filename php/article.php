@@ -145,48 +145,6 @@ function vpacl_print_error($content) {
 }
 
 /**
- * Transformation du BBCode en HTML
- * 
- * @param string $text Texte à transformer
- * @return string BBCode transformé en HTML
- */
-function vpacl_parse_bbcode($text) {
-  // balise [p] -> <p>
-  $text = preg_replace('/\[p\]/', '<p>', $text);
-  $text = preg_replace('/\[\/p\]/', '</p>', $text);
-  // balise [gras] -> <strong>
-  $text = preg_replace('/\[gras\]/', '<strong>', $text);
-  $text = preg_replace('/\[\/gras\]/', '</strong>', $text);
-  // balise [it] -> <em>
-  $text = preg_replace('/\[it\]/', '<em>', $text);
-  $text = preg_replace('/\[\/it\]/', '</em>', $text);
-  // balise [citation] -> <blockquote>
-  $text = preg_replace('/\[citation\]/', '<blockquote>', $text);
-  $text = preg_replace('/\[\/citation\]/', '</blockquote>', $text);
-  // balise [liste] -> <ul>
-  $text = preg_replace('/\[liste\]/', '<ul>', $text);
-  $text = preg_replace('/\[\/liste\]/', '</ul>', $text);
-  // balise [item] -> <li>
-  $text = preg_replace('/\[item\]/', '<li>', $text);
-  $text = preg_replace('/\[\/item\]/', '</li>', $text);
-  // balise [a:url] -> <a>
-  $text = preg_replace('/\[a:([^]]+)\]/', '<a href="\1">', $text);
-  $text = preg_replace('/\[\/a\]/', '</a>', $text);
-
-  // balise [br] -> <br>
-  $text = preg_replace('/\[br\]/', '<br>', $text);
-  // balise [youtube:w:h:url] -> <iframe width='w' height='h' src='url' allowfullscreen></iframe>
-  $text = preg_replace('/\[youtube:([^:]+):([^:]+):([^(\]| )]+)\]/', '<iframe width="\1" height="\1" src="\3" allowfullscreen></iframe>', $text);
-  // balise [youtube:w:h:url] -> <figure><iframe width="w" height="h" src="url" allowfullscreen></iframe><figcaption>f<figcaption></figure>
-  $text = preg_replace('/\[youtube:([^:]+):([^:]+):([^ ]+) ([^]]+)\]/', '<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\4<figcaption></figure>', $text);
-
-  // balise [#NNN] -> &#NNN ou [#xNNN] -> &#xNNN
-  $text = preg_replace('/\[#([^]]+)\]/', '&#\1', $text);
-
-  return $text;
-}
-
-/**
  * Transformation d'une date dans le format
  * dd MMM YYYY à HHhMM
  * 
