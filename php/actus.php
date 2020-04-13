@@ -29,12 +29,14 @@ if(mysqli_num_rows($res) > 0) {
     mysqli_close($bd);
 }
 mysqli_free_result($res);
-var_dump($data);
+//var_dump($data);
+//var_dump(vpac_classer_articles_par_mois($data));
 
 $numberOfPages=(int)(count($data)/4)+1;
-//var_dump(count($data));
-vpac_print_articles($data);
 
+$data_by_month=vpac_classer_articles_par_mois($data);
+
+vpac_print_articles($data_by_month);
 
 // Footer
 vpac_get_footer();
@@ -46,36 +48,69 @@ vpac_get_footer();
  * @return return date au format YYYYDD
  */
 function vpac_get_month_and_year($date){
-    return substr($data[0]['arDatePublication'],0,6);
+    return substr($date,0,6);
 }
+
 /**
- * renvoie un tableau contenant les articles correspondant au numéro de la page, classés par moi
- * @param array $data Tableau contenant tous les articles
+ * renvoie un tableau contenant les articles correspondant au numéro de la page, classés par mois
+ * @param array $data Tableau contenant tous les articles de la page
+ * @return array $return Tableau contenant les 4 articles de la page, indexé par mois
  */
 function vpac_classer_articles_par_mois(array $data){
     $return=array();
     for($i=($_GET['page']-1)*4;$i<=($_GET['page']-1)*4+3&&$i<count($data);++$i){
-        //
+        if(!array_key_exists(vpac_get_month_and_year($data[$i]['arDatePublication']),$return)){
+            $return[vpac_get_month_and_year($data[$i]['arDatePublication'])][0]=$data[$i];
+        }else{
+            array_push($return[vpac_get_month_and_year($data[$i]['arDatePublication'])],$data[$i]);
+        }
     }
+    return $return;
 }
 
 /**
- * Affiche tous les articles correspondant au numéro de la page
+ * Transformation d'une date dans le format
+ * Month Year
  * 
- * @param array $data Tableau contenant tous les articles
+ * @param int $date date à transformer
  */
-/*function vpac_print_articles(array $data){
-    for($i=($_GET['page']-1)*4;$i<=($_GET['page']-1)*4+3&&$i<count($data);++$i){
-        vpac_print_article($data, $i);
-    }
-}*/
+function vpac_month_and_year_to_string($date) {
+    
+    $month = (int)substr($date, -8, 2);
+    $year = substr($date, 0, -8);
+  
+    $months = vpac_get_months();
+  
+    return mb_strtolower($months[$month], 'UTF-8') . ' ' . $year;
+  }
 
 /**
- * Affiche un article
- * @param array $data Tableau contenant tous les articles
- * @param $index indice de l'article dans $data
+ * Affiche le contenu principal de la page, 4 articles classés par mois
+ * @param array $data_by_month Tableau indexé par mois, contenant les 4 articles
  */
-function vpac_print_article(array $data, $index){
+function vpac_print_articles(array $data_by_month){
+    foreach($data_by_month as &$value){
+        echo'<section>',
+            '<h2>',vpac_month_and_year_to_string($value[0]['arDatePublication']),'</h2>';
+            foreach($value as &$article) { 
+                vpac_print_article($article);
+            }
+        echo'</section>';
+    } 
+}
 
+/**
+ * affiche un article
+ * @param $article Tableau contenant les informations de l'article en question
+ */
+function vpac_print_article(array $article){
+    echo'<article class="resume">',
+            '<img src="../upload/',$article['arID'],'.jpg" alt="Photo d\'illustration | ',$article['arTitre'],'"',
+            '<h3>',$article['arTitre'],'</h3>',
+            '<p>',
+            $article['arResume'],
+            '</p>',
+            '<footer><a href="../php/article.php?id=',$article['arID'],'">Lire l\'article</a></footer>',
+        '</article>';
 }
 ?>

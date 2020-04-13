@@ -40,7 +40,7 @@ function vpac_get_nav($path = '..') {
   echo '<nav>',
           '<ul>',
               '<li><a href="', $path, '/">Accueil</a></li>',
-              '<li><a href="', $path, '/html/actus.html">Toute l\'actu</a></li>',
+              '<li><a href="', $path, '/php/actus.php?page=1">Toute l\'actu</a></li>',
               '<li><a href="', $path, '/php/recherche.php">Recherche</a></li>',
               '<li><a href="', $path, '/html/redaction.html">La rédac\'</a></li>',
               '<li>';
