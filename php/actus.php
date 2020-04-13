@@ -33,9 +33,9 @@ mysqli_free_result($res);
 //var_dump(vpac_classer_articles_par_mois($data));
 
 $numberOfPages=(int)(count($data)/4)+1;
+vpac_print_page_selector($numberOfPages);
 
 $data_by_month=vpac_classer_articles_par_mois($data);
-
 vpac_print_articles($data_by_month);
 
 // Footer
@@ -105,8 +105,8 @@ function vpac_print_articles(array $data_by_month){
  */
 function vpac_print_article(array $article){
     $image = (file_exists("../upload/{$article['arID']}.jpg")) ? "<img src=\"../upload/{$article['arID']}.jpg\" alt=\"{$article['arTitre']}\">" : '';
-    $article['arResume'] = vpacl_parse_bbcode($article['arResume']);
-    $article['arTitre'] = vpacl_parse_bbcode($article['arTitre']);
+    $article['arResume'] = vpacl_parse_bbcode1($article['arResume']);
+    $article['arTitre'] = vpacl_parse_bbcode1($article['arTitre']);
     echo'<article class="resume">',
             $image,
             '<h3>',$article['arTitre'],'</h3>',
@@ -116,4 +116,22 @@ function vpac_print_article(array $article){
             '<footer><a href="../php/article.php?id=',$article['arID'],'">Lire l\'article</a></footer>',
         '</article>';
 }
+
+/**
+ * affiche la barre permettant de sélectionner la page souhaitée
+ * @param $numberOfPages nombre de pages d'articles
+ */
+function vpac_print_page_selector($numberOfPages){
+    echo'<article class="page_selector">',
+            'Pages :';
+            for($i=1;$i<=$numberOfPages;$i++){
+                if($i==$_GET['page']){
+                    echo'<a href="../php/actus.php?page=',$i,'"><h5>',$i,'</h5></a>';
+                }else{
+                    echo'<a href="../php/actus.php?page=',$i,'"><h4>',$i,'</h4></a>';
+                }
+            }
+        echo'</article>';
+}
+
 ?>
