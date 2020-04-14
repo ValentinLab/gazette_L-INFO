@@ -220,29 +220,42 @@ function vpacl_print_error($content) {
  * @param string $text Texte à transformer
  */
 function vpacl_parse_bbcode(&$text) {
+  $url_regex = 'https?:\/\/[a-zA-Z0-9.\/\-?=]+';
+
   // balises [p], [gras], [it], [citation], [liste], [item], [br]
-  $markups_general = array('/\[((\/)?p)\]/',
-                          '/\[((\/)?it)\]/',
-                          '/\[((\/)?gras)\]/',
-                          '/\[((\/)?citation)\]/',
-                          '/\[((\/)?liste)\]/',
-                          '/\[((\/)?item)\]/',
+  $markups_general = array('/\[(\/)?p\]/',
+                          '/\[(\/)?it\]/',
+                          '/\[(\/)?gras\]/',
+                          '/\[(\/)?citation\]/',
+                          '/\[(\/)?liste\]/',
+                          '/\[(\/)?item\]/',
                           '/\[br\]/'
                           );
-  $text =  preg_replace($markups_general, '<\2\1>', $text);
+  $replace_general = array('<\1p>',
+                           '<\1em>',
+                           '<\1strong>',
+                           '<\1blockquote>',
+                           '<\1ul>',
+                           '<\1li>'
+                          );
+  $text =  preg_replace($markups_general, $replace_general, $text);
 
   // balises [a:url]
-  $markups_link = array('/\[a:(https?:\/\/[a-zA-Z0-9.\/\-?=]+)\]/',
+  $markups_link = array("/\[a:($url_regex)\]/",
+                        '/\[a:(mailto:[a-zA-Z0-9\-_.]+@[a-zA-Z0-9\-.]+\??.*?)\]/',
+                        '/\[a:[a-zA-Z\/\-_.]+\]/',
                         '/\[\/a\]/'
                        );
   $replace_link = array('<a href="\1" target="_blank">',
+                        '<a href="\1">',
+                        '<a href="\1">',
                         '</a>'
                        );
   $text = preg_replace($markups_link, $replace_link, $text);
 
   // balises [youtube:w:h:url], [youtube:w:h:url legende]
-  $markups_youtube = array('/\[youtube:([^:]+):([^:]+):(https?:\/\/[a-zA-Z0-9.\/\-?=]+)\]/',
-                           '/\[youtube:([^:]+?):([^:]+):(https?:\/\/[a-zA-Z0-9.\/\-?=]+) (.+?)\]/'
+  $markups_youtube = array("/\[youtube:([^:]+):([^:]+):($url_regex)\]/",
+                           "/\[youtube:([^:]+?):([^:]+):($url_regex) (.+?)\]/"
                           );
   $replace_youtube = array('<iframe width="\1" height="\1" src="\3" allowfullscreen></iframe>',
                            '<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\4<figcaption></figure>'

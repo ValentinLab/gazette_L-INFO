@@ -427,7 +427,7 @@ main > article ul li::before {
 
 section > ul {
   list-style: none;
-  margin-left: 5px;
+  margin-left: 0;
 }
 
 section > ul li {
