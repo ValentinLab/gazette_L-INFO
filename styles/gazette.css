@@ -634,6 +634,10 @@ form #form-uncentered td[colspan] {
   width: 705px;
 }
 
+#errors-full-size {
+  margin-bottom: 5px;
+}
+
 #errors p, #errors-full-size p {
   margin: 0 0;
 }

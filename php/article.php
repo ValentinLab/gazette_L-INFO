@@ -151,6 +151,9 @@ function vpacl_print_article_part($res) {
 function vpacl_print_comments($res, $errors) {
   echo '<section id="commentaires"><h2>Réactions</h2>';
 
+  // Affichage des erreurs
+  vpac_print_form_errors($errors, '', true);
+
   // Vérifier s'il y a des commentaires
   $data = mysqli_fetch_assoc($res);
   if(isset($data['coID'])) {
@@ -185,9 +188,6 @@ function vpacl_print_comments($res, $errors) {
     // Connexion ou inscription
     echo '<p><a href="../php/connexion.php">Connectez-vous</a> ou <a href="./inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p></section>';
   } else {
-    // Affichage des erreurs
-    vpac_print_form_errors($errors, '', true);
-
     // Affichage du formulaire
     echo '<form action="" method="post">',
           '<fieldset>',
@@ -220,28 +220,34 @@ function vpacl_print_error($content) {
  * @param string $text Texte à transformer
  */
 function vpacl_parse_bbcode(&$text) {
-  // balise [p] -> <p>
-  $text = preg_replace('/\[(\/?)p\]/', '<\1p>', $text);
-  // balise [gras] -> <strong>
-  $text = preg_replace('/\[(\/?)gras\]/', '<\1strong>', $text);
-  // balise [it] -> <em>
-  $text = preg_replace('/\[(\/?)it\]/', '<\1em>', $text);
-  // balise [citation] -> <blockquote>
-  $text = preg_replace('/\[(\/?)citation\]/', '<\1blockquote>', $text);
-  // balise [liste] -> <ul>
-  $text = preg_replace('/\[(\/?)liste\]/', '<\1ul>', $text);
-  // balise [item] -> <li>
-  $text = preg_replace('/\[(\/?)item\]/', '<\1li>', $text);
-  // balise [a:url] -> <a>
-  $text = preg_replace('/\[a:([^]]+)\]/', '<a href="\1">', $text);
-  $text = preg_replace('/\[\/a\]/', '</a>', $text);
+  // balises [p], [gras], [it], [citation], [liste], [item], [br]
+  $markups_general = array('/\[((\/)?p)\]/',
+                          '/\[((\/)?it)\]/',
+                          '/\[((\/)?gras)\]/',
+                          '/\[((\/)?citation)\]/',
+                          '/\[((\/)?liste)\]/',
+                          '/\[((\/)?item)\]/',
+                          '/\[br\]/'
+                          );
+  $text =  preg_replace($markups_general, '<\2\1>', $text);
 
-  // balise [br] -> <br>
-  $text = preg_replace('/\[br\]/', '<br>', $text);
-  // balise [youtube:w:h:url] -> <iframe width='w' height='h' src='url' allowfullscreen></iframe>
-  $text = preg_replace('/\[youtube:([^:]+):([^:]+):([^(\]| )]+)\]/', '<iframe width="\1" height="\1" src="\3" allowfullscreen></iframe>', $text);
-  // balise [youtube:w:h:url] -> <figure><iframe width="w" height="h" src="url" allowfullscreen></iframe><figcaption>f<figcaption></figure>
-  $text = preg_replace('/\[youtube:([^:]+):([^:]+):([^ ]+) ([^]]+)\]/', '<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\4<figcaption></figure>', $text);
+  // balises [a:url]
+  $markups_link = array('/\[a:(https?:\/\/[a-zA-Z0-9.\/\-?=]+)\]/',
+                        '/\[\/a\]/'
+                       );
+  $replace_link = array('<a href="\1" target="_blank">',
+                        '</a>'
+                       );
+  $text = preg_replace($markups_link, $replace_link, $text);
+
+  // balises [youtube:w:h:url], [youtube:w:h:url legende]
+  $markups_youtube = array('/\[youtube:([^:]+):([^:]+):(https?:\/\/[a-zA-Z0-9.\/\-?=]+)\]/',
+                           '/\[youtube:([^:]+?):([^:]+):(https?:\/\/[a-zA-Z0-9.\/\-?=]+) (.+?)\]/'
+                          );
+  $replace_youtube = array('<iframe width="\1" height="\1" src="\3" allowfullscreen></iframe>',
+                           '<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\4<figcaption></figure>'
+                          );
+  $text = preg_replace($markups_youtube, $replace_youtube, $text);
 
   return $text;
 }
@@ -300,7 +306,7 @@ function vpacl_form_processing_add() {
   mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
   mysqli_close($bd);
 
-  header("Location: article.php?id=$article#commentaires");
+  header("Location: article.php?id={$article}#commentaires");
   exit();
 }
 
@@ -339,7 +345,7 @@ function vpacl_form_processing_remove() {
   mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
   mysqli_close($bd);
 
-  header("Location: article.php?id=$article#commentaires");
+  header("Location: article.php?id={$article}#commentaires");
   exit();
 }
 
