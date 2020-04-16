@@ -43,7 +43,6 @@ function vpacl_print_actus(){
     $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
     if(mysqli_num_rows($res) > 0) {
         $data=array();
-        $current_row;
         while($current_row=mysqli_fetch_assoc($res)){
             array_push($data,$current_row);
         }
