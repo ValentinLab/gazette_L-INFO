@@ -56,7 +56,7 @@ function vpacl_print_people_sections() {
 function vpacl_print_last_section() {
   echo '<section>',
     '<h2>La Gazette de L-INFO recrute !</h2>',
-    '<p>Si vous souhaitez vous aussi faire partie de notre team, rien de plus simple. Envoyez-nous un mail grâce au lien dans le menu de navigation, et rejoignez l\'équipe. </p>';
+    '<p>Si vous souhaitez vous aussi faire partie de notre team, rien de plus simple. Envoyez-nous un mail grâce au lien dans le menu de navigation, et rejoignez l\'équipe. </p>',
   '</section>';
 }
 
@@ -95,7 +95,7 @@ function vpacl_print_person($person) {
     '<img src="', vpac_protect_data($image), '" width="150" height="200" alt="', $author, '">',
     '<h3>', $author, '</h3>',
     $function,
-    '<p>', $person['reBio'], '</p>',
+    $person['reBio'],
   '</article>';
 }
 

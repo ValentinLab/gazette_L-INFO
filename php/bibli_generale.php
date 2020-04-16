@@ -116,21 +116,23 @@ function vpac_parametres_controle($tab_global, $cles_obligatoires, $cles_faculta
 function vpac_parse_bbcode(&$text) {
   $url_regex = 'https?:\/\/[a-zA-Z0-9.\/\-?=]+';
 
-  // balises [p], [gras], [it], [citation], [liste], [item], [br]
+  // balises [p], [gras], [it], [citation], [liste], [item], [br] et \n
   $markups_general = array('/\[(\/)?p\]/',
                           '/\[(\/)?it\]/',
                           '/\[(\/)?gras\]/',
                           '/\[(\/)?citation\]/',
                           '/\[(\/)?liste\]/',
                           '/\[(\/)?item\]/',
-                          '/\[br\]/'
+                          '/\[br\]/',
+                          '/\\n|\r/'
                           );
   $replace_general = array('<\1p>',
                            '<\1em>',
                            '<\1strong>',
                            '<\1blockquote>',
                            '<\1ul>',
-                           '<\1li>'
+                           '<\1li>',
+                           ''
                           );
   $text =  preg_replace($markups_general, $replace_general, $text);
 
