@@ -282,14 +282,19 @@ function vpacl_parse_bbcode_unicode(&$text) {
  * @return array Tableau contenant les erreurs de saisie
  */
 function vpacl_form_processing_add() {
-  // Vérifier les clés présentes dans $_POST
+  // Vérification des clés présentes dans $_POST
   if(!vpac_parametres_controle('post', array('commentaire', 'btnAjouterCommentaire'))) {
     header('Location: ../index.php');
     exit();
   }
 
   // Vérification de l'id de l'article
-  if(!isset($_GET['id']) || !vpac_is_number($_GET['id']) || $_GET['id'] <= 0) {
+  if(!isset($_GET['id'])) {
+    header('Location: ../index.php');
+    exit();
+  }
+  $article = (int)vpac_decrypt_url($_GET['id']);
+  if(!vpac_is_number($article) || $article <= 0) {
     header('Location: ../index.php');
     exit();
   }
@@ -312,12 +317,12 @@ function vpacl_form_processing_add() {
     $auteur = mysqli_real_escape_string($bd, $_SESSION['user']['pseudo']);
     $commentaire = mysqli_real_escape_string($bd, $commentaire);
     $date = date('YmdHi');
-    $article = (int)$_GET['id'];
   $sql = "INSERT INTO commentaire (coAuteur, coTexte, coDate, coArticle)
           VALUES ('{$auteur}', '{$commentaire}', {$date}, {$article})";
   mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
   mysqli_close($bd);
 
+  $article = vpac_encrypt_url($article);
   header("Location: article.php?id={$article}#commentaires");
   exit();
 }
@@ -335,11 +340,15 @@ function vpacl_form_processing_remove() {
   }
 
   // Vérification de l'id de l'article
-  if(!isset($_GET['id']) || !vpac_is_number($_GET['id']) || $_GET['id'] <= 0) {
+  if(!isset($_GET['id'])) {
     header('Location: ../index.php');
     exit();
   }
-  $article = (int)$_GET['id'];
+  $article = (int)vpac_decrypt_url($_GET['id']);
+  if(!vpac_is_number($article) || $article <= 0) {
+    header('Location: ../index.php');
+    exit();
+  }
 
   // Vérification de l'id du commentaire
   $id = $_POST['commentaire_id'];
@@ -357,6 +366,7 @@ function vpacl_form_processing_remove() {
   mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
   mysqli_close($bd);
 
+  $article = vpac_encrypt_url($article);
   header("Location: article.php?id={$article}#commentaires");
   exit();
 }

@@ -7,6 +7,12 @@ require_once 'bibli_user.php';
 // Général
 // ----------------------------------------
 
+/**
+ * Crypter une donnée pour la transmettre dans une URL
+ * 
+ * @param mixed $value Valeur à crypter
+ * @return string Valeur cryptée
+ */
 function vpac_encrypt_url($value) {
   // Vecteur d'initialisation
   $iv_len = openssl_cipher_iv_length(CIPHER);
@@ -22,6 +28,12 @@ function vpac_encrypt_url($value) {
   return urlencode($url_data);
 }
 
+/**
+ * Décrypter une donnée transmise dans une URL
+ * 
+ * @param string $url_data Valeur cryptée
+ * @return mixed Valeur d'origine
+ */
 function vpac_decrypt_url($url_data) {
   $url_data = base64_decode($url_data);
 
