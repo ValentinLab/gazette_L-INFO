@@ -149,13 +149,13 @@ function vpacl_print_article($article){
 function vpacl_print_page_selector($numberOfPages) {
     $page = (isset($_GET['page'])) ? vpac_decrypt_url($_GET['page']) : 1;
 
-    echo'<article class="page_selector">',
-            'Pages :';
+    echo'<article id="page_selector">',
+            '<p>Pages :</p>';
             for($i=1;$i<=$numberOfPages;$i++){
                 if($i==$page){
-                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'" id="selected_page">',$i,'</a>';
+                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'" id="selected_page" class="button">',$i,'</a>';
                 }else{
-                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'">',$i,'</a>';
+                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'" class="button">',$i,'</a>';
                 }
             }
         echo'</article>';

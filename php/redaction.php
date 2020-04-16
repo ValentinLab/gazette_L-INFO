@@ -33,7 +33,7 @@ function vpacl_print_first_section() {
   echo '<section>',
     '<h2>Le mot de la rédaction</h2>',
     '<p>Passionnés par le journalisme d\'investigation depuis notre plus jeune âge, nous avons créé en 2019 ce site pour répondre à un réel besoin : celui de fournir une information fiable et précise sur la vie de la <abbr title="Licence Informatique">L-INFO</abbr> de l\'<a href="http://www.univ-fcomte.fr" target="_blank">Université de Franche-Comté</a>.</p>',
-      '<p>Découvrez les hommes et les femmes qui composent l\'équipe de choc de la Gazette de L-INFO. </p>',
+      '<p>Découvrez les hommes et les femmes qui composent l\'équipe de choc de la Gazette de L-INFO.</p>',
   '</section>';
 }
 
@@ -56,7 +56,7 @@ function vpacl_print_people_sections() {
 function vpacl_print_last_section() {
   echo '<section>',
     '<h2>La Gazette de L-INFO recrute !</h2>',
-    '<p>Si vous souhaitez vous aussi faire partie de notre team, rien de plus simple. Envoyez-nous un mail grâce au lien dans le menu de navigation, et rejoignez l\'équipe. </p>',
+    '<p>Si vous souhaitez vous aussi faire partie de notre team, rien de plus simple. Envoyez-nous un mail grâce au lien dans le menu de navigation, et rejoignez l\'équipe.</p>',
   '</section>';
 }
 
