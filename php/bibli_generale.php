@@ -137,7 +137,7 @@ function vpac_parse_bbcode(&$text) {
   // balises [a:url]
   $markups_link = array("/\[a:($url_regex)\]/",
                         '/\[a:(mailto:[a-zA-Z0-9\-_.]+@[a-zA-Z0-9\-.]+\??.*?)\]/',
-                        '/\[a:[a-zA-Z\/\-_.]+\]/',
+                        '/\[a:[a-zA-Z\/\-_.#]+\]/',
                         '/\[\/a\]/'
                        );
   $replace_link = array('<a href="\1" target="_blank">',
@@ -157,7 +157,12 @@ function vpac_parse_bbcode(&$text) {
   $text = preg_replace($markups_youtube, $replace_youtube, $text);
 }
 
-function  vpac_parse_bbcode_unicode(&$text) {
+/**
+ * Transformation du BBCode en unicode
+ * 
+ * @param string $text Texte à transformer
+ */
+function vpac_parse_bbcode_unicode(&$text) {
   // balise [#NNN] -> &#NNN ou [#xNNN] -> &#xNNN
   $text = preg_replace('/\[#([^]]+)\]/', '&#\1', $text);
 }

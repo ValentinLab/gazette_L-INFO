@@ -16,7 +16,7 @@ vpac_get_header('Rédaction');
 
 // Page
 vpacl_print_first_section();
-vpacl_print_people_section();
+vpacl_print_people_sections();
 vpacl_print_last_section();
 
 // Footer
@@ -40,7 +40,7 @@ function vpacl_print_first_section() {
 /**
  * Afficher les sections avec les membres de la rédaction
  */
-function vpacl_print_people_section() {
+function vpacl_print_people_sections() {
   // Obtenir les membres de la rédaction
   $categories_data = vpacl_extract_categories();
 
@@ -60,8 +60,13 @@ function vpacl_print_last_section() {
   '</section>';
 }
 
+/**
+ * Afficher une catégorie
+ * 
+ * @param array $cat Tableau contenant tous les éléments de la catégorie
+ */
 function vpacl_print_cat($cat) {
-  $title = (count($cat) == 1) ? "Notre {$cat[0]['catLibelle']}" : "Nos {$cat[0]['catLibelle']}";
+  $title = (count($cat) == 1) ? "Notre {$cat[0]['catLibelle']}" : 'Nos ' . vpacl_to_plural($cat[0]['catLibelle']);
 
   echo '<section>',
     '<h2>', $title, '</h2>';
@@ -71,22 +76,34 @@ function vpacl_print_cat($cat) {
   echo '</section>';
 }
 
+/**
+ * Afficher les informations sur une personne
+ * 
+ * @param array $person Tableau contenant les données d'une personne
+ */
 function vpacl_print_person($person) {
   // Valeurs
-  $image = file_exists('../upload/' . $person['rePseudo'] . '.jpg') ? '../upload/' . $person['rePseudo'] . '.jpg' : '../images/anonyme.jpg';
+  $image = file_exists("../upload/{$person['rePseudo']}.jpg") ? "../upload/{$person['rePseudo']}.jpg" : '../images/anonyme.jpg';
   $person = vpac_protect_data($person);
   $author = vpac_mb_ucfirst($person['utPrenom']) . ' ' . vpac_mb_ucfirst($person['utNom']);
   vpac_parse_bbcode($person['reBio']);
   vpac_parse_bbcode_unicode($person['reBio']);
+  $function = (!empty($person['reFonction'])) ? "<h4>{$person['reFonction']}</h4>": '';
 
   // Affichage
   echo '<article class="redacteur" id="', $person['rePseudo'], '">',
     '<img src="', vpac_protect_data($image), '" width="150" height="200" alt="', $author, '">',
     '<h3>', $author, '</h3>',
+    $function,
     '<p>', $person['reBio'], '</p>',
   '</article>';
 }
 
+/**
+ * Extraire les différentes catégories de la base de données
+ * 
+ * @return array Tableau avec les différentes catégories
+ */
 function vpacl_extract_categories() {
   //Requête SQL
   $bd = vpac_bd_connecter();
@@ -107,5 +124,21 @@ function vpacl_extract_categories() {
   mysqli_free_result($res);
 
   return $results;
+}
+
+/**
+ * Mettre une catégorie au pluriel
+ * 
+ * @param string Chaîne au singulier
+ * @param string Chaîne au pluriel
+ */
+function vpacl_to_plural($str) {
+  $strs = explode(' ', $str);
+  $res = '';
+  foreach($strs as $elmt) {
+    $res .= (next($strs)) ? "{$elmt}s " : "{$elmt}s";
+  }
+
+  return $res;
 }
 ?>

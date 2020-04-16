@@ -105,7 +105,7 @@ function vpacl_month_and_year_to_string($date) {
   
     $months = vpac_get_months();
   
-    return mb_strtolower($months[$month], 'UTF-8') . ' ' . $year;
+    return vpac_mb_ucfirst($months[$month]) . ' ' . $year;
 }
 
 /**
