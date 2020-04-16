@@ -36,9 +36,14 @@ function vpac_encrypt_url($value) {
  */
 function vpac_decrypt_url($url_data) {
   $url_data = base64_decode($url_data);
+  $iv_len = openssl_cipher_iv_length(CIPHER);
+
+  // Vérifier la taille de la  chaîne
+  if(strlen($url_data) <= $iv_len + TAG_LEN) {
+    return false;
+  }
 
   // Vi, tag et donnée
-  $iv_len = openssl_cipher_iv_length(CIPHER);
   $iv = substr($url_data, 0, $iv_len);
   $tag = substr($url_data, $iv_len, TAG_LEN);
   $url_data = substr($url_data, $iv_len + TAG_LEN);
