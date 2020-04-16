@@ -111,7 +111,7 @@ function vpacl_print_articles_section($title, $articles) {
  */
 function vpacl_print_article($article) {
   $article = vpac_protect_data($article);
-  echo '<a href="./php/article.php?id=', $article['arID'], '">',
+  echo '<a href="./php/article.php?id=', vpac_encrypt_url($article['arID']), '">',
           '<img src="', vpac_get_article_image($article['arID'], '.'), '" alt="', $article['arTitre'] ,'"><br>',
           $article['arTitre'],
        '</a>';

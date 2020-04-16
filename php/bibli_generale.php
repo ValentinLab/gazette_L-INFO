@@ -7,6 +7,33 @@ require_once 'bibli_user.php';
 // Général
 // ----------------------------------------
 
+function vpac_encrypt_url($value) {
+  // Vecteur d'initialisation
+  $iv_len = openssl_cipher_iv_length(CIPHER);
+  $iv = openssl_random_pseudo_bytes($iv_len);
+
+  // Crypter la valeur
+  $url_data = openssl_encrypt($value, CIPHER, base64_decode(KEY), OPENSSL_RAW_DATA, $iv, $tag);
+
+  // Ajouter l'iv et la signature
+  $url_data = $iv . $tag . $url_data;
+  $url_data = base64_encode($url_data);
+
+  return urlencode($url_data);
+}
+
+function vpac_decrypt_url($url_data) {
+  $url_data = base64_decode($url_data);
+
+  // Vi, tag et donnée
+  $iv_len = openssl_cipher_iv_length(CIPHER);
+  $iv = substr($url_data, 0, $iv_len);
+  $tag = substr($url_data, $iv_len, TAG_LEN);
+  $url_data = substr($url_data, $iv_len + TAG_LEN);
+
+  return openssl_decrypt($url_data, CIPHER, base64_decode(KEY), OPENSSL_RAW_DATA, $iv, $tag);
+}
+
 /**
  * Vérifier si une variable contient uniquement un nombre
  * 

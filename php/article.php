@@ -54,12 +54,11 @@ function vpacl_print_article($errors) {
     vpacl_print_error('Identifiant d\'article non fourni.');
     return;
   }
-  if(!vpac_is_number($_GET['id']) || $_GET['id'] <= 0) {
+  $id = (int)vpac_decrypt_url($_GET['id']);
+  if(!vpac_is_number($id) || $id <= 0) {
     vpacl_print_error('Identifiant d\'article invalide.');
     return;
   }
-
-  $id = (int)$_GET['id'];
 
   // Requête pour obtenir l'article et les commentaires
   $bd = vpac_bd_connecter();

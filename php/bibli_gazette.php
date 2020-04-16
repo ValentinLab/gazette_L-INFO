@@ -9,6 +9,11 @@ define('BD_NAME','gazette_bd');
 define('BD_USER','perignon_u');
 define('BD_PASS','perignon_p');
 
+// URL
+define('CIPHER', 'aes-128-gcm');
+define('KEY', '++/lMMTtpH23xuuxS/+Jlw==');
+define('TAG_LEN', 16);
+
 //Inscription
 define('LMIN_PSEUDO', 4);
 define('LMAX_PSEUDO', 20);
