@@ -100,7 +100,7 @@ function vpacl_print_edit($res) {
     return;
   }
 
-  // Vérifier que l'utilisateur connecté estt l'auteur de l'article
+  // Vérifier que l'utilisateur connecté est l'auteur de l'article
   if($data['utPseudo'] != $_SESSION['user']['pseudo'] || !$_SESSION['user']['redacteur']) {
     return;
   }
@@ -116,6 +116,7 @@ function vpacl_print_edit($res) {
  * @param object $res Résultat d'une requête sql permettant d'obtenir l'article
  */
 function vpacl_print_article_part($res) {
+  mysqli_data_seek($res, 0);
   $data = mysqli_fetch_assoc($res);
   $data = vpac_protect_data($data);
 

@@ -5,9 +5,9 @@
 
 // Base de données
 define('BD_SERVER','localhost');
-define('BD_NAME','claudel_gazette');
-define('BD_USER','claudel_u');
-define('BD_PASS','claudel_p');
+define('BD_NAME','gazette_bd');
+define('BD_USER','perignon_u');
+define('BD_PASS','perignon_p');
 
 // URL
 define('CIPHER', 'aes-128-gcm');
@@ -57,7 +57,7 @@ function vpac_get_nav($path = '..') {
   echo '<nav>',
           '<ul>',
               '<li><a href="', $path, '/">Accueil</a></li>',
-              '<li><a href="', $path, '/php/actus.php?page=1">Toute l\'actu</a></li>',
+              '<li><a href="', $path, '/php/actus.php">Toute l\'actu</a></li>',
               '<li><a href="', $path, '/php/recherche.php">Recherche</a></li>',
               '<li><a href="', $path, '/html/redaction.html">La rédac\'</a></li>',
               '<li>';

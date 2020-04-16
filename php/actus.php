@@ -31,77 +31,82 @@ if(mysqli_num_rows($res) > 0) {
 mysqli_free_result($res);
 
 $numberOfPages=(int)(count($data)/4)+1;
-vpac_print_page_selector($numberOfPages);
+vpacl_print_page_selector($numberOfPages);
 
-$data_by_month=vpac_classer_articles_par_mois($data);
-vpac_print_articles($data_by_month);
+$data_by_month=vpacl_classer_articles_par_mois($data);
+vpacl_print_articles($data_by_month);
 
 // Footer
 vpac_get_footer();
+ob_end_flush();
 
 /**
- * coupe une date pour ne retenir que l'année et le mois
- * 
- * @param date date au format YYYYMMDDhhmm
- * @return return date au format YYYYDD
+ * Couper une date pour ne retenir que l'année et le mois
+ *
+ * @param string $date Date au format YYYYMMDDhhmm
+ * @return string Date au format YYYYDD
  */
-function vpac_get_month_and_year($date){
+function vpacl_get_month_and_year($date){
     return substr($date,0,6);
 }
 
 /**
- * renvoie un tableau contenant les articles correspondant au numéro de la page, classés par mois
+ * Obtenir un tableau contenant les articles correspondant au numéro de la page, classés par mois
+ *
  * @param array $data Tableau contenant tous les articles de la page
- * @return array $return Tableau contenant les 4 articles de la page, indexé par mois
+ * @return array Tableau contenant les 4 articles de la page, indexé par mois
  */
-function vpac_classer_articles_par_mois(array $data){
+function vpacl_classer_articles_par_mois($data){
+    $page = (isset($_GET['page'])) ? vpac_decrypt_url($_GET['page']) : 1;
+
     $return=array();
-    for($i=($_GET['page']-1)*4;$i<=($_GET['page']-1)*4+3&&$i<count($data);++$i){
-        if(!array_key_exists(vpac_get_month_and_year($data[$i]['arDatePublication']),$return)){
-            $return[vpac_get_month_and_year($data[$i]['arDatePublication'])][0]=$data[$i];
+    for($i=($page-1)*4;$i<=($page-1)*4+3&&$i<count($data);++$i){
+        if(!array_key_exists(vpacl_get_month_and_year($data[$i]['arDatePublication']),$return)){
+            $return[vpacl_get_month_and_year($data[$i]['arDatePublication'])][0]=$data[$i];
         }else{
-            array_push($return[vpac_get_month_and_year($data[$i]['arDatePublication'])],$data[$i]);
+            array_push($return[vpacl_get_month_and_year($data[$i]['arDatePublication'])],$data[$i]);
         }
     }
     return $return;
 }
 
 /**
- * Transformation d'une date dans le format
+ * Transformer une date dans le format
  * Month Year
  * 
- * @param int $date date à transformer
+ * @param int $date Date à transformer
  */
-function vpac_month_and_year_to_string($date) {
-    
+function vpacl_month_and_year_to_string($date) {
     $month = (int)substr($date, -8, 2);
     $year = substr($date, 0, -8);
   
     $months = vpac_get_months();
   
     return mb_strtolower($months[$month], 'UTF-8') . ' ' . $year;
-  }
+}
 
 /**
- * Affiche le contenu principal de la page, 4 articles classés par mois
+ * Afficher le contenu principal de la page, 4 articles classés par mois
+ *
  * @param array $data_by_month Tableau indexé par mois, contenant les 4 articles
  */
-function vpac_print_articles(array $data_by_month){
+function vpacl_print_articles($data_by_month){
     foreach($data_by_month as &$value){
         echo'<section>',
-            '<h2>',vpac_month_and_year_to_string($value[0]['arDatePublication']),'</h2>';
+            '<h2>',vpacl_month_and_year_to_string($value[0]['arDatePublication']),'</h2>';
             foreach($value as &$article) { 
-                vpac_print_article($article);
+                vpacl_print_article($article);
             }
         echo'</section>';
     } 
 }
 
 /**
- * affiche un article
- * @param $article Tableau contenant les informations de l'article en question
+ * Afficher un article
+ * 
+ * @param array $article Tableau contenant les informations de l'article en question
  */
-function vpac_print_article(array $article){
+function vpacl_print_article($article){
     $image = (file_exists("../upload/{$article['arID']}.jpg")) ? "<img src=\"../upload/{$article['arID']}.jpg\" alt=\"{$article['arTitre']}\">" : '';
     echo'<article class="resume">',
             $image,
@@ -109,25 +114,27 @@ function vpac_print_article(array $article){
             '<p>',
             $article['arResume'],
             '</p>',
-            '<footer><a href="../php/article.php?id=',$article['arID'],'">Lire l\'article</a></footer>',
+            '<footer><a href="../php/article.php?id=',vpac_encrypt_url($article['arID']),'">Lire l\'article</a></footer>',
         '</article>';
 }
 
 /**
- * affiche la barre permettant de sélectionner la page souhaitée
- * @param $numberOfPages nombre de pages d'articles
+ * Afficher la barre permettant de sélectionner la page souhaitée
+ * 
+ * @param int $numberOfPages Nombre de pages d'articles
  */
-function vpac_print_page_selector($numberOfPages){
+function vpacl_print_page_selector($numberOfPages) {
+    $page = (isset($_GET['page'])) ? vpac_decrypt_url($_GET['page']) : 1;
+
     echo'<article class="page_selector">',
             'Pages :';
             for($i=1;$i<=$numberOfPages;$i++){
-                if($i==$_GET['page']){
-                    echo'<a href="../php/actus.php?page=',$i,'"><h5>',$i,'</h5></a>';
+                if($i==$page){
+                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'" id="selected_page">',$i,'</a>';
                 }else{
-                    echo'<a href="../php/actus.php?page=',$i,'"><h4>',$i,'</h4></a>';
+                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'">',$i,'</a>';
                 }
             }
         echo'</article>';
 }
-
 ?>
