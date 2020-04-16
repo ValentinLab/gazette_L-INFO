@@ -15,30 +15,54 @@ vpac_get_nav();
 vpac_get_header('L\'actu');
 
 // Articles
-$bd = vpac_bd_connecter();
-$sql = "SELECT * FROM article 
-        ORDER BY arDatePublication DESC";
-
-$res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
-if(mysqli_num_rows($res) > 0) {
-    $data=array();
-    $current_row;
-    while($current_row=mysqli_fetch_assoc($res)){
-        array_push($data,$current_row);
-    }
-    mysqli_close($bd);
-}
-mysqli_free_result($res);
-
-$numberOfPages=(int)(count($data)/4)+1;
-vpacl_print_page_selector($numberOfPages);
-
-$data_by_month=vpacl_classer_articles_par_mois($data);
-vpacl_print_articles($data_by_month);
+vpacl_print_actus();
 
 // Footer
 vpac_get_footer();
 ob_end_flush();
+
+/**
+ * Afficher la page actus.php
+ */
+function vpacl_print_actus(){
+    // Vérifier le paramètre id dans l'URL
+    if(isset($_GET['page'])){
+        $page = (int)vpac_decrypt_url($_GET['page']);
+        if(!vpac_is_number($page) || $page <= 0) {
+            vpac_print_error('Identifiant de page invalide.');
+            return;
+        }
+    }else{
+        $page=1;
+    }
+
+    $bd = vpac_bd_connecter();
+    $sql = "SELECT * FROM article 
+            ORDER BY arDatePublication DESC";
+
+    $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
+    if(mysqli_num_rows($res) > 0) {
+        $data=array();
+        $current_row;
+        while($current_row=mysqli_fetch_assoc($res)){
+            array_push($data,$current_row);
+        }
+        mysqli_close($bd);
+    }
+    mysqli_free_result($res);
+
+    $numberOfPages=(int)(count($data)/4)+1;
+    if($page > $numberOfPages) {
+        vpac_print_error('Identifiant de page invalide.');
+        return;
+    }
+
+
+    vpacl_print_page_selector($numberOfPages);
+
+    $data_by_month=vpacl_classer_articles_par_mois($data);
+    vpacl_print_articles($data_by_month);
+}
 
 /**
  * Couper une date pour ne retenir que l'année et le mois
@@ -57,7 +81,7 @@ function vpacl_get_month_and_year($date){
  * @return array Tableau contenant les 4 articles de la page, indexé par mois
  */
 function vpacl_classer_articles_par_mois($data){
-    $page = (isset($_GET['page'])) ? vpac_decrypt_url($_GET['page']) : 1;
+    $page = (isset($_GET['page'])) ? vpac_decrypt_url($_GET['page']) : 1;;
 
     $return=array();
     for($i=($page-1)*4;$i<=($page-1)*4+3&&$i<count($data);++$i){

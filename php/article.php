@@ -51,12 +51,12 @@ ob_end_flush();
 function vpacl_print_article($errors) {
   // Vérifier le paramètre id dans l'URL
   if(!isset($_GET['id'])) {
-    vpacl_print_error('Identifiant d\'article non fourni.');
+    vpac_print_error('Identifiant d\'article non fourni.');
     return;
   }
   $id = (int)vpac_decrypt_url($_GET['id']);
   if(!vpac_is_number($id) || $id <= 0) {
-    vpacl_print_error('Identifiant d\'article invalide.');
+    vpac_print_error('Identifiant d\'article invalide.');
     return;
   }
 
@@ -67,7 +67,7 @@ function vpacl_print_article($errors) {
 
   // Vérifier le nombre de résultats
   if(mysqli_num_rows($res) == 0) {
-    vpacl_print_error('Identifiant d\'article non reconnu.');
+    vpac_print_error('Identifiant d\'article non reconnu.');
     mysqli_free_result($res);
     mysqli_close($bd);
     return;
@@ -201,18 +201,7 @@ function vpacl_print_comments($res, $errors) {
   }
 }
 
-/**
- * Affichage d'une section d'erreur
- * 
- * @param string $array Message d'erreur
- */
-function vpacl_print_error($content) {
-  echo '<section>',
-         '<h2>Oups, il y a une erreur ...</h2>',
-         '<p>La page que vous avez demandée a terminé son exécution avec le message d\'erreur suivant :',
-         '<blockquote>', $content, '</blockquote>',
-       '</section>';
-}
+
 
 /**
  * Transformation du BBCode en HTML

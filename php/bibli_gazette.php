@@ -5,9 +5,9 @@
 
 // Base de données
 define('BD_SERVER','localhost');
-define('BD_NAME','gazette_bd');
-define('BD_USER','perignon_u');
-define('BD_PASS','perignon_p');
+define('BD_NAME','claudel_gazette');
+define('BD_USER','claudel_u');
+define('BD_PASS','claudel_p');
 
 // URL
 define('CIPHER', 'aes-128-gcm');
@@ -119,5 +119,18 @@ function vpac_get_article_image($id, $path = '..') {
   }
 
   return $image;
+}
+
+/**
+ * Affichage d'une section d'erreur
+ * 
+ * @param string $array Message d'erreur
+ */
+function vpac_print_error($content) {
+  echo '<section>',
+         '<h2>Oups, il y a une erreur ...</h2>',
+         '<p>La page que vous avez demandée a terminé son exécution avec le message d\'erreur suivant :',
+         '<blockquote>', $content, '</blockquote>',
+       '</section>';
 }
 ?>
