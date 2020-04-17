@@ -212,7 +212,7 @@ function vpac_print_checkbox($radio_numbers, $names, $values, $checked, $labels,
   for($i = 0; $i < $radio_numbers; ++$i) {
     $check_val = ($checked[$i]) ? ' checked' : '';
     $required_val = ($required[$i]) ? ' required' : '';
-    echo '<label><input type="checkbox" name="', $names[$i], '" value="', $values[$i], '"', $check_val, $required_val, '>', $labels[$i], '</label>';
+    echo '<input type="checkbox" name="', $names[$i], '" id="', $names[$i], '" value="', $values[$i], '"', $check_val, $required_val, '><label for="', $names[$i], '">', $labels[$i], '</label>';
   }
 }
 
@@ -231,7 +231,7 @@ function vpac_print_radio($name, $values, $default, $labels, $required) {
   $required_val = ($required) ? ' required' : '';
   for($i = 0; $i < $checkbox_numbers; ++$i) {
     $check_val = ($values[$i] == $default) ? ' checked' : '';
-    echo '<input type="radio" name="', $name, '" id="', $name, $i, '" value="', $values[$i], '" ',$check_val, $required_val, '><label for="', $name, $i, '" class="label_checkbox">', $labels[$i], '</label> ';
+    echo '<input type="radio" name="', $name, '" id="', $name, $i, '" value="', $values[$i], '" ',$check_val, $required_val, '><label for="', $name, $i, '"s>', $labels[$i], '</label> ';
   }
 }
 

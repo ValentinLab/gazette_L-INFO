@@ -4,7 +4,7 @@ require_once 'bibli_form.php';
 require_once 'bibli_user.php';
 
 // ----------------------------------------
-// Général
+// Gestion des URLs
 // ----------------------------------------
 
 /**
@@ -51,15 +51,9 @@ function vpac_decrypt_url($url_data) {
   return openssl_decrypt($url_data, CIPHER, base64_decode(KEY), OPENSSL_RAW_DATA, $iv, $tag);
 }
 
-/**
- * Vérifier si une variable contient uniquement un nombre
- * 
- * @param string $nb Valeur à vérifier
- * @return bool true si la variable ne contient qu'un nombre
- */
-function vpac_is_number($nb) {
-  return is_numeric($nb) && $nb == (int)$nb;
-}
+// ----------------------------------------
+// Vérification de données
+// ----------------------------------------
 
 /**
  * Protéger les chaînes de caractères
@@ -109,13 +103,25 @@ function vpac_parametres_controle($tab_global, $cles_obligatoires, $cles_faculta
 }
 
 /**
+ * Vérifier si une variable contient uniquement un nombre
+ * 
+ * @param string $nb Valeur à vérifier
+ * @return bool true si la variable ne contient qu'un nombre
+ */
+function vpac_is_number($nb) {
+  return is_numeric($nb) && $nb == (int)$nb;
+}
+
+// ----------------------------------------
+// Transformation de texte
+// ----------------------------------------
+
+/**
  * Transformation du BBCode en HTML
  * 
  * @param string $text Texte à transformer
  */
 function vpac_parse_bbcode(&$text) {
-  $url_regex = 'https?:\/\/[a-zA-Z0-9.\/\-?=]+';
-
   // balises [p], [gras], [it], [citation], [liste], [item], [br] et \n
   $markups_general = array('/\[(\/)?p\]/',
                           '/\[(\/)?it\]/',
@@ -136,16 +142,18 @@ function vpac_parse_bbcode(&$text) {
                           );
   $text =  preg_replace($markups_general, $replace_general, $text);
 
+  // Patterns
+  $url_regex = 'https?:\/\/[a-zA-Z0-9.\/\-?=]+';
+  $end_link = '(.+?)\[\/a\]';
+
   // balises [a:url]
-  $markups_link = array("/\[a:($url_regex)\]/",
-                        '/\[a:(mailto:[a-zA-Z0-9\-_.]+@[a-zA-Z0-9\-.]+\??.*?)\]/',
-                        '/\[a:[a-zA-Z\/\-_.#]+\]/',
-                        '/\[\/a\]/'
+  $markups_link = array("/\[a:($url_regex)\]$end_link/",
+                        "/\[a:(mailto:[a-zA-Z0-9\-_.]+@[a-zA-Z0-9\-.]+\??.*?)\]$end_link/",
+                        "/\[a:([a-zA-Z\/\-_.#]+)\]$end_link/"
                        );
-  $replace_link = array('<a href="\1" target="_blank">',
-                        '<a href="\1">',
-                        '<a href="\1">',
-                        '</a>'
+  $replace_link = array('<a href="\1" target="_blank">\2</a>',
+                        '<a href="\1">\2</a>',
+                        '<a href="\1">\2</a>'
                        );
   $text = preg_replace($markups_link, $replace_link, $text);
 
@@ -170,17 +178,6 @@ function vpac_parse_bbcode_unicode(&$text) {
 }
 
 /**
- * Obtenir un tableau contenant le nom de tous les mois
- * 
- * @return array Nom de tous les mois
- */
-function vpac_get_months() {
-  $months = array(1 => 'janvier');
-  array_push($months, 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aôut', 'septembre', 'octobre', 'novembre', 'décembre');
-  return $months;
-}
-
-/**
  * Mettre la première lettre d'une châine de caractères en majuscule
  * et les suivantes en minuscule
  * 
@@ -192,5 +189,20 @@ function vpac_mb_ucfirst($str) {
   $start = mb_strtoupper(mb_substr($str, 0, 1, 'UTF-8'), 'UTF-8');
 
   return $start . mb_substr($str, 1, mb_strlen($str), 'UTF-8');
+}
+
+// ----------------------------------------
+// Autre
+// ----------------------------------------
+
+/**
+ * Obtenir un tableau contenant le nom de tous les mois
+ * 
+ * @return array Nom de tous les mois
+ */
+function vpac_get_months() {
+  $months = array(1 => 'janvier');
+  array_push($months, 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aôut', 'septembre', 'octobre', 'novembre', 'décembre');
+  return $months;
 }
 ?>

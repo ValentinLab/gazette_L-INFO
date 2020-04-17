@@ -14,7 +14,7 @@ vpac_get_head('La rédac\'');
 vpac_get_nav();
 vpac_get_header('Rédaction');
 
-// Page
+// Membres de la rédaction
 vpacl_print_first_section();
 vpacl_print_people_sections();
 vpacl_print_last_section();

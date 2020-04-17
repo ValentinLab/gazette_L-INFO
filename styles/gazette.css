@@ -60,6 +60,7 @@ body {
   line-height: 1.2;
   background: #EEE; 
   background: linear-gradient(to bottom right, #E0E0E0, #909090);
+  min-height: calc(100vh - 40px);
 }
 
 i, em {
@@ -157,6 +158,8 @@ nav {
   z-index: 1000;
   top: 0px;
   width: 100%;
+  height: 40px;
+  font-size: 14px;
 }
 
 nav > ul {
@@ -191,11 +194,13 @@ nav > ul > li:last-of-type > a::before {
 }
 
 nav a[href], nav a[href]:visited {
-  display: block;
+  display: inline-block;
   font-weight: bold;
   color: black;
   transition: background 0.4s linear 0s;
-  padding: 12px 20px;
+  padding: 0 20px;
+  height: 40px;
+  line-height: 40px;
 }
 
 nav a[href]:hover {
@@ -246,8 +251,8 @@ Header
 
 body > header {
   position: relative;
-  margin-top: 41px;
-  background:  url(../images/fond.png);
+  margin-top: 40px;
+  background: url(../images/fond.png);
   height: 200px;
 }
 
@@ -556,6 +561,10 @@ article#page_selector p {
   margin-right: 7px;
 }
 
+article#page_selector a:last-child {
+  transform: rotate(180deg);
+}
+
 /****************************************************************
 Formulaires
 ****************************************************************/
@@ -603,29 +612,48 @@ form select {
   margin: 0 2px;
 }
 
-/* Boutons */
+/* Checkboxs */
 
-form input[type=submit], form input[type=reset], a.button {
-  display: inline-block;
-  margin: 0 10px 0 0;
-  border: 2px solid red;
-  background-color: transparent;
-  color: red;
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 13px;
-  font-weight: bold;
-  border-radius: 2px;
-  padding: 6px 10px;
-  cursor: pointer;
-  transition: all 0.4s ease;
-  text-decoration: none;
+input[type=checkbox] {
+  display: none;
 }
 
-input[type=submit]:hover, input[type=reset]:hover, a.button:hover {
-  background: red;
+input[type=checkbox] + label {
+  position: relative;
+}
+
+input[type=checkbox] + label:before {
+  content: '';
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  margin-right: 5px;
+}
+
+input[type=checkbox]:checked + label:after {
+  content: '\2713';
+  position: absolute;
+  top: 3px;
+  left: 2px;
   color: white;
-  text-decoration: none;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+input[type=checkbox]:checked + label:before {
+  background-color: red;
+}
+
+input[type=checkbox]:hover + label:before {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+input[type=checkbox]:checked:hover + label:before {
+  background-color: #cc0000;
 }
 
 /* Boutons radio */
@@ -667,11 +695,12 @@ input[type=radio]:checked + label:after {
   content: '';
   position: absolute;
   display: inline-block;
-  width: 7px;
-  height: 7px;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
   background-color: #ffffff;
-  top: 4.5px;
-  left: 3.3px;
+  top: calc(14px/2 + 1px);
+  left: calc(14px/2);
   border-radius: 100%;
 }
 
@@ -695,6 +724,55 @@ form #form-uncentered {
 
 form #form-uncentered td[colspan] {
   text-align: left;
+}
+
+/* Boutons */
+
+form input[type=submit], form input[type=reset], a.button {
+  display: inline-block;
+  margin: 0 10px 0 0;
+  border: 2px solid red;
+  background-color: transparent;
+  color: red;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 2px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition-property: border, color, background;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
+  text-decoration: none;
+}
+
+input[type=submit]:hover, input[type=reset]:hover, a.button:hover {
+  background: red;
+  color: white;
+  text-decoration: none;
+}
+
+a.button_selected {
+  border-color: #cc0000;
+  color: #cc0000;
+}
+
+a.button_selected:hover {
+  border-color: #cc0000;
+  background-color: #cc0000;
+}
+
+a.button_disabled {
+  border-color: rgba(255, 0, 0, 0.2);
+  color: rgba(255, 0, 0, 0.2);
+  cursor: default;
+  pointer-events: none;
+}
+
+a.button_disabled:hover {
+  background-color: transparent;
+  color: rgba(255, 0, 0, 0.2);
 }
 
 /* Erreurs du formulaire */
