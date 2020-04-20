@@ -65,7 +65,7 @@ function vpac_get_nav($path = '..') {
                 echo '<a href="#">', htmlentities($_SESSION['user']['pseudo']), '</a>',
                         '<ul>',
                           '<li><a href="', $path, '/php/compte.php">Mon profil</a></li>',
-                          ($_SESSION['user']['redacteur']) ? "<li><a href=\"{$path}/php/edition.php\">Nouvel article</a></li>" : '',
+                          ($_SESSION['user']['redacteur']) ? "<li><a href=\"{$path}/php/nouveau.php\">Nouvel article</a></li>" : '',
                           ($_SESSION['user']['administrateur']) ? "<li><a href=\"{$path}/php/admin.php\">Administration</a></li>" : '',
                           '<li><a href="', $path, '/php/deconnexion.php">Se déconnecter</a></li>',
                         '</ul>';
