@@ -42,7 +42,7 @@ function vpac_print_table_form_invisible_input($name, $value) {
 /**
  * Affichage d'un textarea dans une ligne de tableau
  * 
- * @param string $name NOm de l'input
+ * @param string $name Nom de l'input
  * @param int $rows Nombre de lignes du textarea
  * @param int $cols Nombre de lignes du  textarea
  */
@@ -53,6 +53,38 @@ function vpac_print_table_form_textarea($name, $rows = 10, $cols = 50, $required
             '<textarea name="', $name, '" rows="', $rows, '" cols="', $cols,'" ', $required_val, '></textarea>',
           '</td>',
         '</tr>';
+}
+
+/**
+ * Afficher un select dans une ligne de tableau
+ * 
+ * @param string $label       Label à afficher
+ * @param string $name        Nom du select
+ * @param array  $values      Valeurs du select
+ * @param mixed  $default_day Valeur sélectionnée par défaut
+ */
+function vpac_print_table_form_select($label, $name, $values, $default_value) {
+  echo '<tr>',
+    '<td>', $label, ' :</td>',
+    '<td>', vpac_print_list($name, $values, $default_value), '</td>',
+  '</tr>';
+}
+
+/**
+ * Afficher un select avec des nombres dans une ligne de tableau
+ * 
+ * @param string $label       Label à afficher
+ * @param string $name        Nom du select
+ * @param int    $start       Valeur de départt
+ * @param int    $end         Valeur de fin
+ * @param int    $step        Pas d'incrémentation
+ * @param int    $default_day Nombre sélectionné par défaut
+ */
+function vpac_print_table_form_select_number($label, $name, $start, $end, $step, $default_value) {
+  echo '<tr>',
+    '<td>', $label, ' :</td>',
+    '<td>', vpac_print_list_number($name, $start, $end, $step, $default_value), '<td>',
+  '</tr>';
 }
 
 /**

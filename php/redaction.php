@@ -106,16 +106,16 @@ function vpacl_print_person($person) {
  */
 function vpacl_extract_categories() {
   //Requête SQL
-  $bd = vpac_bd_connecter();
+  $db = vpac_db_connect();
   $sql = 'SELECT rePseudo, utNom, utPrenom, reBio, reCategorie, reFonction, catLibelle
           FROM redacteur, categorie, utilisateur
           WHERE reCategorie = catID
             AND rePseudo = utPseudo
             AND reBio IS NOT NULL
-            AND rePseudo IN (Select utPseudo FROM utilisateur WHERE utStatut = 1 OR utStatut = 3)
-          ORDER BY reCategorie';
-  $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
-  mysqli_close($bd);
+            AND (utStatut = 1 OR utStatut = 3)
+          ORDER BY reCategorie, utPseudo';
+  $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  mysqli_close($db);
 
   $results = array();
   while($data = mysqli_fetch_assoc($res)) {

@@ -6,7 +6,7 @@ require_once 'bibli_gazette.php';
 require_once 'bibli_generale.php';
 
 // Vérifier l'authentification
-if(isset($_SESSION['utPseudo'])) {
+if(isset($_SESSION['user'])) {
   header('Location: ../index.php');
   exit();
 }
@@ -201,14 +201,14 @@ function vpacl_form_processing() {
   }
 
   // Requête à la bd
-  $bd = vpac_bd_connecter();
-  $pseudo_e = mysqli_real_escape_string($bd, $pseudo);
-  $email = mysqli_real_escape_string($bd, $email);
+  $db = vpac_db_connect();
+  $pseudo_e = mysqli_real_escape_string($db, $pseudo);
+  $email = mysqli_real_escape_string($db, $email);
   $sql = "SELECT utPseudo, utEmail
           FROM utilisateur
           WHERE utPseudo='{$pseudo}'
              OR utEmail='{$email}'";
-  $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
+  $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
   if(mysqli_num_rows($res) > 0) {
     $data = mysqli_fetch_assoc($res);
     if($data['utPseudo'] == $pseudo) {
@@ -216,7 +216,7 @@ function vpacl_form_processing() {
     } else {
       $errors[] = 'Un compte est déjà lié à cet email.';
     }
-    mysqli_close($bd);
+    mysqli_close($db);
   }
   mysqli_free_result($res);
 
@@ -225,16 +225,16 @@ function vpacl_form_processing() {
   }
 
   // Inscription d'un nouvel utilisateur
-  $nom = mysqli_real_escape_string($bd, $nom);
-  $prenom = mysqli_real_escape_string($bd, $prenom);
+  $nom = mysqli_real_escape_string($db, $nom);
+  $prenom = mysqli_real_escape_string($db, $prenom);
   $passe = password_hash($passe, PASSWORD_DEFAULT);
   $sql = "INSERT INTO utilisateur
           VALUES ('{$pseudo_e}', '{$nom}', '{$prenom}', '{$email}', '{$passe}', {$naissance}, 0, '{$civilite}', {$mails_pourris})";
-  mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
-  mysqli_close($bd);
+  mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  mysqli_close($db);
 
   // Mémoriser dans la variable de session
-  $_SESSION['user'] = array('pseudo' => $pseudo, 'redacteur' => false, 'administrateur' => false);
+  vpac_connect_user($pseudo, 0);
 
   header('Location: ../index.php');
 }

@@ -42,7 +42,7 @@ ob_end_flush();
  */
 function vpacl_extract_articles() {
   // Connexion à la bd et requête
-  $bd = vpac_bd_connecter();
+  $db = vpac_db_connect();
   $sql = '(SELECT arID, arTitre, 1 AS type
           FROM article
           ORDER BY arDatePublication DESC
@@ -59,7 +59,7 @@ function vpacl_extract_articles() {
           FROM article
           ORDER BY rand()
           LIMIT 0, 9)';
-  $res = mysqli_query($bd,$sql) or vpac_bd_erreur($bd,$sql);
+  $res = mysqli_query($db,$sql) or vpac_bd_error($db,$sql);
 
   // Extraction des résultats
   $result = array();
@@ -84,7 +84,7 @@ function vpacl_extract_articles() {
   }
 
   mysqli_free_result($res);
-  mysqli_close($bd);
+  mysqli_close($db);
 
   return $result;
 }

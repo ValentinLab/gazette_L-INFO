@@ -106,15 +106,15 @@ function vpacl_form_processing() {
   }
 
   // Requête à la bd
-  $bd = vpac_bd_connecter();
-  $pseudo_e = mysqli_real_escape_string($bd, $pseudo);
+  $db = vpac_db_connect();
+  $pseudo_e = mysqli_real_escape_string($db, $pseudo);
   $sql = "SELECT utPseudo, utStatut
           FROM utilisateur
           WHERE utPseudo='{$pseudo_e}'";
-  $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
+  $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
   $data = mysqli_fetch_assoc($res);
   mysqli_free_result($res);
-  mysqli_close($bd);
+  mysqli_close($db);
 
   $hash = password_hash($_POST['passe'], PASSWORD_DEFAULT);
   if($data == NULL || !password_verify($_POST['passe'], $hash)) {
@@ -126,9 +126,7 @@ function vpacl_form_processing() {
   }
 
   // Mémoriser dans la variable de session
-  $redacteur = ($data['utStatut'] == 1 || $data['utStatut'] == 3);
-  $administrateur = ($data['utStatut'] == 2 || $data['utStatut'] == 3);
-  $_SESSION['user'] = array('pseudo' => $pseudo, 'redacteur' => $redacteur, 'administrateur' => $administrateur);
+  vpac_connect_user($pseudo, $data['utStatut']);
 
   header("Location: {$referer}");
 }

@@ -80,6 +80,7 @@ h3 {
   font-size: 18px;
   font-weight: bold;
   text-decoration: underline;
+  padding-bottom: 3px;
 }
 
 h4 {
@@ -236,6 +237,10 @@ nav > ul > li > ul:before {
   transform: rotate(45deg);
 }
 
+nav > ul > li > ul > li > a[href] {
+  display: block;
+}
+
 nav > ul > li:hover > ul {
   display: block;
 }
@@ -310,6 +315,279 @@ section article h3 {
   font-size: 16px;
   text-decoration: none;
   margin-bottom: 20px;
+}
+
+/****************************************************************
+Tableau de données
+****************************************************************/
+
+#data_table {
+  width: 100%;
+}
+
+#data_table thead {
+  font-size: 15px;
+  text-align: left;
+  border-top: 1px solid red;
+  border-bottom: 1px solid red;
+}
+
+#data_table th {
+  padding: 15px 14px
+}
+
+#data_table tbody > tr:nth-child(even) {
+  background-color: rgba(5, 10, 20, 0.1);
+}
+
+#data_table tbody > tr:hover {
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+#data_table td {
+  padding: 10px 14px;
+}
+
+/****************************************************************
+Formulaires
+****************************************************************/
+
+/* Tableau */
+
+form table {
+  min-width: 500px;
+  margin: 15px auto;
+}
+
+form table td {
+  padding: 7px;
+  width: 250px;
+}
+
+form td:first-child:not(:only-child) {
+  text-align: right;
+}
+
+form td[colspan] {
+  text-align: center;
+}
+
+form td[colspan] label {
+  text-align: left;
+  display: block;
+  margin: 10px 10px 10px 60px;
+}
+
+/* Champs texte */
+
+form input[type=text], form input[type=email], form input[type=password] {
+  width: 200px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 7px 12px;
+  font-size: 14px;
+  border-radius: 2px;
+}
+
+/* Select */
+
+form select {
+  margin: 0 2px;
+}
+
+/* Checkboxs */
+
+form input[type=checkbox] {
+  display: none;
+}
+
+form input[type=checkbox] + label {
+  position: relative;
+}
+
+form input[type=checkbox] + label:before {
+  content: '';
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  margin-right: 5px;
+}
+
+form input[type=checkbox]:checked + label:after {
+  content: '\2713';
+  position: absolute;
+  top: 3px;
+  left: 2px;
+  color: white;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+form input[type=checkbox]:checked + label:before {
+  background-color: red;
+}
+
+form input[type=checkbox]:hover + label:before {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+form input[type=checkbox]:checked:hover + label:before {
+  background-color: #cc0000;
+}
+
+/* Boutons radio */
+
+form input[type=radio] {
+  display: none;
+}
+
+form input[type=radio] + label {
+  position: relative;
+  margin-right: 5px;
+}
+
+form input[type=radio] + label:before {
+  content: '';
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 100%;
+  margin-right: 5px;
+}
+
+form input[type=radio]:hover + label:before {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+form input[type=radio]:checked:hover + label:before {
+  background-color: #cc0000;
+}
+
+form input[type=radio]:checked + label:before {
+  background-color: red;
+}
+
+form input[type=radio]:checked + label:after {
+  content: '';
+  position: absolute;
+  display: inline-block;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background-color: #ffffff;
+  top: calc(14px/2 + 1px);
+  left: calc(14px/2);
+  border-radius: 100%;
+}
+
+/* Fieldset */
+
+form fieldset {
+  margin-top: 5px;
+  padding: 2px 5px;
+  border: 1px solid grey;
+}
+
+form legend {
+  margin-left: 8px;
+}
+
+/* Formulaire non centré */
+
+form > label {
+  display: block;
+  margin: 10px 0;
+}
+
+form #form_uncentered {
+  margin: 0;
+}
+
+form #form_uncentered td[colspan] {
+  text-align: left;
+}
+
+/* Boutons */
+
+form input[type=submit], form input[type=reset], a.button {
+  display: inline-block;
+  margin: 0 10px 0 0;
+  border: 2px solid red;
+  background-color: transparent;
+  color: red;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 2px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition-property: border, color, background;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
+  text-decoration: none;
+}
+
+input[type=submit]:hover, input[type=reset]:hover, a.button:hover {
+  background: red;
+  color: white;
+  text-decoration: none;
+}
+
+a.button_selected {
+  border-color: #cc0000;
+  color: #cc0000;
+}
+
+a.button_selected:hover {
+  border-color: #cc0000;
+  background-color: #cc0000;
+}
+
+a.button_disabled {
+  border-color: rgba(255, 0, 0, 0.2);
+  color: rgba(255, 0, 0, 0.2);
+  cursor: default;
+  pointer-events: none;
+}
+
+a.button_disabled:hover {
+  background-color: transparent;
+  color: rgba(255, 0, 0, 0.2);
+}
+
+/* Erreurs du formulaire */
+
+#errors, #errors-full-size {
+  border: 2px solid red;
+  margin: auto;
+  color: red;
+  padding: 10px 6px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+#errors {
+  width: 705px;
+}
+
+#errors-full-size {
+  margin-bottom: 5px;
+}
+
+#errors p, #errors-full-size p {
+  margin: 0 0;
+}
+
+#errors ul, #errors-full-size ul {
+  margin-top: 4px;
 }
 
 /****************************************************************************************
@@ -565,239 +843,45 @@ article#page_selector a:last-child {
   transform: rotate(180deg);
 }
 
-/****************************************************************
-Formulaires
-****************************************************************/
+/****************************************************************************************
+administration.php
+****************************************************************************************/
 
-/* Tableau */
-
-form table {
-  min-width: 500px;
-  margin: 15px auto;
+#admin_rights {
+  margin-bottom: 10px;
 }
 
-form table td {
-  padding: 7px;
-  width: 250px;
+#user_articles {
+  display: none;
 }
 
-form td:first-child:not(:only-child) {
-  text-align: right;
-}
-
-form td[colspan] {
-  text-align: center;
-}
-
-form td[colspan] label {
-  text-align: left;
+#user_articles + label {
   display: block;
-  margin: 10px 10px 10px 60px;
-}
-
-/* Champs texte */
-
-form input[type=text], form input[type=email], form input[type=password] {
-  width: 200px;
-  border: none;
-  background-color: rgba(0, 0, 0, 0.1);
-  padding: 7px 12px;
-  font-size: 14px;
-  border-radius: 2px;
-}
-
-/* Select */
-
-form select {
-  margin: 0 2px;
-}
-
-/* Checkboxs */
-
-input[type=checkbox] {
-  display: none;
-}
-
-input[type=checkbox] + label {
-  position: relative;
-}
-
-input[type=checkbox] + label:before {
-  content: '';
-  position: relative;
-  top: 2px;
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
-  margin-right: 5px;
-}
-
-input[type=checkbox]:checked + label:after {
-  content: '\2713';
-  position: absolute;
-  top: 3px;
-  left: 2px;
-  color: white;
-  font-weight: bold;
-  font-size: 11px;
-}
-
-input[type=checkbox]:checked + label:before {
-  background-color: red;
-}
-
-input[type=checkbox]:hover + label:before {
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-input[type=checkbox]:checked:hover + label:before {
-  background-color: #cc0000;
-}
-
-/* Boutons radio */
-
-input[type=radio] {
-  display: none;
-}
-
-input[type=radio] + label {
-  position: relative;
-  margin-right: 5px;
-}
-
-input[type=radio] + label:before {
-  content: '';
-  position: relative;
-  top: 2px;
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 100%;
-  margin-right: 5px;
-}
-
-input[type=radio]:hover + label:before {
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-input[type=radio]:checked:hover + label:before {
-  background-color: #cc0000;
-}
-
-input[type=radio]:checked + label:before {
-  background-color: red;
-}
-
-input[type=radio]:checked + label:after {
-  content: '';
-  position: absolute;
-  display: inline-block;
-  transform: translate(-50%, -50%);
-  width: 6px;
-  height: 6px;
-  background-color: #ffffff;
-  top: calc(14px/2 + 1px);
-  left: calc(14px/2);
-  border-radius: 100%;
-}
-
-/* Fieldset */
-
-fieldset {
-  margin-top: 5px;
-  padding: 2px 5px;
-  border: 1px solid grey;
-}
-
-legend {
-  margin-left: 8px;
-}
-
-/* Formulaire non centré */
-
-form #form-uncentered {
-  margin: 0;
-}
-
-form #form-uncentered td[colspan] {
-  text-align: left;
-}
-
-/* Boutons */
-
-form input[type=submit], form input[type=reset], a.button {
-  display: inline-block;
-  margin: 0 10px 0 0;
-  border: 2px solid red;
-  background-color: transparent;
-  color: red;
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 13px;
-  font-weight: bold;
-  border-radius: 2px;
-  padding: 6px 10px;
+  font-style: italic;
   cursor: pointer;
-  transition-property: border, color, background;
-  transition-duration: 0.4s;
-  transition-timing-function: ease;
-  text-decoration: none;
 }
 
-input[type=submit]:hover, input[type=reset]:hover, a.button:hover {
-  background: red;
-  color: white;
-  text-decoration: none;
+#user_articles + label:after {
+  content: ' afficher';
 }
 
-a.button_selected {
-  border-color: #cc0000;
-  color: #cc0000;
+#user_articles:checked + label:after {
+  content: ' effacer';
 }
 
-a.button_selected:hover {
-  border-color: #cc0000;
-  background-color: #cc0000;
+#user_articles + label + ul {
+  display: none;
+  margin-top: 5px;
 }
 
-a.button_disabled {
-  border-color: rgba(255, 0, 0, 0.2);
-  color: rgba(255, 0, 0, 0.2);
-  cursor: default;
-  pointer-events: none;
+#user_articles + label + ul li {
+  margin-bottom: 4px;
 }
 
-a.button_disabled:hover {
-  background-color: transparent;
-  color: rgba(255, 0, 0, 0.2);
+#user_articles + label + ul li:last-child {
+  margin-bottom: 0;
 }
 
-/* Erreurs du formulaire */
-
-#errors, #errors-full-size {
-  border: 2px solid red;
-  margin: auto;
-  color: red;
-  padding: 10px 6px;
-  font-size: 13px;
-  font-weight: bold;
-}
-
-#errors {
-  width: 705px;
-}
-
-#errors-full-size {
-  margin-bottom: 5px;
-}
-
-#errors p, #errors-full-size p {
-  margin: 0 0;
-}
-
-#errors ul, #errors-full-size ul {
-  margin-top: 4px;
+#user_articles:checked + label + ul {
+  display: block;
 }

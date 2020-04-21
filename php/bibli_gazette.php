@@ -14,6 +14,11 @@ define('CIPHER', 'aes-128-gcm');
 define('KEY', '++/lMMTtpH23xuuxS/+Jlw==');
 define('TAG_LEN', 16);
 
+// Droits des utilisateurs
+define('ALL_U', 0b00);
+define('WRITER_U', 0b01);
+define('ADMINISTRATOR_U', 0b10);
+
 //Inscription
 define('LMIN_PSEUDO', 4);
 define('LMAX_PSEUDO', 20);
@@ -65,8 +70,8 @@ function vpac_get_nav($path = '..') {
                 echo '<a href="#">', htmlentities($_SESSION['user']['pseudo']), '</a>',
                         '<ul>',
                           '<li><a href="', $path, '/php/compte.php">Mon profil</a></li>',
-                          ($_SESSION['user']['redacteur']) ? "<li><a href=\"{$path}/php/edition.php\">Nouvel article</a></li>" : '',
-                          ($_SESSION['user']['administrateur']) ? "<li><a href=\"{$path}/php/admin.php\">Administration</a></li>" : '',
+                          ($_SESSION['user']['writer']) ? "<li><a href=\"{$path}/php/edition.php\">Nouvel article</a></li>" : '',
+                          ($_SESSION['user']['administrator']) ? "<li><a href=\"{$path}/php/administration.php\">Administration</a></li>" : '',
                           '<li><a href="', $path, '/php/deconnexion.php">Se déconnecter</a></li>',
                         '</ul>';
               } else {

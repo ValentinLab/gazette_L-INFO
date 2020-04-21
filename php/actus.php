@@ -36,17 +36,17 @@ function vpacl_print_actus(){
         $page=1;
     }
 
-    $bd = vpac_bd_connecter();
+    $db = vpac_db_connect();
     $sql = "SELECT * FROM article 
             ORDER BY arDatePublication DESC";
 
-    $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
+    $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
     if(mysqli_num_rows($res) > 0) {
         $data=array();
         while($current_row=mysqli_fetch_assoc($res)){
             array_push($data,$current_row);
         }
-        mysqli_close($bd);
+        mysqli_close($db);
     }
     mysqli_free_result($res);
 

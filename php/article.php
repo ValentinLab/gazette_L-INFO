@@ -61,15 +61,15 @@ function vpacl_print_article($errors) {
   }
 
   // Requête pour obtenir l'article et les commentaires
-  $bd = vpac_bd_connecter();
+  $db = vpac_db_connect();
   $sql = "SELECT * FROM ((article INNER JOIN utilisateur ON arAuteur = utPseudo) LEFT OUTER JOIN redacteur ON utPseudo = rePseudo) LEFT OUTER JOIN commentaire ON arID = coArticle WHERE arID = $id ORDER BY coDate DESC, coID DESC";
-  $res = mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
+  $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
 
   // Vérifier le nombre de résultats
   if(mysqli_num_rows($res) == 0) {
     vpac_print_error('Identifiant d\'article non reconnu.');
     mysqli_free_result($res);
-    mysqli_close($bd);
+    mysqli_close($db);
     return;
   }
 
@@ -80,7 +80,7 @@ function vpacl_print_article($errors) {
   vpacl_print_comments($res, $errors);
 
   mysqli_free_result($res);
-  mysqli_close($bd);
+  mysqli_close($db);
 }
 
 /**
@@ -101,7 +101,7 @@ function vpacl_print_edit($res) {
   }
 
   // Vérifier que l'utilisateur connecté est l'auteur de l'article
-  if($data['utPseudo'] != $_SESSION['user']['pseudo'] || !$_SESSION['user']['redacteur']) {
+  if($data['utPseudo'] != $_SESSION['user']['pseudo'] || !$_SESSION['user']['writer']) {
     return;
   }
 
@@ -192,7 +192,7 @@ function vpacl_print_comments($res, $errors) {
     echo '<form action="" method="post">',
           '<fieldset>',
             '<legend>Ajoutez un commentaire</legend>',
-            '<table id="form-uncentered">';
+            '<table id="form_uncentered">';
               vpac_print_table_form_textarea('commentaire', 15, 70, true);
               vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnAjouterCommentaire'));
             echo '</table>',
@@ -239,14 +239,14 @@ function vpacl_form_processing_add() {
   }
 
   // Requête SQL
-  $bd = vpac_bd_connecter();
-    $auteur = mysqli_real_escape_string($bd, $_SESSION['user']['pseudo']);
-    $commentaire = mysqli_real_escape_string($bd, $commentaire);
+  $db = vpac_db_connect();
+    $auteur = mysqli_real_escape_string($db, $_SESSION['user']['pseudo']);
+    $commentaire = mysqli_real_escape_string($db, $commentaire);
     $date = date('YmdHi');
   $sql = "INSERT INTO commentaire (coAuteur, coTexte, coDate, coArticle)
           VALUES ('{$auteur}', '{$commentaire}', {$date}, {$article})";
-  mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
-  mysqli_close($bd);
+  mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  mysqli_close($db);
 
   $article = vpac_encrypt_url($article);
   header("Location: article.php?id={$article}#commentaires");
@@ -284,13 +284,13 @@ function vpacl_form_processing_remove() {
   }
 
   // Requête SQL
-  $bd = vpac_bd_connecter();
-    $auteur = mysqli_real_escape_string($bd, $_SESSION['user']['pseudo']);
+  $db = vpac_db_connect();
+    $auteur = mysqli_real_escape_string($db, $_SESSION['user']['pseudo']);
   $sql = "DELETE FROM commentaire
           WHERE coAuteur = '{$auteur}'
             AND coID = $id";
-  mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
-  mysqli_close($bd);
+  mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  mysqli_close($db);
 
   $article = vpac_encrypt_url($article);
   header("Location: article.php?id={$article}#commentaires");
