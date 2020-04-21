@@ -18,7 +18,7 @@ if(isset($_SESSION['utPseudo'])) {
 $errors = array();
 if(isset($_POST['btnInscription'])) {
   $errors = vpacl_form_processing();
-}
+}var_dump($errors);
 
 // ----------------------------------------
 // Page
@@ -172,7 +172,7 @@ function vpacl_form_processing() {
   if($passe_len == 0) {
     $errors[] = 'Le mot de passe ne peut pas être vide.';
   } elseif($passe_len > 255) {
-    $errors[] = 'Le mot de passe ne peut pas contenir plus de 255 caractères.';
+    $errors[] = "Le mot de passe ne peut pas contenir plus de 255 caractères. Actuellement $passe_len";
   }
 
   // Vérification du mot de passe 2
