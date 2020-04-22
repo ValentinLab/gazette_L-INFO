@@ -9,6 +9,14 @@ require_once 'bibli_gazette.php';
 vpac_check_authentication(ADMINISTRATOR_U);
 
 // ----------------------------------------
+// Traitement du formulaire
+// ----------------------------------------
+
+if(isset($_POST['btnChangeRights'])) {
+  vpacl_form_processing();
+}
+
+// ----------------------------------------
 // Page
 // ----------------------------------------
 
@@ -29,10 +37,13 @@ ob_end_flush();
 // Fonctions
 // ----------------------------------------
 
+/**
+ * Afficher le tableau contenant tous les utilisateurs
+ */
 function vpacl_print_users() {
   // Requête SQL
   $db = vpac_db_connect();
-  $sql = "SELECT utPseudo, utNom, utPrenom, utStatut, count(coID) AS NbCo, count(arID) as NbAr
+  $sql = "SELECT utPseudo, utNom, utPrenom, utStatut, count(DISTINCT coID) AS NbCo, count(DISTINCT arID) as NbAr
           FROM (utilisateur LEFT OUTER JOIN commentaire ON utPseudo = coAuteur)
                 LEFT OUTER JOIN article ON utPseudo = arAuteur
           GROUP BY utPseudo";
@@ -65,6 +76,9 @@ function vpacl_print_users() {
   mysqli_free_result($res);
 }
 
+/**
+ * Afficher un utilisateur dans une ligne de tableau
+ */
 function vpacl_print_user_tr($data) {
   // Données
   $print_datas = array(
@@ -85,35 +99,101 @@ function vpacl_print_user_tr($data) {
   echo '</tr>';
 }
 
+/**
+ * Afficher une section avec l'ensemble des informations sur l'utilisateur
+ */
 function vpacl_print_user_datas() {
   if(!isset($_GET['user'])) {
     return;
   }
+  $current_user = vpac_decrypt_url($_GET['user']);
+  if($current_user === FALSE) {
+    vpac_session_exit();
+  }
+
+  // Requête sql
+  $db = vpac_db_connect();
+  $user_e = mysqli_real_escape_string($db, $current_user);
+  $sql = "SELECT utNom, utPrenom, utEmail, utCivilite, utDateNaissance, utMailsPourris, utStatut, arID, arTitre
+          FROM utilisateur LEFT OUTER JOIN article ON utPseudo = arAuteur
+          WHERE utPseudo = '$user_e'
+          ORDER BY arID";
+  $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  mysqli_close($db);
+
+  // Données
+  $data = mysqli_fetch_assoc($res);
+  $name = vpac_protect_data(vpac_mb_ucfirst($data['utPrenom']) . ' ' . vpac_mb_ucfirst($data['utNom']));
+  $email = vpac_protect_data($data['utEmail']);
+  $gender = ($data['utCivilite'] == 'h') ? 'homme' : 'femme';
+  $birthdate = substr($data['utDateNaissance'], 6) . '/' . substr($data['utDateNaissance'], 4, 2) . '/' . substr($data['utDateNaissance'], 0, 4);
+  $spam = ($data['utMailsPourris'] == 1) ? 'oui' : 'non';
 
   // Affichage
   echo '<section>',
-    '<h2>Utilisateur <em>freddd</em></h2>',
+    '<h2>Utilisateur <em>', $current_user,'</em></h2>',
 
     '<h3>Informations personnelles</h3>',
-    '<p><strong>Nom</strong> : Frédéric Dadeau</p>',
-    '<p><strong>Email</strong> : blabla@email.com</p>',
-    '<p><strong>Civilité</strong> : homme</p>',
-    '<p><strong>Date de naissance</strong> : 11/11/11</p>',
-    '<p><strong>Spam</strong> : oui</p>',
+    '<p><strong>Nom</strong> : ', $name, '</p>',
+    '<p><strong>Email</strong> : ', $email, '</p>',
+    '<p><strong>Civilité</strong> : ', $gender, '</p>',
+    '<p><strong>Date de naissance</strong> : ', $birthdate, '</p>',
+    '<p><strong>Spam</strong> : ', $spam,'</p>',
 
     '<h3>Modification des droits</h3>',
-    '<form action="administration.php?user=', $_GET['user'], '", method="post" id="admin_rights">';
+    '<form action="administration.php?user=', urlencode($_GET['user']), '", method="post" id="admin_rights">';
       $rights = array('aucun droit', 'rédacteur', 'administrateur', 'rédacteur et administrateur');
-      echo '<label><strong>Droits</strong> : ', vpac_print_list('right', $rights, $rights[0]), '</label>';
+      echo '<label><strong>Droits</strong> : ', vpac_print_list('rights', $rights, $rights[$data['utStatut']]), '</label>';
       vpac_print_input_btn('submit', 'Modifier les droits', 'btnChangeRights');
     echo '</form>',
 
-    '<h3>Articles de l\'utilisateur</h3>',
-    '<input type="checkbox" id="user_articles"><label for="user_articles">Cliquez ici pour</label>',
-    '<ul>',
-      '<li><a href="../index.php">Un mouchard dans un corrigé de Langages du Web</a></li>',
-      '<li><a href="../index.php">Un mouchard dans un corrigé de Langages du Web</a></li>',
-    '</ul>',
-  '</section>';
+    '<h3>Articles de l\'utilisateur</h3>';
+    // Affichage des Articles
+    if(empty($data['arTitre'])) {
+      echo '<p>L\'utilisateur n\'a écrit aucun article.</p>';
+    } else {
+      echo '<input type="checkbox" id="user_articles"><label for="user_articles">Cliquez ici pour</label>',
+      '<ul>';
+        do{
+          echo '<li><a href="article.php?id=', vpac_encrypt_url($data['arID']), '" >', $data['arTitre'], '</a></li>';
+        } while($data = mysqli_fetch_assoc($res));
+      echo '</ul>';
+    }
+    echo '</section>';
+  }
+
+/**
+ * Traitement du formulaire de changement de droits d'un utilisateur
+ */
+function vpacl_form_processing() {
+  // Vérification de $_GET
+  if(!isset($_GET['user'])) {
+    header('Location: ../index.php');
+    exit;
+  }
+  $current_user = vpac_decrypt_url($_GET['user']);
+  if($current_user === FALSE) {
+    vpac_session_exit();
+  }
+
+  // Vérification des clés
+  if(!vpac_parametres_controle('post', array('rights', 'btnChangeRights'))) {
+    vpac_session_exit();
+  }
+
+  // Vérification des droits
+  if($_POST['rights'] < 0 || $_POST['rights'] > 3 && vpac_is_number($_POST['rights'])) {
+    header('Location: ../index.php');
+    exit;
+  }
+
+  // Modification des droits de l'utilisateur
+  $db = vpac_db_connect();
+    $current_user = mysqli_real_escape_string($db, $current_user);
+    $new_rights = (int)$_POST['rights'];
+  $sql = "UPDATE Utilisateur
+          SET utStatut={$new_rights}
+          WHERE utPseudo='{$current_user}'";
+  mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
 }
 ?>

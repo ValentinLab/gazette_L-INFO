@@ -5,7 +5,7 @@
 
 /**
  * Créer la session d'un utilisateur
- * 
+ *
  * @param string $pseudo Pseudo de l'utilisateur
  * @param int    $statut Statut de l'utilisateur dans l'intervalle [0, 3]
  */
@@ -18,7 +18,7 @@ function vpac_connect_user($pseudo, $statut) {
 
 /**
  * Détruire une session
- * 
+ *
  * @param string $redirection Page vers laquelle l'utilisateur sera redirigé
  */
 function vpac_session_exit($redirection = '../index.php') {
@@ -34,7 +34,7 @@ function vpac_session_exit($redirection = '../index.php') {
 
 /**
  * Vérifier qu'un utilisateur est authentifié
- * 
+ *
  * @param int $min_rights Droit que l'utilisateur doit posséder
  *                        ALL_U :                      pour tous les utilisateurs
  *                        WRITER_U :                   pour les rédacteurs uniquement
@@ -61,7 +61,7 @@ function vpac_check_authentication($rights = ALL_U) {
 
 /**
  * Transformer les droits de l'utilisateur en ue chaîne de caractères
- * 
+ *
  * @param int $user_rights Droits de l'utilisateur
  *                         Si NULL, les droits de l'utilisateur courant
 *                          sont utilisés
@@ -84,6 +84,7 @@ function vpac_rights_to_string($user_rights = NULL) {
   switch($user_rights) {
     case 0:
       $rights_str = 'utilisateur';
+      break;
     case 1:
       $rights_str = 'rédacteur';
       break;
@@ -91,7 +92,7 @@ function vpac_rights_to_string($user_rights = NULL) {
       $rights_str = 'administrateur';
       break;
     case 3:
-      $rights_str = 'admin/rédacteur';
+      $rights_str = 'rédacteur/admin';
       break;
   }
 

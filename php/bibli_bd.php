@@ -12,9 +12,10 @@
 function vpac_db_connect() {
   $conn = mysqli_connect(BD_SERVER, BD_USER, BD_PASS, BD_NAME);
   if ($conn !== FALSE) {
-      mysqli_set_charset($conn, 'utf8') or vpac_bd_error_exit('<h4>Erreur lors du chargement du jeu de caractères utf8</h4>');
-      return $conn;
+    mysqli_set_charset($conn, 'utf8') or vpac_bd_error_exit('<h4>Erreur lors du chargement du jeu de caractères utf8</h4>');
+    return $conn;
   }
+
   // Erreur de connexion
   // Collecte des informations facilitant le debugage
   $msg = '<h4>Erreur de connexion base MySQL</h4>'
@@ -25,7 +26,7 @@ function vpac_db_connect() {
           .'<br>BD_NAME : '. BD_NAME
           .'<p>Erreur MySQL numéro : '.mysqli_connect_errno()
           //appel de htmlentities() pour que les éventuels accents s'affiche correctement
-          .'<br>'.htmlentities(mysqli_connect_error(), ENT_QUOTES, 'ISO-8859-1')
+          .'<br>'.htmlentities(mysqli_connect_error(), ENT_QUOTES, 'UTF-8')
           .'</div>';
   vpac_bd_error_exit($msg);
 }
@@ -41,16 +42,16 @@ function vpac_db_connect() {
  * @param string $msg Message d'erreur à afficher
  */
 function vpac_bd_error_exit($msg) {
-  ob_end_clean();	// Suppression de tout ce qui a pu être déja généré
+  ob_end_clean(); // Suppression de tout ce qui a pu être déja généré
 
-  echo    '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">',
-          '<title>Erreur base de données</title>',
-          '<style>',
-              'table{border-collapse: collapse;}td{border: 1px solid black;padding: 4px 10px;}',
-          '</style>',
-          '</head><body>',
-          $msg,
-          '</body></html>';
+  echo '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">',
+       '<title>Erreur base de données</title>',
+       '<style>',
+         'table{border-collapse: collapse;}td{border: 1px solid black;padding: 4px 10px;}',
+       '</style>',
+       '</head><body>',
+         $msg,
+       '</body></html>';
   exit(1);
 }
 
