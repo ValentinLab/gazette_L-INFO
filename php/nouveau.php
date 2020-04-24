@@ -66,7 +66,7 @@
         '</form>',
       '</section>';
     }
-
+  
   /**
    * Traitement du formulaire
    * 
@@ -114,10 +114,33 @@
     $titre = mysqli_real_escape_string($bd, $titre);
     $resume = mysqli_real_escape_string($bd, $resume);
     $contenu = mysqli_real_escape_string($bd, $contenu);
-    /**
-     * à faire
-     */
-    $datePublication=21042002;
+  
+    $date=getDate();
+    $datePublication=$date['year'];
+    
+    //mise au bon format du mois, jour, heure et minutes
+    if($date['mon']<10){
+      $datePublication.='0'.$date['mon'];
+    }else{
+      $datePublication.=$date['mon'];
+    }
+    if($date['mday']<10){
+      $datePublication.='0'.$date['mday'];
+    }else{
+      $datePublication.=$date['mday'];
+    }
+    if($date['hours']<10){
+      $datePublication.='0'.$date['hours'];
+    }else{
+      $datePublication.=$date['hours'];
+    }
+    if($date['minutes']<10){
+      $datePublication.='0'.$date['minutes'];
+    }else{
+      $datePublication.=$date['minutes'];
+    }
+    var_dump($datePublication);
+
     $auteur=mysqli_real_escape_string($bd, $_SESSION['user']['pseudo']);
     $sql = "INSERT INTO article (arTitre,arResume,arTexte,arDatePublication,arDateModification,arAuteur)
           VALUES ('{$titre}', '{$resume}', '{$contenu}', '{$datePublication}', NULL, '{$auteur}')";
