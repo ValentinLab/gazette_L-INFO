@@ -857,6 +857,7 @@ administration.php
 
 #user_articles + label {
   display: block;
+  margin: 10px 0;
   font-style: italic;
   cursor: pointer;
 }
@@ -871,7 +872,7 @@ administration.php
 
 #user_articles + label + ul {
   display: none;
-  margin-top: 5px;
+  margin: 10px 0 5px 0;
 }
 
 #user_articles + label + ul li {
