@@ -259,6 +259,17 @@ function vpac_print_input_btn($type, $value, $name) {
 }
 
 /**
+ * Afficher un sélecteur d'image à upload
+ * 
+ * @param string $label     label du champ
+ * @param mixed  $id        id du champ
+ */
+function vpac_print_input_image($label,$id) {
+  echo'<label for="',$id,'">',$label,'</label>',
+  '<input type="file" id="',$id,'" name="',$id,'">';
+}
+
+/**
  * Afficher les erreurs d'un forrmulaire
  * 
  * @param array  $errors    Tableau contenant les erreurs du formulaire
