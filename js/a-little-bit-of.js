@@ -14,6 +14,8 @@ function isReady() {
 function toStatusBox() {
   var statusBox = document.getElementsByClassName('statusBox');
   if(statusBox.length > 0) {
-    statusBox[0].scrollIntoView();
+    if(statusBox[0].getBoundingClientRect().y > window.innerHeight) {
+      window.scroll(0, statusBox[0].getBoundingClientRect().y + 40)
+    }
   }
 }

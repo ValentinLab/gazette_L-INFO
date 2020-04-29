@@ -13,8 +13,9 @@ vpac_check_authentication(ADMINISTRATOR_U);
 // ----------------------------------------
 
 $db = null;
+$status = array();
 if(isset($_POST['btnChangeRights'])) {
-  vpacl_form_processing($db);
+  $status = vpacl_form_processing($db);
 }
 
 // ----------------------------------------
@@ -27,7 +28,7 @@ vpac_get_nav();
 vpac_get_header('Administration');
 
 // Administration
-vpacl_print_user_datas($db);
+vpacl_print_user_datas($db, $status);
 vpacl_print_users($db);
 
 // Footer
@@ -82,7 +83,7 @@ function vpacl_print_users(&$db) {
 /**
  * Afficher une section avec l'ensemble des informations sur l'utilisateur
  */
-function vpacl_print_user_datas(&$db) {
+function vpacl_print_user_datas(&$db, $status) {
   if(!isset($_GET['user'])) {
     return;
   }
@@ -113,9 +114,12 @@ function vpacl_print_user_datas(&$db) {
 
   // Affichage
   echo '<section>',
-    '<h2>Utilisateur <em>', $current_user,'</em></h2>',
+    '<h2>Utilisateur <em>', $current_user,'</em></h2>';
 
-    '<h3>Informations personnelles</h3>',
+    // Affichage du status de traitement
+    vpac_print_form_status($status, '', true);
+
+    echo '<h3>Informations personnelles</h3>',
     '<p><strong>Nom</strong> : ', $name, '</p>',
     '<p><strong>Email</strong> : ', $email, '</p>',
     '<p><strong>Civilité</strong> : ', $gender, '</p>',
@@ -201,5 +205,8 @@ function vpacl_form_processing(&$db) {
           SET utStatut={$new_rights}
           WHERE utPseudo='{$current_user}'";
   mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+
+  $status['stdout'] = 'Les droits de l\'utilisateur ont été modifiés.';
+  return $status;
 }
 ?>
