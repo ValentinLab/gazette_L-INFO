@@ -18,11 +18,12 @@ if(!vpac_parametres_controle('get', array(), array('id'))) {
 // Traitement des formulaires
 // ----------------------------------------
 
+$db = null;
 $status = array();
 if(isset($_POST['btnAjouterCommentaire'])) {
-  $status = vpacl_form_processing_add();
+  $status = vpacl_form_processing_add($db);
 } else if(isset($_POST['btnSupprimerCommentaire'])) {
-  $status = vpacl_form_processing_remove();
+  $status = vpacl_form_processing_remove($db);
 }
 
 // ----------------------------------------
@@ -35,7 +36,7 @@ vpac_get_nav();
 vpac_get_header('L\'actu');
 
 // Article et commentaires
-vpacl_print_article($status);
+vpacl_print_article($db, $status);
 
 // Footer
 vpac_get_footer();
@@ -48,7 +49,7 @@ ob_end_flush();
 /**
  * Afficher un article et ses commentaires
  */
-function vpacl_print_article($status) {
+function vpacl_print_article(&$db, $status) {
   // Vérifier le paramètre id dans l'URL
   if(!isset($_GET['id'])) {
     vpac_print_error('Identifiant d\'article non fourni.');
@@ -61,7 +62,9 @@ function vpacl_print_article($status) {
   }
 
   // Requête pour obtenir l'article et les commentaires
-  $db = vpac_db_connect();
+  if($db == null) {
+    $db = vpac_db_connect();
+  }
   $sql = "SELECT * FROM ((article INNER JOIN utilisateur ON arAuteur = utPseudo) LEFT OUTER JOIN redacteur ON utPseudo = rePseudo) LEFT OUTER JOIN commentaire ON arID = coArticle WHERE arID = $id ORDER BY coDate DESC, coID DESC";
   $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
 
@@ -208,7 +211,7 @@ function vpacl_print_comments($res, $status) {
  * 
  * @return array Tableau contenant les erreurs de saisie
  */
-function vpacl_form_processing_add() {
+function vpacl_form_processing_add(&$db) {
   // Vérification des clés présentes dans $_POST
   if(!vpac_parametres_controle('post', array('commentaire', 'btnAjouterCommentaire'))) {
     header('Location: ../index.php');
@@ -247,7 +250,6 @@ function vpacl_form_processing_add() {
   $sql = "INSERT INTO commentaire (coAuteur, coTexte, coDate, coArticle)
           VALUES ('{$auteur}', '{$commentaire}', {$date}, {$article})";
   mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
-  mysqli_close($db);
 
   $status['stdout'] = 'Votre commentaire a été publié.';
   return $status;
@@ -258,7 +260,7 @@ function vpacl_form_processing_add() {
  * 
  * @return array Tableau contenant les erreurs de saisie
  */
-function vpacl_form_processing_remove() {
+function vpacl_form_processing_remove(&$db) {
   // Vérifier les clés présentes dans $_POST
   if(!vpac_parametres_controle('post', array('commentaire_id', 'btnSupprimerCommentaire'))) {
     header('Location: ../index.php');
@@ -290,7 +292,6 @@ function vpacl_form_processing_remove() {
           WHERE coAuteur = '{$auteur}'
             AND coID = $id";
   mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
-  mysqli_close($db);
 
   $status['stdout'] = 'Votre commentaire a été supprimé.';
   return $status;
