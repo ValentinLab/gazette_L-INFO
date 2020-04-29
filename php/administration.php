@@ -12,8 +12,9 @@ vpac_check_authentication(ADMINISTRATOR_U);
 // Traitement du formulaire
 // ----------------------------------------
 
+$db = null;
 if(isset($_POST['btnChangeRights'])) {
-  vpacl_form_processing();
+  vpacl_form_processing($db);
 }
 
 // ----------------------------------------
@@ -26,8 +27,8 @@ vpac_get_nav();
 vpac_get_header('Administration');
 
 // Administration
-vpacl_print_user_datas();
-vpacl_print_users();
+vpacl_print_user_datas($db);
+vpacl_print_users($db);
 
 // Footer
 vpac_get_footer();
@@ -40,9 +41,11 @@ ob_end_flush();
 /**
  * Afficher le tableau contenant tous les utilisateurs
  */
-function vpacl_print_users() {
+function vpacl_print_users(&$db) {
   // Requête SQL
-  $db = vpac_db_connect();
+  if($db == null) {
+    $db = vpac_db_connect();
+  }
   $sql = "SELECT utPseudo, utNom, utPrenom, utStatut, count(DISTINCT coID) AS NbCo, count(DISTINCT arID) as NbAr
           FROM (utilisateur LEFT OUTER JOIN commentaire ON utPseudo = coAuteur)
                 LEFT OUTER JOIN article ON utPseudo = arAuteur
@@ -77,32 +80,9 @@ function vpacl_print_users() {
 }
 
 /**
- * Afficher un utilisateur dans une ligne de tableau
- */
-function vpacl_print_user_tr($data) {
-  // Données
-  $print_datas = array(
-    'pseudo' => vpac_protect_data($data['utPseudo']),
-    'name' => vpac_protect_data(vpac_mb_ucfirst($data['utPrenom']) . ' ' . vpac_mb_ucfirst($data['utNom'])),
-    'rights' => vpac_rights_to_string($data['utStatut']),
-    'comments' => $data['NbCo'],
-    'articles' => $data['NbAr'],
-    'average' => 0
-  );
-
-  // Affichage
-  echo '<tr>';
-    foreach($print_datas as $user_d) {
-      echo '<td>', $user_d, '</td>';
-    }
-    echo '<td><a href="administration.php?user=', vpac_encrypt_url($print_datas['pseudo']),'">Modifier</a></td>';
-  echo '</tr>';
-}
-
-/**
  * Afficher une section avec l'ensemble des informations sur l'utilisateur
  */
-function vpacl_print_user_datas() {
+function vpacl_print_user_datas(&$db) {
   if(!isset($_GET['user'])) {
     return;
   }
@@ -112,14 +92,15 @@ function vpacl_print_user_datas() {
   }
 
   // Requête sql
-  $db = vpac_db_connect();
+  if($db == null) {
+    $db = vpac_db_connect();
+  }
   $user_e = mysqli_real_escape_string($db, $current_user);
   $sql = "SELECT utNom, utPrenom, utEmail, utCivilite, utDateNaissance, utMailsPourris, utStatut, arID, arTitre
           FROM utilisateur LEFT OUTER JOIN article ON utPseudo = arAuteur
           WHERE utPseudo = '$user_e'
           ORDER BY arID";
   $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
-  mysqli_close($db);
 
   // Données
   $data = mysqli_fetch_assoc($res);
@@ -162,12 +143,35 @@ function vpacl_print_user_datas() {
       echo '</ul>';
     }
     echo '</section>';
-  }
+}
+
+/**
+ * Afficher un utilisateur dans une ligne de tableau
+ */
+function vpacl_print_user_tr($data) {
+  // Données
+  $print_datas = array(
+    'pseudo' => vpac_protect_data($data['utPseudo']),
+    'name' => vpac_protect_data(vpac_mb_ucfirst($data['utPrenom']) . ' ' . vpac_mb_ucfirst($data['utNom'])),
+    'rights' => vpac_rights_to_string($data['utStatut']),
+    'comments' => $data['NbCo'],
+    'articles' => $data['NbAr'],
+    'average' => 0
+  );
+
+  // Affichage
+  echo '<tr>';
+    foreach($print_datas as $user_d) {
+      echo '<td>', $user_d, '</td>';
+    }
+    echo '<td><a href="administration.php?user=', vpac_encrypt_url($print_datas['pseudo']),'">Modifier</a></td>';
+  echo '</tr>';
+}
 
 /**
  * Traitement du formulaire de changement de droits d'un utilisateur
  */
-function vpacl_form_processing() {
+function vpacl_form_processing(&$db) {
   // Vérification de $_GET
   if(!isset($_GET['user'])) {
     header('Location: ../index.php');
