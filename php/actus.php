@@ -153,18 +153,21 @@ function vpacl_print_page_selector($numberOfPages) {
             '<p>Pages :</p>';
             // Précédent
             $disabled = ($page == 1) ? ' button_disabled' : '';
-            echo'<a href="../php/actus.php?page=',vpac_encrypt_url($page - 1),'" class="button', $disabled,'">&#x25C1;</a>';;
+            echo'<a href="../php/actus.php?page=',vpac_encrypt_url($page - 1),'" class="button', $disabled,
+              '">&#x25C1;</a>';;
             // Numéros
             for($i=1;$i<=$numberOfPages;$i++){
                 if($i==$page){
-                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'" class="button button_selected">',$i,'</a>';
+                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'" class="button button_selected">',$i,
+                      '</a>';
                 }else{
                     echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'" class="button">',$i,'</a>';
                 }
             }
             // Suivant
             $disabled = ($page >= $numberOfPages) ? ' button_disabled' : '';
-            echo'<a href="../php/actus.php?page=',vpac_encrypt_url($page + 1),'" class="button', $disabled,'">&#x25C1;</a>';
+            echo'<a href="../php/actus.php?page=',vpac_encrypt_url($page + 1),'" class="button', $disabled,
+              '">&#x25C1;</a>';
         echo'</article>';
 }
 ?>

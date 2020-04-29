@@ -247,10 +247,6 @@ function vpacl_form_processing_add() {
           VALUES ('{$auteur}', '{$commentaire}', {$date}, {$article})";
   mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
   mysqli_close($db);
-
-  $article = vpac_encrypt_url($article);
-  header("Location: article.php?id={$article}#commentaires");
-  exit();
 }
 
 /**
@@ -291,10 +287,6 @@ function vpacl_form_processing_remove() {
             AND coID = $id";
   mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
   mysqli_close($db);
-
-  $article = vpac_encrypt_url($article);
-  header("Location: article.php?id={$article}#commentaires");
-  exit();
 }
 
 /**

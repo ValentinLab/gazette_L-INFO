@@ -126,7 +126,8 @@ function vpacl_print_user_datas() {
   $name = vpac_protect_data(vpac_mb_ucfirst($data['utPrenom']) . ' ' . vpac_mb_ucfirst($data['utNom']));
   $email = vpac_protect_data($data['utEmail']);
   $gender = ($data['utCivilite'] == 'h') ? 'homme' : 'femme';
-  $birthdate = substr($data['utDateNaissance'], 6) . '/' . substr($data['utDateNaissance'], 4, 2) . '/' . substr($data['utDateNaissance'], 0, 4);
+  $birthdate = substr($data['utDateNaissance'], 6) . '/' . substr($data['utDateNaissance'], 4, 2) . '/' . 
+    substr($data['utDateNaissance'], 0, 4);
   $spam = ($data['utMailsPourris'] == 1) ? 'oui' : 'non';
 
   // Affichage
@@ -143,7 +144,8 @@ function vpacl_print_user_datas() {
     '<h3>Modification des droits</h3>',
     '<form action="administration.php?user=', urlencode($_GET['user']), '", method="post" id="admin_rights">';
       $rights = array('aucun droit', 'rédacteur', 'administrateur', 'rédacteur et administrateur');
-      echo '<label><strong>Droits</strong> : ', vpac_print_list('rights', $rights, $rights[$data['utStatut']]), '</label>';
+      echo '<label><strong>Droits</strong> : ', vpac_print_list('rights', $rights, $rights[$data['utStatut']]), 
+        '</label>';
       vpac_print_input_btn('submit', 'Modifier les droits', 'btnChangeRights');
     echo '</form>',
 

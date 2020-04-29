@@ -301,7 +301,7 @@ function vpac_print_form_errors($errors, $text = '', $full_size = false) {
   $errors_id = ($full_size) ? 'errors-full-size' : 'errors';
 
   if(!empty($errors)) {
-    echo '<div id="', $errors_id, '">', $text;
+    echo '<div id="', $errors_id, '" class="statusBox">', $text;
     if(count($errors) > 1) {
       echo '<ul>';
         foreach($errors as $err) {
