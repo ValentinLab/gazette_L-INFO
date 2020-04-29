@@ -49,6 +49,7 @@ function vpac_get_head($title, $path = '..') {
             '<meta charset="UTF-8">',
             '<title>', $page_title, '</title>',
             '<link rel="stylesheet" type="text/css" href="', $path,'/styles/gazette.css">',
+            '<script src="', $path, '/js/a-little-bit-of.js"></script>',
         '</head>',
         '<body>';
 }
@@ -70,8 +71,10 @@ function vpac_get_nav($path = '..') {
                 echo '<a href="#">', htmlentities($_SESSION['user']['pseudo']), '</a>',
                         '<ul>',
                           '<li><a href="', $path, '/php/compte.php">Mon profil</a></li>',
-                          ($_SESSION['user']['writer']) ? "<li><a href=\"{$path}/php/edition.php\">Nouvel article</a></li>" : '',
-                          ($_SESSION['user']['administrator']) ? "<li><a href=\"{$path}/php/administration.php\">Administration</a></li>" : '',
+                          ($_SESSION['user']['writer']) ? 
+                            "<li><a href=\"{$path}/php/edition.php\">Nouvel article</a></li>" : '',
+                          ($_SESSION['user']['administrator']) ? 
+                            "<li><a href=\"{$path}/php/administration.php\">Administration</a></li>" : '',
                           '<li><a href="', $path, '/php/deconnexion.php">Se déconnecter</a></li>',
                         '</ul>';
               } else {
