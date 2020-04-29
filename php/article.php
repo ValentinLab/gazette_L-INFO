@@ -18,11 +18,11 @@ if(!vpac_parametres_controle('get', array(), array('id'))) {
 // Traitement des formulaires
 // ----------------------------------------
 
-$errors = array();
+$status = array();
 if(isset($_POST['btnAjouterCommentaire'])) {
-  $errors = vpacl_form_processing_add();
+  $status = vpacl_form_processing_add();
 } else if(isset($_POST['btnSupprimerCommentaire'])) {
-  $errors = vpacl_form_processing_remove();
+  $status = vpacl_form_processing_remove();
 }
 
 // ----------------------------------------
@@ -35,7 +35,7 @@ vpac_get_nav();
 vpac_get_header('L\'actu');
 
 // Article et commentaires
-vpacl_print_article($errors);
+vpacl_print_article($status);
 
 // Footer
 vpac_get_footer();
@@ -48,7 +48,7 @@ ob_end_flush();
 /**
  * Afficher un article et ses commentaires
  */
-function vpacl_print_article($errors) {
+function vpacl_print_article($status) {
   // Vérifier le paramètre id dans l'URL
   if(!isset($_GET['id'])) {
     vpac_print_error('Identifiant d\'article non fourni.');
@@ -77,7 +77,7 @@ function vpacl_print_article($errors) {
   vpacl_print_edit($res);
   // Afficher l'article et les commentaires
   vpacl_print_article_part($res);
-  vpacl_print_comments($res, $errors);
+  vpacl_print_comments($res, $status);
 
   mysqli_free_result($res);
   mysqli_close($db);
@@ -148,13 +148,14 @@ function vpacl_print_article_part($res) {
  * 
  * @param object $res Résultat d'une requête sql permettant d'obtenir les commentaires
  */
-function vpacl_print_comments($res, $errors) {
+function vpacl_print_comments($res, $status) {
   echo '<section id="commentaires"><h2>Réactions</h2>';
 
   // Affichage des erreurs
-  vpac_print_form_errors($errors, '', true);
+  vpac_print_form_status($status, '', true);
 
   // Vérifier s'il y a des commentaires
+  mysqli_data_seek($res, 0);
   $data = mysqli_fetch_assoc($res);
   if(isset($data['coID'])) {
     mysqli_data_seek($res, 0);
@@ -229,13 +230,13 @@ function vpacl_form_processing_add() {
   $commentaire = trim($_POST['commentaire']);
   $commentaire_len = mb_strlen($commentaire, 'UTF-8');
   if($commentaire_len == 0) {
-    $errors[] = 'Le commentaire ne peut pas être vide.';
+    $status['stderr'][] = 'Le commentaire ne peut pas être vide.';
   } else if($commentaire_len > LMAX_COMMENTAIRE) {
-    $errors[] = 'Le commentaire ne doit pas faire plus de ' . LMAX_COMMENTAIRE . ' caractères.';
+    $status['stderr'][] = 'Le commentaire ne doit pas faire plus de ' . LMAX_COMMENTAIRE . ' caractères.';
   }
 
-  if(!empty($errors)) {
-    return $errors;
+  if(!empty($status['stderr'])) {
+    return $status;
   }
 
   // Requête SQL
@@ -247,6 +248,9 @@ function vpacl_form_processing_add() {
           VALUES ('{$auteur}', '{$commentaire}', {$date}, {$article})";
   mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
   mysqli_close($db);
+
+  $status['stdout'] = 'Votre commentaire a été publié.';
+  return $status;
 }
 
 /**
@@ -287,6 +291,9 @@ function vpacl_form_processing_remove() {
             AND coID = $id";
   mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
   mysqli_close($db);
+
+  $status['stdout'] = 'Votre commentaire a été supprimé.';
+  return $status;
 }
 
 /**

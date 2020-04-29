@@ -420,8 +420,8 @@ form input[type=checkbox] + label:before {
 form input[type=checkbox]:checked + label:after {
   content: '\2713';
   position: absolute;
-  top: 3px;
-  left: 2px;
+  top: 4px;
+  left: 3px;
   color: white;
   font-weight: bold;
   font-size: 11px;
@@ -482,7 +482,7 @@ form input[type=radio]:checked + label:after {
   width: 6px;
   height: 6px;
   background-color: #ffffff;
-  top: calc(14px/2 + 1px);
+  top: calc(14px/2 + 2px);
   left: calc(14px/2);
   border-radius: 100%;
 }
@@ -563,31 +563,52 @@ a.button_disabled:hover {
   color: rgba(255, 0, 0, 0.2);
 }
 
-/* Erreurs du formulaire */
+/* Status du formulaire */
 
-#errors, #errors-full-size {
-  border: 2px solid red;
+.statusBox {
+  border: 2px solid;
   margin: auto;
-  color: red;
   padding: 10px 6px;
   font-size: 13px;
   font-weight: bold;
 }
 
-#errors {
-  width: 705px;
-}
-
-#errors-full-size {
-  margin-bottom: 5px;
-}
-
-#errors p, #errors-full-size p {
+.statusBox p {
   margin: 0 0;
 }
 
-#errors ul, #errors-full-size ul {
-  margin-top: 4px;
+#errors, #succes {
+  width: 705px;
+}
+
+#errors-full-size, #success-full-size {
+  margin-bottom: 5px;
+}
+
+/* Erreurs du formulaire */
+
+#errors, #errors-full-size {
+  color: red;
+  border-color: red;
+}
+
+#errors p:before, #errors-full-size p:before {
+  content: '\2716';
+  margin-right: 6px;
+  margin-left: 4px;
+}
+
+/* Succès du formulaire */
+
+#success, #success-full-size {
+  color: green;
+  border-color: green;
+}
+
+#success p:before, #success-full-size p:before {
+  content: '\2713';
+  margin-right: 6px;
+  margin-left: 4px;
 }
 
 /****************************************************************************************

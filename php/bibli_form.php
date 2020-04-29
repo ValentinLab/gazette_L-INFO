@@ -289,6 +289,14 @@ function vpac_print_input_btn($type, $value, $name) {
   echo '<input type="', $type, '" value="',  $value, '"', $name, '>';
 }
 
+function vpac_print_form_status($status, $text_err = '', $full_size = false) {
+  if(isset($status['stderr'])) {
+    vpac_print_form_errors($status['stderr'], $text_err, $full_size);
+  } elseif(isset($status['stdout'])) {
+    vpac_print_form_success($status['stdout'], $full_size);
+  }
+}
+
 /**
  * Afficher les erreurs d'un forrmulaire
  * 
@@ -312,6 +320,16 @@ function vpac_print_form_errors($errors, $text = '', $full_size = false) {
       echo '<p>',$errors[0], '</p>';
     }
     echo '</div>';
+  }
+}
+
+function vpac_print_form_success($success, $full_size = false) {
+  $success_id = ($full_size) ? 'success-full-size' : 'success';
+
+  if(!empty($success)) {
+    echo '<div id="', $success_id, '" class="statusBox">',
+      '<p>',$success, '</p>',
+    '</div>';
   }
 }
 ?>
