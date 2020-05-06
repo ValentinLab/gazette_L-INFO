@@ -299,6 +299,21 @@ function vpac_print_form_status($status, $text_err = '', $full_size = false) {
 }
 
 /**
+ * Afficher un sélecteur d'image à upload
+ * 
+ * @param string $label     label du champ
+ * @param mixed  $id        id du champ
+ */
+function vpac_print_input_image($label,$id,$maxSize=0) {
+  echo'<label for="',$id,'">',$label,'</label>';
+  if($maxSize>0){
+    echo'<input type="hidden" name="MAX_FILE_SIZE" ',
+			'value="',$maxSize,'">';
+  }
+  echo'<input type="file" name="',$id,'">';
+}
+
+/**
  * Afficher les erreurs d'un forrmulaire
  * 
  * @param array  $errors    Tableau contenant les erreurs du formulaire
