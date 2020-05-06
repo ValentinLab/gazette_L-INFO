@@ -197,7 +197,7 @@ function vpacl_print_comments($res, $status) {
           '<fieldset>',
             '<legend>Ajoutez un commentaire</legend>',
             '<table id="form_uncentered">';
-              vpac_print_table_form_textarea('commentaire', 10, 60, true);
+              vpac_print_table_form_textarea('', 'commentaire', 10, 60, true);
               vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnAjouterCommentaire'));
             echo '</table>',
           '</fieldset>',
