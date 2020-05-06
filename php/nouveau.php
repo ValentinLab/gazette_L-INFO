@@ -15,7 +15,7 @@
     // ----------------------------------------
 
     $errors = array();
-    if(isset($_POST['btnPublication'])) {
+    if(isset($_POST['btnPublication'])||isset($_POST['btnValidationImage'])) {
       $errors = vpacl_form_processing();
     }
 
@@ -74,8 +74,8 @@
           vpac_print_form_errors($errors, 'Les erreurs suivantes ont été relevées lors de l\'upload de la photo de l\'article :');
         echo '<form action="nouveau.php?id=',$_GET['id'],'" method="post" enctype="multipart/form-data">',
             '<table>';
-              vpac_print_input_image('Sélectionnez une image (PNG/JPEG) : ','image');
-              vpac_print_table_form_button(array('submit', 'reset'), array('Valider', 'Réinitialiser'), array('btnPublication', ''));
+              vpac_print_input_image('Sélectionnez une image (JPG) : ','image');
+              vpac_print_table_form_button(array('submit', 'reset'), array('Valider', 'Réinitialiser'), array('btnValidationImage', ''));
             echo '</table>',
           '</form>',
         '</section>';
@@ -85,7 +85,7 @@
   /**
    * Traitement du formulaire (titre, résumé et contenu si ce n'est pas déjà fait, sinon choix de l'image)
    * 
-   * @return array Tableau à remplir avec les erreurs de saisie
+   * @return array $errors Tableau à remplir avec les erreurs de saisie
    */
   function vpacl_form_processing() {
     //premier formulaire (titre, résumé et contenu)
@@ -121,16 +121,19 @@
       }
       
       if(!empty($errors)) {
-        exit();
+        return;
       }
     
       //Publication de l'article
       $bd = vpac_bd_connecter();
       
       $titre = mysqli_real_escape_string($bd, $titre);
-      $resume = mysqli_real_escape_string($bd, $resume);
-      $contenu = mysqli_real_escape_string($bd, $contenu);
-    
+      $resume = mysqli_real_escape_string($bd,$resume);
+      $contenu = mysqli_real_escape_string($bd,$contenu);
+      
+      string_to_bbcode($contenu);
+      
+      $date=getdate();
       $datePublication=date_array_to_int($date);  
 
       $auteur=mysqli_real_escape_string($bd, $_SESSION['user']['pseudo']);
@@ -139,17 +142,53 @@
       mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
       $insert_id=mysqli_insert_id($bd);
       mysqli_close($bd);
-      header('Location: ./nouveau?id='.$insert_id);
+      header('Location: ./nouveau.php?id='.vpac_encrypt_url($insert_id));
+      exit();
     }//deuxième formulaire : upload de l'image
     else{
-      if(!vpac_parametres_controle('post',array('image','btnPublication'))) {
-        vpac_session_exit();
+      if (isset($_POST['btnValidationImage'])) {
+        if(isset($_FILES['image'])){
+          $errors=array();
+          //vérification des erreurs
+          $f = $_FILES['image'];
+          if($f['type']!='image/jpeg'){
+            $errors[] = 'le fichier doit être de type jpg';
+          }
+          switch ($f['error']) {
+          case 1:
+          case 2:
+            $errors[] = $f['name'].' est trop gros.';
+            break;
+          case 3:
+            $errors[] = 'Erreur de transfert de '.$f['name'];
+            break;
+          case 4:
+            $errors[] = $f['name'].' introuvable.';
+          }
+          var_dump(vpac_decrypt_url($_GET['id']));
+          var_dump($f);
+          if(!empty($errors)) {
+            return;
+          }
+          var_dump($f);
+          if (! @is_uploaded_file($f['tmp_name'])) {
+            $errors[]='Erreur interne de transfert';
+          }
+          var_dump(vpac_decrypt_url($_GET['id']));
+          $place = realpath('..').'\\upload\\'.vpac_decrypt_url($_GET['id']).'.'.pathinfo($f['name'])['extension'];
+          if (!@move_uploaded_file($f['tmp_name'], $place)) {
+            $errors[] = 'Erreur interne de transfert';
+          }
+          if(!empty($errors)) {
+            return;
+          }
+          var_dump($f);
+        }
+        header('Location: ./article.php?id='.$_GET['id']);
+        exit();
       }
-
-      //Vérification de la validité fichier sélectionné
-
-      //Création du fichier dans le répértoire upload
     }
+
   }
 
   /**
@@ -181,5 +220,17 @@
       $datePublication.=$date['minutes'];
     }
     return $datePublication;
+  }
+
+  /**
+   * Ajoute la balise [p] à une string si elle n'est pas présente
+   * 
+   * @param string $string chaîne à transformer
+   */
+  function string_to_bbcode(&$string){
+    //ajout de la balise paragraphe
+    if(strcmp(substr($string,0,3),'[p]')!=0){
+      $string='[p]'.$string.'[/p]';
+    }
   }
 ?>

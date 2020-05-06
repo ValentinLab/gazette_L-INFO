@@ -264,9 +264,13 @@ function vpac_print_input_btn($type, $value, $name) {
  * @param string $label     label du champ
  * @param mixed  $id        id du champ
  */
-function vpac_print_input_image($label,$id) {
-  echo'<label for="',$id,'">',$label,'</label>',
-  '<input type="file" id="',$id,'" name="',$id,'">';
+function vpac_print_input_image($label,$id,$maxSize=0) {
+  echo'<label for="',$id,'">',$label,'</label>';
+  if($maxSize>0){
+    echo'<input type="hidden" name="MAX_FILE_SIZE" ',
+			'value="',$maxSize,'">';
+  }
+  echo'<input type="file" name="',$id,'">';
 }
 
 /**
