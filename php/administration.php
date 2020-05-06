@@ -47,9 +47,10 @@ function vpacl_print_users(&$db) {
   if($db == null) {
     $db = vpac_db_connect();
   }
-  $sql = "SELECT utPseudo, utNom, utPrenom, utStatut, count(DISTINCT coID) AS NbCo, count(DISTINCT arID) as NbAr
-          FROM (utilisateur LEFT OUTER JOIN commentaire ON utPseudo = coAuteur)
-                LEFT OUTER JOIN article ON utPseudo = arAuteur
+  $sql = "SELECT utPseudo, utNom, utPrenom, utStatut, count(DISTINCT c1.coID) AS NbCo, count(DISTINCT arID) AS NbAr, count(DISTINCT c2.coID) AS NbCoOnAr
+          FROM ((utilisateur LEFT OUTER JOIN commentaire AS c1 ON utPseudo = c1.coAuteur)
+               LEFT OUTER JOIN article ON utPseudo = arAuteur)
+               LEFT OUTER JOIN commentaire AS c2 ON arID = c2.coArticle
           GROUP BY utPseudo";
   $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
   mysqli_close($db);
@@ -160,7 +161,7 @@ function vpacl_print_user_tr($data) {
     'rights' => vpac_rights_to_string($data['utStatut']),
     'comments' => $data['NbCo'],
     'articles' => $data['NbAr'],
-    'average' => 0
+    'average' => ($data['NbAr'] != 0) ? round($data['NbCoOnAr']/$data['NbAr'], 2) : 0
   );
 
   // Affichage

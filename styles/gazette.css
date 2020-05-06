@@ -563,6 +563,12 @@ a.button_disabled:hover {
   color: rgba(255, 0, 0, 0.2);
 }
 
+/* Problème de saisie */
+
+input[type=checkbox]:focus:invalid + label:before, input[type=radio]:focus:invalid + label:before {
+  box-shadow: 0 0 10px red;
+}
+
 /* Status du formulaire */
 
 .statusBox {

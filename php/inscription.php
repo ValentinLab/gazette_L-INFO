@@ -101,7 +101,7 @@ function vpacl_form_processing() {
     'post', 
     array('pseudo', 'nom', 'prenom', 'naissance_j', 'naissance_m', 'naissance_a', 'email', 'passe1', 'passe2', 'btnInscription'), 
     array('radSexe', 'cbCGU', 'cbSpam'))
-  ) {
+  ){
     vpac_session_exit();
   }
 
@@ -119,9 +119,10 @@ function vpacl_form_processing() {
   // Vérification de la civilité
   if(!isset($_POST['radSexe'])) {
     $errors[] = 'Vous devez choisir une civilité.';
-  } else if(!vpac_is_number($_POST['radSexe']) || !vpacl_check_between($_POST['radSexe'], 1, 2)) {
+  } else if(!vpac_is_number($_POST['radSexe'])) {
     vpac_session_exit();
   }
+  vpacl_check_between($_POST['radSexe'], 1, 2);
   switch($_POST['radSexe']) {
     case 1:
       $civilite = 'h';
@@ -264,8 +265,7 @@ function vpacl_check_name(&$errors, $value, $field_name, $length) {
  */
 function vpacl_check_between($value, $min, $max) {
   if($value < $min || $value > $max) {
-    header('Location: ../index.php');
-    exit();
+    vpac_session_exit();
   }
 }
 ?>

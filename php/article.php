@@ -205,7 +205,6 @@ function vpacl_print_comments($res, $status) {
   }
 }
 
-
 /**
  * Traitement du formulaire pour l'ajout d'un commentaire
  * 
@@ -290,7 +289,8 @@ function vpacl_form_processing_remove(&$db) {
     $auteur = mysqli_real_escape_string($db, $_SESSION['user']['pseudo']);
   $sql = "DELETE FROM commentaire
           WHERE coAuteur = '{$auteur}'
-            AND coID = $id";
+            AND coID = $id
+            AND coArticle = $article";
   mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
 
   $status['stdout'] = 'Votre commentaire a été supprimé.';

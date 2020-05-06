@@ -4,7 +4,7 @@
 
 # Fonction de mise à jour des données
 update_data() {
-  echo -n 'Nom de la  base de données : '
+  echo -n 'Nom de la base de données : '
   read DATABASE
   echo -n "Nom d'utilisateur : "
   read USER
@@ -17,7 +17,7 @@ update_data() {
 # Fonction pour obtenir les données
 get_data() {
   if [ ! -f $FILENAME ]; then
-    echo '-- Première utilisation du script --'
+    echo "-- Première utilisation du script --\n"
     update_data
   else
     echo "-- Mise à jour des informations sur la bd --"
