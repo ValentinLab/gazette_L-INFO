@@ -487,6 +487,14 @@ form input[type=radio]:checked + label:after {
   border-radius: 100%;
 }
 
+/* Textarea */
+
+form textarea {
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
 /* Fieldset */
 
 form fieldset {

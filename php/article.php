@@ -66,7 +66,7 @@ function vpacl_print_article(&$db, $status) {
     $db = vpac_db_connect();
   }
   $sql = "SELECT * FROM ((article INNER JOIN utilisateur ON arAuteur = utPseudo) LEFT OUTER JOIN redacteur ON utPseudo = rePseudo) LEFT OUTER JOIN commentaire ON arID = coArticle WHERE arID = $id ORDER BY coDate DESC, coID DESC";
-  $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
 
   // Vérifier le nombre de résultats
   if(mysqli_num_rows($res) == 0) {
@@ -197,7 +197,7 @@ function vpacl_print_comments($res, $status) {
           '<fieldset>',
             '<legend>Ajoutez un commentaire</legend>',
             '<table id="form_uncentered">';
-              vpac_print_table_form_textarea('commentaire', 15, 70, true);
+              vpac_print_table_form_textarea('commentaire', 10, 60, true);
               vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnAjouterCommentaire'));
             echo '</table>',
           '</fieldset>',
@@ -248,7 +248,7 @@ function vpacl_form_processing_add(&$db) {
     $date = date('YmdHi');
   $sql = "INSERT INTO commentaire (coAuteur, coTexte, coDate, coArticle)
           VALUES ('{$auteur}', '{$commentaire}', {$date}, {$article})";
-  mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  mysqli_query($db, $sql) or vpac_db_error($db, $sql);
 
   $status['stdout'] = 'Votre commentaire a été publié.';
   return $status;
@@ -291,7 +291,7 @@ function vpacl_form_processing_remove(&$db) {
           WHERE coAuteur = '{$auteur}'
             AND coID = $id
             AND coArticle = $article";
-  mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  mysqli_query($db, $sql) or vpac_db_error($db, $sql);
 
   $status['stdout'] = 'Votre commentaire a été supprimé.';
   return $status;

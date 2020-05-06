@@ -59,7 +59,7 @@ function vpacl_extract_articles() {
           FROM article
           ORDER BY rand()
           LIMIT 0, 9)';
-  $res = mysqli_query($db,$sql) or vpac_bd_error($db,$sql);
+  $res = mysqli_query($db,$sql) or vpac_db_error($db,$sql);
 
   // Extraction des résultats
   $result = array();

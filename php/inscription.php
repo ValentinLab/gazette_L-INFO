@@ -209,7 +209,7 @@ function vpacl_form_processing() {
           FROM utilisateur
           WHERE utPseudo='{$pseudo}'
              OR utEmail='{$email}'";
-  $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
   if(mysqli_num_rows($res) > 0) {
     $data = mysqli_fetch_assoc($res);
     if($data['utPseudo'] == $pseudo) {
@@ -231,7 +231,7 @@ function vpacl_form_processing() {
   $passe = password_hash($passe, PASSWORD_DEFAULT);
   $sql = "INSERT INTO utilisateur
           VALUES ('{$pseudo_e}', '{$nom}', '{$prenom}', '{$email}', '{$passe}', {$naissance}, 0, '{$civilite}', {$mails_pourris})";
-  mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  mysqli_query($db, $sql) or vpac_db_error($db, $sql);
   mysqli_close($db);
 
   // Mémoriser dans la variable de session

@@ -52,7 +52,7 @@ function vpacl_print_users(&$db) {
                LEFT OUTER JOIN article ON utPseudo = arAuteur)
                LEFT OUTER JOIN commentaire AS c2 ON arID = c2.coArticle
           GROUP BY utPseudo";
-  $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
   mysqli_close($db);
 
   // Affichage du tableau
@@ -102,7 +102,7 @@ function vpacl_print_user_datas(&$db, $status) {
           FROM utilisateur LEFT OUTER JOIN article ON utPseudo = arAuteur
           WHERE utPseudo = '$user_e'
           ORDER BY arID";
-  $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
 
   // Données
   $data = mysqli_fetch_assoc($res);
@@ -205,7 +205,7 @@ function vpacl_form_processing(&$db) {
   $sql = "UPDATE Utilisateur
           SET utStatut={$new_rights}
           WHERE utPseudo='{$current_user}'";
-  mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  mysqli_query($db, $sql) or vpac_db_error($db, $sql);
 
   $status['stdout'] = 'Les droits de l\'utilisateur ont été modifiés.';
   return $status;

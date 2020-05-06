@@ -5,9 +5,9 @@
 
 // Base de données
 define('BD_SERVER','localhost');
-define('BD_NAME','claudel_gazette');
-define('BD_USER','claudel_u');
-define('BD_PASS','claudel_p');
+define('BD_NAME','gazette_bd');
+define('BD_USER','perignon_u');
+define('BD_PASS','perignon_p');
 
 // URL
 define('CIPHER', 'aes-128-gcm');
@@ -72,7 +72,7 @@ function vpac_get_nav($path = '..') {
                         '<ul>',
                           '<li><a href="', $path, '/php/compte.php">Mon profil</a></li>',
                           ($_SESSION['user']['writer']) ? 
-                            "<li><a href=\"{$path}/php/edition.php\">Nouvel article</a></li>" : '',
+                            "<li><a href=\"{$path}/php/nouveau.php\">Nouvel article</a></li>" : '',
                           ($_SESSION['user']['administrator']) ? 
                             "<li><a href=\"{$path}/php/administration.php\">Administration</a></li>" : '',
                           '<li><a href="', $path, '/php/deconnexion.php">Se déconnecter</a></li>',

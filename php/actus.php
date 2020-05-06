@@ -21,10 +21,14 @@ vpacl_print_actus();
 vpac_get_footer();
 ob_end_flush();
 
+// ----------------------------------------
+// Fonctions
+// ----------------------------------------
+
 /**
  * Afficher la page actus.php
  */
-function vpacl_print_actus(){
+function vpacl_print_actus() {
     // Vérifier le paramètre id dans l'URL
     if(isset($_GET['page'])){
         $page = (int)vpac_decrypt_url($_GET['page']);
@@ -43,7 +47,7 @@ function vpacl_print_actus(){
             ORDER BY arDatePublication DESC
             LIMIT 4 OFFSET {$offset}";
 
-    $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+    $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
     if(mysqli_num_rows($res) > 0) {
         $data=array();
         while($current_row=mysqli_fetch_assoc($res)){
@@ -57,7 +61,7 @@ function vpacl_print_actus(){
         $numberOfPages=vpac_decrypt_url($_GET['nbPages']);
     }else{
         $sql_numberOfArticles="SELECT COUNT(*) FROM article";
-        $numberOfArticles = mysqli_query($db, $sql_numberOfArticles) or vpac_bd_error($db, $sql_numberOfArticles);
+        $numberOfArticles = mysqli_query($db, $sql_numberOfArticles) or vpac_db_error($db, $sql_numberOfArticles);
         $numberOfPages=mysqli_fetch_assoc($numberOfArticles)['COUNT(*)']/4+1;
     }
 
@@ -172,11 +176,11 @@ function vpacl_print_page_selector($numberOfPages) {
                     echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'" class="button button_selected">',$i,
                       '</a>';
                 }else{
-                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'">',$i,'</a>';
+                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'" class="button">',$i,'</a>';
                 }
             }
             // Suivant
-            $disabled = ($page >= $numberOfPages) ? ' button_disabled' : '';
+            $disabled = ($page == (int)$numberOfPages) ? ' button_disabled' : '';
             echo'<a href="../php/actus.php?page=',vpac_encrypt_url($page + 1),'" class="button', $disabled,
               '">&#x25C1;</a>';
         echo'</article>';

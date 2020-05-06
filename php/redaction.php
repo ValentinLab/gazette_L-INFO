@@ -114,7 +114,7 @@ function vpacl_extract_categories() {
             AND reBio IS NOT NULL
             AND (utStatut = 1 OR utStatut = 3)
           ORDER BY reCategorie, utPseudo';
-  $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
   mysqli_close($db);
 
   $results = array();

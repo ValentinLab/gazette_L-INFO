@@ -12,7 +12,7 @@
 function vpac_db_connect() {
   $conn = mysqli_connect(BD_SERVER, BD_USER, BD_PASS, BD_NAME);
   if ($conn !== FALSE) {
-    mysqli_set_charset($conn, 'utf8') or vpac_bd_error_exit('<h4>Erreur lors du chargement du jeu de caractères utf8</h4>');
+    mysqli_set_charset($conn, 'utf8') or vpac_db_error_exit('<h4>Erreur lors du chargement du jeu de caractères utf8</h4>');
     return $conn;
   }
 
@@ -28,7 +28,7 @@ function vpac_db_connect() {
           //appel de htmlentities() pour que les éventuels accents s'affiche correctement
           .'<br>'.htmlentities(mysqli_connect_error(), ENT_QUOTES, 'UTF-8')
           .'</div>';
-  vpac_bd_error_exit($msg);
+  vpac_db_error_exit($msg);
 }
 
 /**
@@ -41,7 +41,7 @@ function vpac_db_connect() {
  *
  * @param string $msg Message d'erreur à afficher
  */
-function vpac_bd_error_exit($msg) {
+function vpac_db_error_exit($msg) {
   ob_end_clean(); // Suppression de tout ce qui a pu être déja généré
 
   echo '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">',
@@ -64,7 +64,7 @@ function vpac_bd_error_exit($msg) {
  * @param object $db  Connecteur sur la bd ouverte
  * @param string $sql Requête SQL provoquant l'erreur
  */
-function vpac_bd_error($db, $sql) {
+function vpac_db_error($db, $sql) {
   $errNum = mysqli_errno($db);
   $errTxt = mysqli_error($db);
 
@@ -90,7 +90,7 @@ function vpac_bd_error($db, $sql) {
 
   $msg .= '</table>';
 
-  vpac_bd_error_exit($msg); // ==> ARRET DU SCRIPT
+  vpac_db_error_exit($msg); // ==> ARRET DU SCRIPT
 }
 
 /**
@@ -100,7 +100,7 @@ function vpac_bd_error($db, $sql) {
  * @param object $db  Connecteur sur la bd ouverte
  */
 function vpac_get_array_from_sql($sql, $db) {
-  $res = mysqli_query($db,$sql) or vpac_bd_error($db,$sql);
+  $res = mysqli_query($db,$sql) or vpac_db_error($db,$sql);
   $all_results = array();
   while($datas_res = mysqli_fetch_assoc($res)) {
     $all_results[] = $datas_res;

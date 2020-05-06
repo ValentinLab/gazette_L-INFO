@@ -111,7 +111,7 @@ function vpacl_form_processing() {
   $sql = "SELECT utPseudo, utStatut
           FROM utilisateur
           WHERE utPseudo='{$pseudo_e}'";
-  $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
+  $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
   $data = mysqli_fetch_assoc($res);
   mysqli_free_result($res);
   mysqli_close($db);
