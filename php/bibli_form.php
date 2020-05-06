@@ -46,10 +46,10 @@ function vpac_print_table_form_invisible_input($name, $value) {
  * @param int $rows Nombre de lignes du textarea
  * @param int $cols Nombre de lignes du  textarea
  */
-function vpac_print_table_form_textarea($name, $rows = 10, $cols = 50, $required = false) {
+function vpac_print_table_form_textarea($label,$name, $rows = 10, $cols = 50, $required = false) {
   $required_val = ($required) ?  ' required'  : '';
   echo '<tr>',
-          '<td colspan="2">',
+          '<td colspan="2"><h2>',$label,'</h2>',
             '<textarea name="', $name, '" rows="', $rows, '" cols="', $cols,'" ', $required_val, '></textarea>',
           '</td>',
         '</tr>';

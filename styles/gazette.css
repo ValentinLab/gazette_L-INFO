@@ -190,7 +190,7 @@ nav > ul > li:last-child {
   margin-right: 20px;
 }
 
-nav > ul > li:last-of-type > a::before {
+nav > ul > li:last-of-type > a[href="#"]::before {
   content: "\2630\00A0";
 }
 

@@ -37,8 +37,11 @@ function vpacl_print_actus(){
     }
 
     $db = vpac_db_connect();
+    //On récupère les 3 articles qui seront affichés
+    $offset = ($page-1)*4;
     $sql = "SELECT * FROM article 
-            ORDER BY arDatePublication DESC";
+            ORDER BY arDatePublication DESC
+            LIMIT 4 OFFSET {$offset}";
 
     $res = mysqli_query($db, $sql) or vpac_bd_error($db, $sql);
     if(mysqli_num_rows($res) > 0) {
@@ -46,16 +49,24 @@ function vpacl_print_actus(){
         while($current_row=mysqli_fetch_assoc($res)){
             array_push($data,$current_row);
         }
-        mysqli_close($db);
     }
     mysqli_free_result($res);
 
-    $numberOfPages=(int)(count($data)/4)+1;
+    //numberOfPages prend le nombre total de pages d'articles
+    if(isset($_GET['nbPages'])){
+        $numberOfPages=vpac_decrypt_url($_GET['nbPages']);
+    }else{
+        $sql_numberOfArticles="SELECT COUNT(*) FROM article";
+        $numberOfArticles = mysqli_query($db, $sql_numberOfArticles) or vpac_bd_error($db, $sql_numberOfArticles);
+        $numberOfPages=mysqli_fetch_assoc($numberOfArticles)['COUNT(*)']/4+1;
+    }
+
+    mysqli_close($db);
+
     if($page > $numberOfPages) {
         vpac_print_error('Identifiant de page invalide.');
         return;
     }
-
 
     vpacl_print_page_selector($numberOfPages);
 
@@ -83,7 +94,7 @@ function vpacl_classer_articles_par_mois($data){
     $page = (isset($_GET['page'])) ? vpac_decrypt_url($_GET['page']) : 1;;
 
     $return=array();
-    for($i=($page-1)*4;$i<=($page-1)*4+3&&$i<count($data);++$i){
+    for($i=0;$i<count($data);++$i){
         if(!array_key_exists(vpacl_get_month_and_year($data[$i]['arDatePublication']),$return)){
             $return[vpacl_get_month_and_year($data[$i]['arDatePublication'])][0]=$data[$i];
         }else{
@@ -105,7 +116,7 @@ function vpacl_month_and_year_to_string($date) {
   
     $months = vpac_get_months();
   
-    return vpac_mb_ucfirst($months[$month]) . ' ' . $year;
+    return mb_strtolower($months[$month], 'UTF-8') . ' ' . $year;
 }
 
 /**
@@ -161,7 +172,7 @@ function vpacl_print_page_selector($numberOfPages) {
                     echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'" class="button button_selected">',$i,
                       '</a>';
                 }else{
-                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'" class="button">',$i,'</a>';
+                    echo'<a href="../php/actus.php?page=',vpac_encrypt_url($i),'">',$i,'</a>';
                 }
             }
             // Suivant
