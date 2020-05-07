@@ -169,14 +169,14 @@ function vpacl_print_comments($res, $status) {
       vpac_parse_bbcode_unicode($comment['coTexte']);
 
       //Vérifier si la personne connectée est l'auteur du message
-      $my_comment_id = (isset($_SESSION['user']) && $_SESSION['user']['pseudo'] == $comment['coAuteur']) ? ' id="comment-mine"' : '';
+      $my_comment_id = (isset($_SESSION['user']) && ($_SESSION['user']['pseudo'] == $comment['coAuteur'] || $_SESSION['user']['writer'])) ? ' class="comment-mine"' : '';
 
       // Afficher le commentaire
       echo '<li', $my_comment_id, '>',
             '<p>Commentaire de <strong>', $comment['coAuteur'],'</strong>, ', vpacl_time_to_string($comment['coDate']), '</p>';
             if(!empty($my_comment_id)) {
-              echo '<form action="" method="post">';
-                vpac_print_invisible_input('commentaire_id', $comment['coID']);
+              echo '<form action="article.php?id=', urlencode($_GET['id']) ,'" method="post">';
+                vpac_print_invisible_input('commentaire_id', vpac_encrypt_url($comment['coID']));
                 vpac_print_input_btn('submit', 'Supprimer le commentaire', 'btnSupprimerCommentaire');
               echo '</form>';
             }
@@ -192,8 +192,10 @@ function vpacl_print_comments($res, $status) {
     // Connexion ou inscription
     echo '<p><a href="../php/connexion.php">Connectez-vous</a> ou <a href="./inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p></section>';
   } else {
+    // Affichage de la boîte de dialogue pour le BBCode
+    vpac_print_bbcode_dialog();
     // Affichage du formulaire
-    echo '<form action="" method="post">',
+    echo '<form action="article.php?id=', urlencode($_GET['id']) ,'" method="post">',
           '<fieldset>',
             '<legend>Ajoutez un commentaire</legend>',
             '<table id="form_uncentered">';
@@ -201,7 +203,8 @@ function vpacl_print_comments($res, $status) {
               vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnAjouterCommentaire'));
             echo '</table>',
           '</fieldset>',
-        '</form>';
+        '</form>',
+      '</section>';
   }
 }
 
@@ -278,18 +281,16 @@ function vpacl_form_processing_remove(&$db) {
   }
 
   // Vérification de l'id du commentaire
-  $id = $_POST['commentaire_id'];
-  if(!vpac_is_number($id) || $id <= 0) {
+  $id = vpac_decrypt_url(urldecode($_POST['commentaire_id']));
+  if($id === FALSE) {
     header('Location: ../index.php');
     exit();
   }
 
   // Requête SQL
   $db = vpac_db_connect();
-    $auteur = mysqli_real_escape_string($db, $_SESSION['user']['pseudo']);
   $sql = "DELETE FROM commentaire
-          WHERE coAuteur = '{$auteur}'
-            AND coID = $id
+          WHERE coID = $id
             AND coArticle = $article";
   mysqli_query($db, $sql) or vpac_db_error($db, $sql);
 

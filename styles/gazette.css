@@ -261,11 +261,11 @@ body > header {
   height: 200px;
 }
 
-header > img {
+body > header > img {
   margin: 30px 0 0 10px;
 }
 
-header h1 {
+body > header h1 {
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -493,6 +493,7 @@ form textarea {
   font-size: 12px;
   background-color: rgba(0, 0, 0, 0.1);
   border: none;
+  border-radius: 2px;
 }
 
 /* Fieldset */
@@ -623,6 +624,79 @@ input[type=checkbox]:focus:invalid + label:before, input[type=radio]:focus:inval
   content: '\2713';
   margin-right: 6px;
   margin-left: 4px;
+}
+
+/****************************************************************
+Boîtes de dialogue
+****************************************************************/
+
+#dialog {
+  position: fixed;
+  display: none;
+  top: -50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  background-color: #ffffff;
+  border-radius: 5px;
+  width: 500px;
+  padding-bottom: 20px;
+  transition: all 0.5s;
+}
+
+p:hover + #dialog {
+  display: block;
+  top: 50%;
+}
+
+#dialog > header {
+  position: relative;
+  background-color: #ff0000;
+  color: #ffffff;
+  border-radius: 5px 5px 0 0;
+  padding: 20px 30px;
+}
+
+#dialog > header:before {
+  content: '\2715';
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+#dialog > header > h2 {
+  text-transform: uppercase;
+  font-weight: normal;
+}
+
+#dialog > header > h2 span {
+  font-weight: bold;
+}
+
+#dialog h3 {
+  padding: 10px 30px 7px 30px;
+  font-weight: bold;
+}
+
+#dialog p {
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+#dialog ul {
+  list-style: none;
+  margin: 0 30px;
+}
+
+#dialog > ul li {
+  margin-bottom: 4px;
+}
+
+#dialog > ul span {
+  font-family: monospace;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  padding: 0 2px 3px 2px;
 }
 
 /****************************************************************************************
@@ -772,15 +846,15 @@ section > ul > li > blockquote {
 
 /* Commentaires de l'utilisateur */
 
-li#comment-mine:hover {
+li.comment-mine:hover {
   background: #f0f0f0;
 }
 
-li#comment-mine > form {
+li.comment-mine > form {
   display: none;
 }
 
-li#comment-mine:hover > form {
+li.comment-mine:hover > form {
   display: block;
 }
 

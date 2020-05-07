@@ -162,7 +162,7 @@ function vpac_parse_bbcode(&$text) {
                            "/\[youtube:([^:]+?):([^:]+):($url_regex) (.+?)\]/"
                           );
   $replace_youtube = array('<iframe width="\1" height="\1" src="\3" allowfullscreen></iframe>',
-                           '<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\4<figcaption></figure>'
+                           '<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\4</figcaption></figure>'
                           );
   $text = preg_replace($markups_youtube, $replace_youtube, $text);
 }
@@ -174,7 +174,7 @@ function vpac_parse_bbcode(&$text) {
  */
 function vpac_parse_bbcode_unicode(&$text) {
   // balise [#NNN] -> &#NNN ou [#xNNN] -> &#xNNN
-  $text = preg_replace('/\[#([^]]+)\]/', '&#\1', $text);
+  $text = preg_replace('/\[#([^]]+)\]/', '&#\1;', $text);
 }
 
 /**

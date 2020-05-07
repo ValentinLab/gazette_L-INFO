@@ -275,7 +275,7 @@ function vpac_print_radio($name, $values, $default, $labels, $required) {
  * @param mixed  $value Valeur de l'input
  */
 function vpac_print_invisible_input($name, $value) {
-  echo '<input type="hidden" name="', $name, '" value="', $value, '" required></td>';
+  echo '<input type="hidden" name="', $name, '" value="', $value, '">';
 }
 
 /**
@@ -307,8 +307,7 @@ function vpac_print_form_status($status, $text_err = '', $full_size = false) {
 function vpac_print_input_image($label,$id,$maxSize=0) {
   echo'<label for="',$id,'">',$label,'</label>';
   if($maxSize>0){
-    echo'<input type="hidden" name="MAX_FILE_SIZE" ',
-			'value="',$maxSize,'">';
+    echo'<input type="hidden" name="MAX_FILE_SIZE" ', 'value="',$maxSize,'">';
   }
   echo'<input type="file" name="',$id,'">';
 }
