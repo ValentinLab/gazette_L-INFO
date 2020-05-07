@@ -55,12 +55,13 @@ function vpacl_print_form($errors) {
 
       // Valeur du formulaire
       $pseudo = (isset($_POST['btnConnexion'])) ? $_POST['pseudo'] : '';
+      $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '../index.php';
 
       echo '<form action="connexion.php" method="post">',
         '<table>';
           vpac_print_table_form_input('Pseudo', 'pseudo', vpac_protect_data($pseudo), true);
           vpac_print_table_form_input('Mot de passe', 'passe', '', true, 'password');
-          vpac_print_table_form_invisible_input('referer', $_SERVER['HTTP_REFERER']);
+          vpac_print_table_form_invisible_input('referer', vpac_encrypt_url($referer));
           vpac_print_table_form_button(array('submit', 'reset'), array('Se connecter', 'Annuler'), array('btnConnexion', ''));
         echo '</table>',
       '</form>',
@@ -92,13 +93,10 @@ function vpacl_form_processing() {
   }
 
   // Vérificattion de referer
-  $referer = '../index.php';
-  if(!empty($_POST['referer'])) {
-    if(!filter_var($_POST['referer'], FILTER_VALIDATE_URL)) {
-      header('Location: ../index.php');
-      exit();
-    }
-    $referer = $_POST['referer'];
+  $referer = vpac_decrypt_url(urldecode($_POST['referer']));
+  if($referer === FALSE) {
+    header('Location: ../index.php');
+    exit;
   }
 
   if(!empty($errors)) {

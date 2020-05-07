@@ -166,11 +166,12 @@ function vpac_print_table_form_button($types, $values, $names) {
  * @param array  $values      Valeurs du select
  * @param mixed  $default_day Valeur sélectionnée par défaut
  */
-function vpac_print_list($name, $values, $default_value) {
+function vpac_print_list($name, $values, $default_value, $disabled = array()) {
   echo '<select name="', $name, '">';
     foreach($values as $key => $val) {
       $selected = ($default_value == $val) ? ' selected' : '';
-      echo '<option value="', $key, '"', $selected, '>', $val, '</option>';
+      $dsbld = (in_array($val, $disabled)) ? ' disabled' : '';
+      echo '<option value="', $key, '"', $selected, $dsbld, '>', $val, '</option>';
     }
   echo '</select>';
 }

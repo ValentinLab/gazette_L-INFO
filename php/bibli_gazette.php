@@ -143,11 +143,14 @@ function vpac_print_error($content) {
 }
 
 function vpac_print_bbcode_dialog($all = TRUE) {
-  echo '<p>Afficher</p>';
+  // Bouton d'affichage
+  echo '<input type="checkbox" id="dialog_btn"><label for="dialog_btn">Comment utiliser le BBCode ?</label>';
 
+  // Boîte de dialogue
   echo '<div id="dialog">',
     '<header>',
       '<h2><span>BBCode</span> : cheatsheet</h2>',
+      '<label for="dialog_btn">&#x2715;</label>',
     '</header>';
     if($all == TRUE) {
       echo '<h3>Mise en forme du texte</h3>',

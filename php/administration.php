@@ -130,7 +130,11 @@ function vpacl_print_user_datas(&$db, $status) {
     '<h3>Modification des droits</h3>',
     '<form action="administration.php?user=', urlencode($_GET['user']), '", method="post" id="admin_rights">';
       $rights = array('aucun droit', 'rédacteur', 'administrateur', 'rédacteur et administrateur');
-      echo '<label><strong>Droits</strong> : ', vpac_print_list('rights', $rights, $rights[$data['utStatut']]), 
+      $disabled = array();
+      if($current_user == $_SESSION['user']['pseudo']) {
+        $disabled = array('aucun droit', 'rédacteur');
+      }
+      echo '<label><strong>Droits</strong> : ', vpac_print_list('rights', $rights, $rights[$data['utStatut']], $disabled), 
         '</label>';
       vpac_print_input_btn('submit', 'Modifier les droits', 'btnChangeRights');
     echo '</form>',
@@ -169,7 +173,7 @@ function vpacl_print_user_tr($data) {
     foreach($print_datas as $user_d) {
       echo '<td>', $user_d, '</td>';
     }
-    echo '<td><a href="administration.php?user=', vpac_encrypt_url($print_datas['pseudo']),'">Modifier</a></td>';
+    echo '<td><a href="administration.php?user=', vpac_encrypt_url($print_datas['pseudo']),'">Afficher</a></td>';
   echo '</tr>';
 }
 
@@ -177,6 +181,9 @@ function vpacl_print_user_tr($data) {
  * Traitement du formulaire de changement de droits d'un utilisateur
  */
 function vpacl_form_processing(&$db) {
+  // Erreurs du formulaire
+  $status = array();
+
   // Vérification de $_GET
   if(!isset($_GET['user'])) {
     header('Location: ../index.php');
@@ -197,6 +204,13 @@ function vpacl_form_processing(&$db) {
     header('Location: ../index.php');
     exit;
   }
+  if($current_user == $_SESSION['user']['pseudo'] && ($_POST['rights'] == WRITER_U || $_POST['rights'] == ALL_U)) {
+    $status['stderr'][] = 'Vous ne pouvez pas vous retirer le droit d\'administrateur';
+  }
+
+  if(!empty($status['stderr'])) {
+    return $status;
+  }
 
   // Modification des droits de l'utilisateur
   $db = vpac_db_connect();
@@ -206,6 +220,15 @@ function vpacl_form_processing(&$db) {
           SET utStatut={$new_rights}
           WHERE utPseudo='{$current_user}'";
   mysqli_query($db, $sql) or vpac_db_error($db, $sql);
+  
+  // Vérifier s'il s'agit de l'utilisateur courant
+  if($current_user == $_SESSION['user']['pseudo']) {
+    if($new_rights == ADMINISTRATOR_U) {
+      $_SESSION['user']['writer'] = false;
+    } else {
+      $_SESSION['user']['writer'] = true;
+    }
+  }
 
   $status['stdout'] = 'Les droits de l\'utilisateur ont été modifiés.';
   return $status;

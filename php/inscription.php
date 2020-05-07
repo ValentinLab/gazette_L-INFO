@@ -18,7 +18,7 @@ if(isset($_SESSION['user'])) {
 $errors = array();
 if(isset($_POST['btnInscription'])) {
   $errors = vpacl_form_processing();
-}var_dump($errors);
+}
 
 // ----------------------------------------
 // Page

@@ -115,6 +115,7 @@ body > header, main, body > footer {
 p, blockquote {
   text-align: justify;
   margin: 10px auto;
+  font-size: 16px;
 }
 
 blockquote {
@@ -630,9 +631,18 @@ input[type=checkbox]:focus:invalid + label:before, input[type=radio]:focus:inval
 Boîtes de dialogue
 ****************************************************************/
 
+#dialog_btn {
+  display: none;
+}
+
+#dialog_btn + label {
+  font-size: 14px;
+  font-style: italic;
+  cursor: help;
+}
+
 #dialog {
   position: fixed;
-  display: none;
   top: -50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -641,11 +651,10 @@ Boîtes de dialogue
   border-radius: 5px;
   width: 500px;
   padding-bottom: 20px;
-  transition: all 0.5s;
+  transition: top 1s ease;
 }
 
-p:hover + #dialog {
-  display: block;
+input[type=checkbox]:checked + label + #dialog {
   top: 50%;
 }
 
@@ -657,16 +666,18 @@ p:hover + #dialog {
   padding: 20px 30px;
 }
 
-#dialog > header:before {
+#dialog > header label {
   content: '\2715';
   position: absolute;
   top: 15px;
   right: 15px;
+  cursor: pointer;
 }
 
 #dialog > header > h2 {
   text-transform: uppercase;
   font-weight: normal;
+  font-size: 24px;
 }
 
 #dialog > header > h2 span {
@@ -676,6 +687,7 @@ p:hover + #dialog {
 #dialog h3 {
   padding: 10px 30px 7px 30px;
   font-weight: bold;
+  text-decoration: none;
 }
 
 #dialog p {

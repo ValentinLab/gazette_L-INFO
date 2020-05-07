@@ -193,7 +193,7 @@ function vpacl_print_comments($res, $status) {
     echo '<p><a href="../php/connexion.php">Connectez-vous</a> ou <a href="./inscription.php">inscrivez-vous</a> pour pouvoir commenter cet article !</p></section>';
   } else {
     // Affichage de la boîte de dialogue pour le BBCode
-    vpac_print_bbcode_dialog();
+    vpac_print_bbcode_dialog(FALSE);
     // Affichage du formulaire
     echo '<form action="article.php?id=', urlencode($_GET['id']) ,'" method="post">',
           '<fieldset>',
