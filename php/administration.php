@@ -134,8 +134,9 @@ function vpacl_print_user_datas(&$db, $status) {
       if($current_user == $_SESSION['user']['pseudo']) {
         $disabled = array('aucun droit', 'rédacteur');
       }
-      echo '<label><strong>Droits</strong> : ', vpac_print_list('rights', $rights, $rights[$data['utStatut']], $disabled), 
-        '</label>';
+      echo '<label><strong>Droits</strong> : ',
+        vpac_print_list('rights', $rights, $rights[$data['utStatut']], $disabled), 
+      '</label>';
       vpac_print_input_btn('submit', 'Modifier les droits', 'btnChangeRights');
     echo '</form>',
 

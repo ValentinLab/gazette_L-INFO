@@ -101,7 +101,8 @@ function vpac_print_table_form_select_number($label, $name, $start, $end, $step,
  * @param int    $default_year  Année sélectionnée par défaut (l'année actuelle pour 0)
  * @param int    $step          Pas d'incrément pour l'année
  */
-function vpac_print_table_form_date($label, $name, $start_year, $end_year, $default_day = 0, $default_month = 0, $default_year  = 0, $step = -1) {
+function vpac_print_table_form_date($label, $name, $start_year, $end_year, $default_day = 0, $default_month = 0,
+$default_year  = 0, $step = -1) {
   echo  '<tr><td>', $label, ' :</td><td>';
   vpac_print_list_date($name, $start_year, $end_year, $default_day, $default_month, $default_year, $step);
   echo '</td></tr>';
@@ -212,7 +213,8 @@ function vpac_print_list_months($name, $default_value) {
  * @param int    $default_year  Année sélectionnée par défaut (l'année actuelle pour 0)
  * @param int    $step          Pas d'incrément pour l'année
  */
-function vpac_print_list_date($name, $start_year, $end_year, $default_day = 0, $default_month = 0, $default_year  = 0, $step = -1) {
+function vpac_print_list_date($name, $start_year, $end_year, $default_day = 0, $default_month = 0, $default_year  = 0, 
+$step = -1) {
   if($default_day == 0 || $default_month == 0 || $default_year == 0) {
     $current_date = getdate();
     if($default_day == 0) {
@@ -265,7 +267,8 @@ function vpac_print_radio($name, $values, $default, $labels, $required) {
   $required_val = ($required) ? ' required' : '';
   for($i = 0; $i < $checkbox_numbers; ++$i) {
     $check_val = ($values[$i] == $default) ? ' checked' : '';
-    echo '<input type="radio" name="', $name, '" id="', $name, $i, '" value="', $values[$i], '" ',$check_val, $required_val, '><label for="', $name, $i, '">', $labels[$i], '</label> ';
+    echo '<input type="radio" name="', $name, '" id="', $name, $i, '" value="', $values[$i], '" ',$check_val,
+    $required_val, '><label for="', $name, $i, '">', $labels[$i], '</label> ';
   }
 }
 

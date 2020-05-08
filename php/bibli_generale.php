@@ -79,9 +79,9 @@ function vpac_protect_data($data) {
  * Cette fonction renvoie false en présence d'une suspicion de piratage 
  * et true quand il n'y a pas de problème détecté.
  * 
- * @param string $tab_global 'post' ou 'get'
- * @param array  $cles_obligatoires tableau contenant les clés qui doivent obligatoirement être présentes
- * @param array  $cles_facultatives tableau contenant les clés facultatives
+ * @param  string $tab_global 'post' ou 'get'
+ * @param  array  $cles_obligatoires tableau contenant les clés qui doivent obligatoirement être présentes
+ * @param  array  $cles_facultatives tableau contenant les clés facultatives
  * @global array $_GET
  * @global array $_POST
  * @return bool  true si les paramètres sont corrects, false sinon
@@ -140,31 +140,17 @@ function vpac_parse_bbcode(&$text) {
                            '<\1li>',
                            ''
                           );
-  $text =  preg_replace($markups_general, $replace_general, $text);
-
-  // Patterns
-  $url_regex = 'https?:\/\/[a-zA-Z0-9.\/\-?=]+';
-  $end_link = '(.+?)\[\/a\]';
+  $text = preg_replace($markups_general, $replace_general, $text);
 
   // balises [a:url]
-  $markups_link = array("/\[a:($url_regex)\]$end_link/",
-                        "/\[a:(mailto:[a-zA-Z0-9\-_.]+@[a-zA-Z0-9\-.]+\??.*?)\]$end_link/",
-                        "/\[a:([a-zA-Z\/\-_.#]+)\]$end_link/"
-                       );
-  $replace_link = array('<a href="\1" target="_blank">\2</a>',
-                        '<a href="\1">\2</a>',
-                        '<a href="\1">\2</a>'
-                       );
-  $text = preg_replace($markups_link, $replace_link, $text);
+  $text = preg_replace_callback('/\[a:([^]]+)\](.*?)\[\/a\]/', 'vpac_parse_url', $text);
 
   // balises [youtube:w:h:url], [youtube:w:h:url legende]
-  $markups_youtube = array("/\[youtube:([^:]+):([^:]+):($url_regex)\]/",
-                           "/\[youtube:([^:]+?):([^:]+):($url_regex) (.+?)\]/"
-                          );
-  $replace_youtube = array('<iframe width="\1" height="\1" src="\3" allowfullscreen></iframe>',
-                           '<figure><iframe width="\1" height="\2" src="\3" allowfullscreen></iframe><figcaption>\4</figcaption></figure>'
-                          );
-  $text = preg_replace($markups_youtube, $replace_youtube, $text);
+  $yt = array(
+          '/\[youtube:([0-9]+):([0-9]+):([a-zA-Z:\/.0-9&?\-_]+)\]/',
+          '/\[youtube:([0-9]+):([0-9]+):([a-zA-Z:\/.0-9&?\-_]+) ([^]]+)\]/'
+        );
+  $text = preg_replace_callback($yt, 'vpac_parse_youtube', $text);
 }
 
 /**
@@ -175,6 +161,61 @@ function vpac_parse_bbcode(&$text) {
 function vpac_parse_bbcode_unicode(&$text) {
   // balise [#NNN] -> &#NNN ou [#xNNN] -> &#xNNN
   $text = preg_replace('/\[#([^]]+)\]/', '&#\1;', $text);
+}
+
+/**
+ * Transformer le BBCode [a:url] si l'URL est valide
+ * 
+ * @param array $x Tableau transmit par preg_replace_callback
+ * @return string BBCode transformé en chaîne de caractères
+ */
+function vpac_parse_url($x) {
+  // Mail
+  if(preg_match('/^mailto:([^?]+)/', $x[1], $res) == 1) {
+    if(filter_var($res[1], FILTER_VALIDATE_EMAIL)) {
+      return "<a href=\"{$x[1]}\">{$x[2]}</a>";
+    }
+    return $x[0];
+  }
+
+  // External link
+  if(preg_match('/^https?/', $x[1]) == 1) {
+    if(filter_var($x[1], FILTER_VALIDATE_URL)) {
+      return "<a href=\"{$x[1]}\" target=\"_blank\">{$x[2]}</a>";
+    }
+    return $x[0];
+  }
+
+  // Anchor
+  if(preg_match('/^#[a-zA-Z0-9\-_]/', $x[1]) == 1) {
+    return "<a href=\"{$x[1]}\">{$x[2]}</a>";
+  }
+
+  // Internal link
+  if(file_exists($x[1])) {
+    return "<a href=\"{$x[1]}\">{$x[2]}</a>";
+  }
+
+ return $x[0];
+}
+
+/**
+ * Transformer le BBCode [youtube:...] si l'URL est valide
+ * 
+ * @param array $x Tableau transmit par preg_replace_callback
+ * @return string BBCode transformé en chaîne de caractères
+ */
+function vpac_parse_youtube($x) {
+  // Vérification de l'URL
+  if(filter_var($x[3], FILTER_VALIDATE_URL) === FALSE) {
+    return $x[0];
+  }
+
+  // Transformation du BBCode
+  if(count($x) == 5) {
+    return "<figure><iframe width=\"{$x[1]}\" height=\"{$x[2]}\" src=\"{$x[3]}\" allowfullscreen></iframe><figcaption>{$x[4]}</figcaption></figure>";
+  }
+  return "<figure><iframe width=\"{$x[1]}\" height=\"{$x[2]}\" src=\"{$x[3]}\" allowfullscreen></iframe></figure>";
 }
 
 /**
