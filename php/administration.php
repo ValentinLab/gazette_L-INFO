@@ -108,7 +108,7 @@ function vpacl_print_user_datas(&$db, $status) {
   $data = mysqli_fetch_assoc($res);
   $name = vpac_protect_data(vpac_mb_ucfirst($data['utPrenom']) . ' ' . vpac_mb_ucfirst($data['utNom']));
   $email = vpac_protect_data($data['utEmail']);
-  $gender = ($data['utCivilite'] == 'h') ? 'homme' : 'femme';
+  $gender = ($data['utCivilite'] == 'h') ? 'monsieur' : 'madame';
   $birthdate = substr($data['utDateNaissance'], 6) . '/' . substr($data['utDateNaissance'], 4, 2) . '/' . 
     substr($data['utDateNaissance'], 0, 4);
   $spam = ($data['utMailsPourris'] == 1) ? 'oui' : 'non';

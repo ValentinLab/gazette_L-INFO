@@ -76,14 +76,14 @@ function vpacl_print_form($errors) {
       echo '<form action="inscription.php" method="post">',
         '<table>';
           vpac_print_table_form_input('Choisissez un pseudo', 'pseudo', vpac_protect_data($pseudo), true, 'text', LMIN_PSEUDO . ' caractères minimum');
-          vpac_print_table_form_radio('Votre civilité', 'radSexe', array(1, 2), $civilite, array('Monsieur', 'Madame'), true);
+          vpac_print_table_form_radio('Votre civilité', 'radSexe', array(1, 2), $civilite, array('Monsieur', 'Madame'), false);
           vpac_print_table_form_input('Votre nom', 'nom', vpac_protect_data($nom), true);
           vpac_print_table_form_input('Votre prénom', 'prenom', vpac_protect_data($prenom), true);
           vpac_print_table_form_date('Votre date de naissance', 'naissance', $current_year, $current_year - DIFF_ANNEE, $naissance_j, $naissance_m, $naissance_a);
           vpac_print_table_form_input('Votre email', 'email', vpac_protect_data($email), true);
           vpac_print_table_form_input('Choisissez un mot de passe', 'passe1', '', true, 'password');
           vpac_print_table_form_input('Répétez le  mot de passe', 'passe2', '', true, 'password');
-          vpac_print_table_form_checkbox(array('cbCGU', 'cbSpam'), array(1, 1), array(0, $mails_pourris), array('J\'ai lu et j\'accepte les conditions générales d\'utilisation', 'J\'accepte de recevoir des tonnes de mails pourris'), array(true, false));
+          vpac_print_table_form_checkbox(array('cbCGU', 'cbSpam'), array(1, 1), array(0, $mails_pourris), array('J\'ai lu et j\'accepte les conditions générales d\'utilisation', 'J\'accepte de recevoir des tonnes de mails pourris'), array(false, false));
           vpac_print_table_form_button(array('submit', 'reset'), array('S\'inscrire', 'Réinitialiser'), array('btnInscription', ''));
         echo '</table>',
       '</form>',
@@ -119,17 +119,19 @@ function vpacl_form_processing() {
   // Vérification de la civilité
   if(!isset($_POST['radSexe'])) {
     $errors[] = 'Vous devez choisir une civilité.';
-  } else if(!vpac_is_number($_POST['radSexe'])) {
-    vpac_session_exit();
-  }
-  vpacl_check_between($_POST['radSexe'], 1, 2);
-  switch($_POST['radSexe']) {
-    case 1:
-      $civilite = 'h';
-      break;
-    case 2;
-      $civilite = 'f';
-      break;
+  } else {
+    if(!vpac_is_number($_POST['radSexe'])) {
+      vpac_session_exit();
+    }
+    vpacl_check_between($_POST['radSexe'], 1, 2);
+    switch($_POST['radSexe']) {
+      case 1:
+        $civilite = 'h';
+        break;
+      case 2;
+        $civilite = 'f';
+        break;
+    }
   }
 
   // Vérification du nom et du prénom
@@ -162,7 +164,7 @@ function vpacl_form_processing() {
   } elseif($email_len > LMAX_EMAIL) {
     $errors[] = 'L\'adresse mail ne peut pas contenir plus de 255 caractères.';
   }
-  // Vérification de la validité de l'adresse mail
+  // Vérification de la validité de l'adresse
   if(filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
     $errors[] = 'L\'adresse mail n\'est pas valide.';
   }
@@ -182,10 +184,8 @@ function vpacl_form_processing() {
   }
 
   // Vérification des spams
-  if(isset($_POST['cbSpam'])) {
-    if($_POST['cbSpam'] != 1) {
-      vpac_session_exit();
-    }
+  if(isset($_POST['cbSpam']) && $_POST['cbSpam'] != 1) {
+    vpac_session_exit();
   } else {
     $mails_pourris = false;
   }
@@ -222,7 +222,7 @@ function vpacl_form_processing() {
   mysqli_free_result($res);
 
   if(!empty($errors)) {
-    exit();
+    return $errors;
   }
 
   // Inscription d'un nouvel utilisateur
@@ -251,17 +251,17 @@ function vpacl_form_processing() {
 function vpacl_check_name(&$errors, $value, $field_name, $length) {
   if(empty($value)) {
     $errors[] = "Le $field_name ne peut pas être vide.";
-  } else if(!preg_match("/^[a-zéèêëàâäùçôö\-]{1,50}$/i", $value)) {
-    $errors[] = "Le $field_name ne peut pas contenir plus de $length caractères.";
+  } else if(!preg_match("/^[a-zéèêëàâäùçôö\-]{1,$length}$/i", $value)) {
+    $errors[] = "Le $field_name ne peut pas contenir plus de $length caractères et doit être composé de caractères alphabétiques.";
   }
 }
 
 /**
  * Vérifier la validité d'un champ numérique
  * 
- * @param int    $value  Valeur à vérifier
- * @param int    $min    Valeur minimum possible
- * @param int    $max    Valeur maximum possible
+ * @param int $value Valeur à vérifier
+ * @param int $min   Valeur minimum possible
+ * @param int $max   Valeur maximum possible
  */
 function vpacl_check_between($value, $min, $max) {
   if($value < $min || $value > $max) {
