@@ -58,6 +58,7 @@ table {
 body {
   /* Variables (thème par défaut) */
   --color-main: #ffffff;
+  --color-second: #e5e5e5;
   --color-opposite: #000000;
   --color-accent: #ff0000;
   --color-accent-bold: #cc0000;
@@ -67,18 +68,21 @@ body {
   --color-nav-text: #000000;
   --color-nav-text-hover: #333333;
   --color-links: #0000dd;
+  --color-link-disabled: rgba(255, 0, 0, 0.2);
 
   /* Variables (thème sombre) */
   --color-dark-main: rgb(28, 30, 34);
+  --color-dark-second: rgb(38, 40, 44);
   --color-dark-opposite: #ffffff;
   --color-dark-accent: rgb(21, 143, 245);
-  --color-dark-accent-bold: rgb(0, 122, 224);
+  --color-dark-accent-bold: rgb(8, 115, 204);
   --color-dark-background: linear-gradient(to bottom right, rgb(72, 72, 72), rgb(33, 35, 39));
   --color-dark-nav: rgba(0, 0, 0, 0.8);
   --color-dark-nav-hover: rgba(0, 0, 0, 1);
   --color-dark-nav-text: #ffffff;
   --color-dark-nav-text-hover: #333333;
   --color-dark-links: #ff0000;
+  --color-dark-link-disabled: rgba(21, 143, 245, 0.3);
 
   /* Propriétés */
   font-family: Trebuchet, arial, verdana, sans-serif;
@@ -253,7 +257,7 @@ body#dark nav a[href], body#dark nav a[href]:visited {
 
 nav a[href]:hover {
   text-decoration: none;
-  color: var(var(--color-main));
+  color: var(--color-main);
   background: var(--color-nav-text-hover);
   cursor: pointer;
 }
@@ -419,8 +423,16 @@ body#dark #data_table thead {
   background-color: rgba(5, 10, 20, 0.1);
 }
 
+body#dark #data_table tbody > tr:nth-child(even) {
+  background-color: rgba(5, 10, 20, 0.2);
+}
+
 #data_table tbody > tr:hover {
   background-color: rgba(255, 0, 0, 0.1);
+}
+
+body#dark #data_table tbody > tr:hover {
+  background-color: rgba(0, 0,255, 0.1);
 }
 
 #data_table td {
@@ -468,6 +480,11 @@ form input[type=text], form input[type=email], form input[type=password] {
   border-radius: 2px;
 }
 
+body#dark form input[type=text], body#dark form input[type=email], body#dark form input[type=password] {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: var(--color-dark-opposite);
+}
+
 /* Select */
 
 form select {
@@ -496,11 +513,15 @@ form input[type=checkbox] + label:before {
   margin-right: 5px;
 }
 
+body#dark form input[type=checkbox] + label:before {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 form input[type=checkbox]:checked + label:after {
   content: '\2713';
   position: absolute;
   top: 4px;
-  left: 3px;
+  left: 2.5px;
   color: var(--color-main);
   font-weight: bold;
   font-size: 11px;
@@ -520,6 +541,10 @@ body#dark form input[type=checkbox]:checked + label:before {
 
 form input[type=checkbox]:hover + label:before {
   background-color: rgba(0, 0, 0, 0.2);
+}
+
+body#dark form input[type=checkbox]:hover + label:before {
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 form input[type=checkbox]:checked:hover + label:before {
@@ -553,8 +578,16 @@ form input[type=radio] + label:before {
   margin-right: 5px;
 }
 
+body#dark form input[type=radio] + label:before {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 form input[type=radio]:hover + label:before {
   background-color: rgba(0, 0, 0, 0.2);
+}
+
+body#dark form input[type=radio]:hover + label:before {
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 form input[type=radio]:checked:hover + label:before {
@@ -580,23 +613,29 @@ form input[type=radio]:checked + label:after {
   transform: translate(-50%, -50%);
   width: 6px;
   height: 6px;
-  background-color: var(--color-accent);
+  background-color: var(--color-main);
   top: calc(14px/2 + 2px);
   left: calc(14px/2);
   border-radius: 100%;
 }
 
 body#dark form input[type=radio]:checked + label:after {
-  background-color: var(--color-dark-accent);
+  background-color: var(--color-dark-main);
 }
 
 /* Textarea */
 
 form textarea {
-  font-size: 12px;
+  font-size: 16px;
   background-color: rgba(0, 0, 0, 0.1);
   border: none;
   border-radius: 2px;
+  padding: 4px 7px;
+}
+
+body#dark form textarea {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: var(--color-dark-opposite);
 }
 
 /* Fieldset */
@@ -647,19 +686,20 @@ form input[type=submit], form input[type=reset], a.button {
   text-decoration: none;
 }
 
-body#dark form input[type=submit], body#dark form input[type=reset], a.button {
+body#dark form input[type=submit], body#dark form input[type=reset], body#dark a.button {
   border: 2px solid var(--color-dark-accent);
   color: var(--color-dark-accent);
 }
 
 input[type=submit]:hover, input[type=reset]:hover, a.button:hover {
   background: var(--color-accent);
-  color: white;
+  color: var(--color-main);
   text-decoration: none;
 }
 
-body#dark input[type=submit]:hover, body#dark input[type=reset]:hover, a.button:hover {
-  background: var(--color-accent);
+body#dark input[type=submit]:hover, body#dark input[type=reset]:hover, body#dark a.button:hover {
+  background: var(--color-dark-accent);
+  color: var(--color-dark-opposite);
 }
 
 a.button_selected {
@@ -667,7 +707,7 @@ a.button_selected {
   color: var(--color-accent-bold);
 }
 
-body#hover a.button_selected {
+body#dark a.button_selected {
   border-color: var(--color-dark-accent-bold);
   color: var(--color-dark-accent-bold);
 }
@@ -677,21 +717,31 @@ a.button_selected:hover {
   background-color: var(--color-accent-bold);
 }
 
-body#hover a.button_selected:hover {
+body#dark a.button_selected:hover {
   border-color: var(--color-dark-accent-bold);
   background-color: var(--color-dark-accent-bold);
 }
 
 a.button_disabled {
-  border-color: rgba(255, 0, 0, 0.2);
-  color: rgba(255, 0, 0, 0.2);
+  border-color: var(--color-link-disabled);
+  color: var(--color-link-disabled);
   cursor: default;
   pointer-events: none;
 }
 
+body#dark a.button_disabled {
+  border-color: var(--color-dark-link-disabled);
+  color: var(--color-dark-link-disabled);
+}
+
 a.button_disabled:hover {
   background-color: transparent;
-  color: rgba(255, 0, 0, 0.2);
+  color: var(--color-link-disabled);
+}
+
+body#dark a.button_disabled:hover {
+  background-color: transparent;
+  color: var(--color-dark-link-disabled);
 }
 
 /* Problème de saisie */
@@ -1018,6 +1068,10 @@ li.comment-mine:hover {
   background: #f0f0f0;
 }
 
+body#dark li.comment-mine:hover {
+  background: var(--color-dark-second);
+}
+
 li.comment-mine > form {
   display: none;
 }
@@ -1076,7 +1130,11 @@ actus.php
 section article.resume {
   margin: 10px 0;
   padding: 10px;
-  background-color: #E5E5E5;
+  background-color: var(--color-second);
+}
+
+body#dark section article.resume {
+  background-color: var(--color-dark-second);
 }
 
 section article.resume:first-of-type {
