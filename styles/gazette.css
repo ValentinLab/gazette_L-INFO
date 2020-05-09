@@ -294,7 +294,7 @@ nav > ul > li > ul:before {
 }
 
 body#dark nav > ul > li > ul:before {
-  background: var(--color-dark-main);
+  background: var(--color-dark-nav-hover);
 }
 
 nav > ul > li > ul > li > a[href] {
@@ -338,6 +338,10 @@ Pied de page
 body > footer {
   text-align: center;
   margin-bottom: 10px;
+}
+
+body#dark > footer {
+  color: var(--color-dark-opposite);
 }
 
 /****************************************************************** 
@@ -643,7 +647,7 @@ form input[type=submit], form input[type=reset], a.button {
   text-decoration: none;
 }
 
-body#dark form input[type=submit], form input[type=reset], a.button {
+body#dark form input[type=submit], body#dark form input[type=reset], a.button {
   border: 2px solid var(--color-dark-accent);
   color: var(--color-dark-accent);
 }
@@ -654,7 +658,7 @@ input[type=submit]:hover, input[type=reset]:hover, a.button:hover {
   text-decoration: none;
 }
 
-body#dark input[type=submit]:hover, input[type=reset]:hover, a.button:hover {
+body#dark input[type=submit]:hover, body#dark input[type=reset]:hover, a.button:hover {
   background: var(--color-accent);
 }
 
@@ -798,7 +802,7 @@ input[type=checkbox]:checked + label + #dialog {
 
 body#dark #dialog > header {
   background-color: var(--color-dark-accent);
-  color: var(--color-dark-main);
+  color: var(--color-dark-opposite);
 }
 
 #dialog > header label {
@@ -861,6 +865,10 @@ section > a[href], section > a[href]:visited {
   font-weight: bold;
 }
 
+body#dark section > a[href], section > a[href]:visited {
+  color: var(--color-dark-opposite);
+}
+
 section > a[href]:hover{
   text-decoration: none;
 }
@@ -878,6 +886,10 @@ section > a > img {
 
 section > a:hover > img {
   box-shadow: 0px 0px 20px var(--color-accent);
+}
+
+body#dark section > a:hover > img {
+  box-shadow: 0px 0px 20px var(--color-dark-accent);
 }
 
 /* Affichage des images d'articles */
@@ -904,8 +916,12 @@ section > a:hover > img {
 
 #horoscope td {
   padding: 5px 10px;
-  border: solid 1px #000;
+  border: solid 1px var(--color-opposite);
   text-align:justify;
+}
+
+body#dark #horoscope td {
+  border: solid 1px var(--color-dark-opposite);
 }
 
 #horoscope td:nth-child(1), #horoscope td:nth-child(2) {
@@ -917,11 +933,16 @@ article.php
 *******************************************************************************/
 
 main > article {
-  background-color: var(--color-accent);
+  background-color: var(--color-main);
   box-shadow: 10px 10px 20px #000;
   padding: 10px 20px;
   margin: 20px 0 40px 0;
   border-radius: 10px 0 20px 0;
+}
+
+body#dark main > article {
+  background-color: var(--color-dark-main);
+  color: var(--color-dark-opposite);
 }
 
 main > article img {
