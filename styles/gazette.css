@@ -68,12 +68,29 @@ body {
   --color-nav-text-hover: #333333;
   --color-links: #0000dd;
 
+  /* Variables (thème sombre) */
+  --color-dark-main: rgb(28, 30, 34);
+  --color-dark-opposite: #ffffff;
+  --color-dark-accent: rgb(21, 143, 245);
+  --color-dark-accent-bold: rgb(0, 122, 224);
+  --color-dark-background: linear-gradient(to bottom right, rgb(72, 72, 72), rgb(33, 35, 39));
+  --color-dark-nav: rgba(0, 0, 0, 0.8);
+  --color-dark-nav-hover: rgba(0, 0, 0, 1);
+  --color-dark-nav-text: #ffffff;
+  --color-dark-nav-text-hover: #333333;
+  --color-dark-links: #ff0000;
+
   /* Propriétés */
   font-family: Trebuchet, arial, verdana, sans-serif;
   line-height: 1.2;
   background: var(--color-main); 
   background: var(--color-background);
   min-height: calc(100vh - 40px);
+}
+
+body#dark {
+  background: var(--color-dark-main);
+  background: var(--color-dark-background);
 }
 
 i, em {
@@ -104,6 +121,10 @@ h4 {
 a[href], a[href]:visited {
   color: var(--color-links);
   text-decoration: none;
+}
+
+body#dark a[href], body#dark a[href]:visited {
+  color: var(--color-dark-links);
 }
 
 a[href]:hover {
@@ -186,8 +207,16 @@ nav > ul {
   text-align: right;
 }
 
+body#dark nav > ul {
+  background: var(--color-dark-nav);
+}
+
 nav > ul:hover {
   background: var(--color-nav-hover);
+}
+
+body#dark nav > ul:hover {
+  background: var(--color-dark-nav-hover);
 }
 
 nav > ul > li {
@@ -218,11 +247,20 @@ nav a[href], nav a[href]:visited {
   line-height: 40px;
 }
 
+body#dark nav a[href], body#dark nav a[href]:visited {
+  color: var(--color-dark-nav-text);
+}
+
 nav a[href]:hover {
   text-decoration: none;
   color: var(var(--color-main));
   background: var(--color-nav-text-hover);
   cursor: pointer;
+}
+
+body#dark nav a[href]:hover {
+  color: var(var(--color-dark-main));
+  background: var(--color-dark-nav-text-hover);
 }
 
 nav > ul > li > ul {
@@ -238,6 +276,10 @@ nav > ul > li > ul {
   padding-bottom: 4px;
 }
 
+body#dark nav > ul > li > ul {
+  background-color: var(--color-dark-nav-hover);
+}
+
 nav > ul > li > ul:before {
   z-index: 1;
   content: '';
@@ -249,6 +291,10 @@ nav > ul > li > ul:before {
   height: 12px;
   background: var(--color-main);
   transform: rotate(45deg);
+}
+
+body#dark nav > ul > li > ul:before {
+  background: var(--color-dark-main);
 }
 
 nav > ul > li > ul > li > a[href] {
@@ -304,7 +350,12 @@ section {
   background-color: var(--color-main);
   padding: 10px 20px;
   border-radius: 0 10px 10px 10px;
-  box-shadow: 10px 10px 10px #000;
+  box-shadow: 10px 10px 10px #000;;
+}
+
+body#dark section {
+  background-color: var(--color-dark-main);
+  color: var(--color-dark-opposite);
 }
 
 section:last-of-type {
@@ -323,6 +374,11 @@ section > h2 {
   width: auto;
   border-radius: 0 10px 0 0;
   padding: 5px 10px;
+}
+
+body#dark section > h2 {
+  background: var(--color-dark-accent);
+  color: var(--color-dark-opposite);
 }
 
 section article h3 {
@@ -344,6 +400,11 @@ Tableau de données
   text-align: left;
   border-top: 1px solid var(--color-accent);
   border-bottom: 1px solid var(--color-accent);
+}
+
+body#dark #data_table thead {
+  border-top: 1px solid var(--color-dark-accent);
+  border-bottom: 1px solid var(--color-dark-accent);
 }
 
 #data_table th {
@@ -441,8 +502,16 @@ form input[type=checkbox]:checked + label:after {
   font-size: 11px;
 }
 
+body#dark form input[type=checkbox]:checked + label:after {
+  color: var(--color-dark-main);
+}
+
 form input[type=checkbox]:checked + label:before {
   background-color: var(--color-accent);
+}
+
+body#dark form input[type=checkbox]:checked + label:before {
+  background-color: var(--color-dark-accent);
 }
 
 form input[type=checkbox]:hover + label:before {
@@ -451,6 +520,10 @@ form input[type=checkbox]:hover + label:before {
 
 form input[type=checkbox]:checked:hover + label:before {
   background-color: var(--color-accent-bold);
+}
+
+body#dark form input[type=checkbox]:checked:hover + label:before {
+  background-color: var(--color-dark-accent-bold);
 }
 
 /* Boutons radio */
@@ -484,8 +557,16 @@ form input[type=radio]:checked:hover + label:before {
   background-color: var(--color-accent-bold);
 }
 
+body#dark form input[type=radio]:checked:hover + label:before {
+  background-color: var(--color-dark-accent-bold);
+}
+
 form input[type=radio]:checked + label:before {
   background-color: var(--color-accent);
+}
+
+body#dark form input[type=radio]:checked + label:before {
+  background-color: var(--color-dark-accent);
 }
 
 form input[type=radio]:checked + label:after {
@@ -499,6 +580,10 @@ form input[type=radio]:checked + label:after {
   top: calc(14px/2 + 2px);
   left: calc(14px/2);
   border-radius: 100%;
+}
+
+body#dark form input[type=radio]:checked + label:after {
+  background-color: var(--color-dark-accent);
 }
 
 /* Textarea */
@@ -558,10 +643,19 @@ form input[type=submit], form input[type=reset], a.button {
   text-decoration: none;
 }
 
+body#dark form input[type=submit], form input[type=reset], a.button {
+  border: 2px solid var(--color-dark-accent);
+  color: var(--color-dark-accent);
+}
+
 input[type=submit]:hover, input[type=reset]:hover, a.button:hover {
   background: var(--color-accent);
   color: white;
   text-decoration: none;
+}
+
+body#dark input[type=submit]:hover, input[type=reset]:hover, a.button:hover {
+  background: var(--color-accent);
 }
 
 a.button_selected {
@@ -569,9 +663,19 @@ a.button_selected {
   color: var(--color-accent-bold);
 }
 
+body#hover a.button_selected {
+  border-color: var(--color-dark-accent-bold);
+  color: var(--color-dark-accent-bold);
+}
+
 a.button_selected:hover {
   border-color: var(--color-accent-bold);
   background-color: var(--color-accent-bold);
+}
+
+body#hover a.button_selected:hover {
+  border-color: var(--color-dark-accent-bold);
+  background-color: var(--color-dark-accent-bold);
 }
 
 a.button_disabled {
@@ -590,6 +694,10 @@ a.button_disabled:hover {
 
 input[type=checkbox]:focus:invalid + label:before, input[type=radio]:focus:invalid + label:before {
   box-shadow: 0 0 10px var(--color-accent-bold);
+}
+
+body#dark input[type=checkbox]:focus:invalid + label:before, body#dark input[type=radio]:focus:invalid + label:before {
+  box-shadow: 0 0 10px var(--color-dark-accent-bold);
 }
 
 /* Status du formulaire */
@@ -619,6 +727,11 @@ input[type=checkbox]:focus:invalid + label:before, input[type=radio]:focus:inval
 #errors, #errors-full-size {
   color: var(--color-accent);
   border-color: var(--color-accent);
+}
+
+body#dark #errors, body#dark #errors-full-size {
+  color: var(--color-dark-accent);
+  border-color: var(--color-dark-accent);
 }
 
 #errors p:before, #errors-full-size p:before {
@@ -667,6 +780,10 @@ Boîtes de dialogue
   transition: top 1s ease;
 }
 
+body#dark #dialog {
+  background-color: var(--color-dark-main);
+}
+
 input[type=checkbox]:checked + label + #dialog {
   top: 50%;
 }
@@ -677,6 +794,11 @@ input[type=checkbox]:checked + label + #dialog {
   color: var(--color-main);
   border-radius: 5px 5px 0 0;
   padding: 20px 30px;
+}
+
+body#dark #dialog > header {
+  background-color: var(--color-dark-accent);
+  color: var(--color-dark-main);
 }
 
 #dialog > header label {
