@@ -56,10 +56,23 @@ table {
 ************************************************************************/
 
 body {
+  /* Variables (thème par défaut) */
+  --color-main: #ffffff;
+  --color-opposite: #000000;
+  --color-accent: #ff0000;
+  --color-accent-bold: #cc0000;
+  --color-background: linear-gradient(to bottom right, #E0E0E0, #909090);
+  --color-nav: rgba(255, 255, 255, 0.8);
+  --color-nav-hover: rgba(255, 255, 255, 1);
+  --color-nav-text: #000000;
+  --color-nav-text-hover: #333333;
+  --color-links: #0000dd;
+
+  /* Propriétés */
   font-family: Trebuchet, arial, verdana, sans-serif;
   line-height: 1.2;
-  background: #EEE; 
-  background: linear-gradient(to bottom right, #E0E0E0, #909090);
+  background: var(--color-main); 
+  background: var(--color-background);
   min-height: calc(100vh - 40px);
 }
 
@@ -89,7 +102,7 @@ h4 {
 }
 
 a[href], a[href]:visited {
-  color: #0000DD;
+  color: var(--color-links);
   text-decoration: none;
 }
 
@@ -148,7 +161,7 @@ figure > iframe {
 }
 
 figcaption {
-  text-align: center;   
+  text-align: center;
 }
 
 /************************************************************************
@@ -169,12 +182,12 @@ nav > ul {
   height: 100%;
   margin: 0;
   transition: background 0.1s linear 0s;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--color-nav);
   text-align: right;
 }
 
 nav > ul:hover {
-  background: rgb(255, 255, 255);
+  background: var(--color-nav-hover);
 }
 
 nav > ul > li {
@@ -198,7 +211,7 @@ nav > ul > li:last-of-type > a[href="#"]::before {
 nav a[href], nav a[href]:visited {
   display: inline-block;
   font-weight: bold;
-  color: black;
+  color: var(--color-nav-text);
   transition: background 0.4s linear 0s;
   padding: 0 20px;
   height: 40px;
@@ -207,8 +220,8 @@ nav a[href], nav a[href]:visited {
 
 nav a[href]:hover {
   text-decoration: none;
-  color: #FFF;
-  background: #333;
+  color: var(var(--color-main));
+  background: var(--color-nav-text-hover);
   cursor: pointer;
 }
 
@@ -218,7 +231,7 @@ nav > ul > li > ul {
   right: 20px;
   display: none;
   list-style: none;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: var(--color-nav-hover);
   box-shadow: 0 0 20px 3px rgba(27,31,35,.15);
   border-radius: 3px;
   padding-top: 4px;
@@ -234,7 +247,7 @@ nav > ul > li > ul:before {
   display: block;
   width: 12px;
   height: 12px;
-  background: #ffffff;
+  background: var(--color-main);
   transform: rotate(45deg);
 }
 
@@ -288,7 +301,7 @@ Sections
 section {
   position: relative;
   margin: 50px 0 60px 0;
-  background-color: white;
+  background-color: var(--color-main);
   padding: 10px 20px;
   border-radius: 0 10px 10px 10px;
   box-shadow: 10px 10px 10px #000;
@@ -303,8 +316,8 @@ section > h2 {
   top: -30px;
   left: 0px;
   height: 20px;
-  background: red;
-  color: white;
+  background: var(--color-accent);
+  color: var(--color-main);
   font-weight: bold;
   font-size: 16px;
   width: auto;
@@ -329,8 +342,8 @@ Tableau de données
 #data_table thead {
   font-size: 15px;
   text-align: left;
-  border-top: 1px solid red;
-  border-bottom: 1px solid red;
+  border-top: 1px solid var(--color-accent);
+  border-bottom: 1px solid var(--color-accent);
 }
 
 #data_table th {
@@ -423,13 +436,13 @@ form input[type=checkbox]:checked + label:after {
   position: absolute;
   top: 4px;
   left: 3px;
-  color: white;
+  color: var(--color-main);
   font-weight: bold;
   font-size: 11px;
 }
 
 form input[type=checkbox]:checked + label:before {
-  background-color: red;
+  background-color: var(--color-accent);
 }
 
 form input[type=checkbox]:hover + label:before {
@@ -437,7 +450,7 @@ form input[type=checkbox]:hover + label:before {
 }
 
 form input[type=checkbox]:checked:hover + label:before {
-  background-color: #cc0000;
+  background-color: var(--color-accent-bold);
 }
 
 /* Boutons radio */
@@ -468,11 +481,11 @@ form input[type=radio]:hover + label:before {
 }
 
 form input[type=radio]:checked:hover + label:before {
-  background-color: #cc0000;
+  background-color: var(--color-accent-bold);
 }
 
 form input[type=radio]:checked + label:before {
-  background-color: red;
+  background-color: var(--color-accent);
 }
 
 form input[type=radio]:checked + label:after {
@@ -482,7 +495,7 @@ form input[type=radio]:checked + label:after {
   transform: translate(-50%, -50%);
   width: 6px;
   height: 6px;
-  background-color: #ffffff;
+  background-color: var(--color-accent);
   top: calc(14px/2 + 2px);
   left: calc(14px/2);
   border-radius: 100%;
@@ -529,9 +542,9 @@ form #form_uncentered td[colspan] {
 form input[type=submit], form input[type=reset], a.button {
   display: inline-block;
   margin: 0 10px 0 0;
-  border: 2px solid red;
+  border: 2px solid var(--color-accent);
   background-color: transparent;
-  color: red;
+  color: var(--color-accent);
   text-transform: uppercase;
   text-align: center;
   font-size: 13px;
@@ -546,19 +559,19 @@ form input[type=submit], form input[type=reset], a.button {
 }
 
 input[type=submit]:hover, input[type=reset]:hover, a.button:hover {
-  background: red;
+  background: var(--color-accent);
   color: white;
   text-decoration: none;
 }
 
 a.button_selected {
-  border-color: #cc0000;
-  color: #cc0000;
+  border-color: var(--color-accent-bold);
+  color: var(--color-accent-bold);
 }
 
 a.button_selected:hover {
-  border-color: #cc0000;
-  background-color: #cc0000;
+  border-color: var(--color-accent-bold);
+  background-color: var(--color-accent-bold);
 }
 
 a.button_disabled {
@@ -576,7 +589,7 @@ a.button_disabled:hover {
 /* Problème de saisie */
 
 input[type=checkbox]:focus:invalid + label:before, input[type=radio]:focus:invalid + label:before {
-  box-shadow: 0 0 10px red;
+  box-shadow: 0 0 10px var(--color-accent-bold);
 }
 
 /* Status du formulaire */
@@ -604,8 +617,8 @@ input[type=checkbox]:focus:invalid + label:before, input[type=radio]:focus:inval
 /* Erreurs du formulaire */
 
 #errors, #errors-full-size {
-  color: red;
-  border-color: red;
+  color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 #errors p:before, #errors-full-size p:before {
@@ -647,7 +660,7 @@ Boîtes de dialogue
   left: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-  background-color: #ffffff;
+  background-color: var(--color-main);
   border-radius: 5px;
   width: 500px;
   padding-bottom: 20px;
@@ -660,8 +673,8 @@ input[type=checkbox]:checked + label + #dialog {
 
 #dialog > header {
   position: relative;
-  background-color: #ff0000;
-  color: #ffffff;
+  background-color: var(--color-accent);
+  color: var(--color-main);
   border-radius: 5px 5px 0 0;
   padding: 20px 30px;
 }
@@ -722,7 +735,7 @@ section > a[href], section > a[href]:visited {
   margin: 0;
   padding: 10px 0 10px 0;
   text-decoration: none;
-  color: #000;
+  color: var(--color-opposite);
   font-weight: bold;
 }
 
@@ -734,15 +747,15 @@ section > a:not(:first-of-type):not(:last-of-type) {
   margin: 0 12px 0 12px;
 }
 
-section > a > img {   
-  border: solid 1px #000;
+section > a > img {
+  border: solid 1px var(--color-opposite);
   width: 250px;
   height: 187px;
   margin: 0 0 10px 0;
 }
 
 section > a:hover > img {
-  box-shadow: 0px 0px 20px red;   
+  box-shadow: 0px 0px 20px var(--color-accent);
 }
 
 /* Affichage des images d'articles */
@@ -782,7 +795,7 @@ article.php
 *******************************************************************************/
 
 main > article {
-  background-color: white;
+  background-color: var(--color-accent);
   box-shadow: 10px 10px 20px #000;
   padding: 10px 20px;
   margin: 20px 0 40px 0;
@@ -882,7 +895,7 @@ section article.redacteur {
 }
 
 section article.redacteur:not(:only-of-type) {
-  border-top: solid 2px #000;
+  border-top: solid 2px var(--color-opposite);
   padding-top: 20px;
 }
 
@@ -903,8 +916,8 @@ section article.redacteur h4 {
   text-align: right;
   right: 0px;
   padding: 5px;
-  background: black;
-  color: white;
+  background: var(--color-opposite);
+  color: var(--color-main);
   top: 0px;
 }
 
