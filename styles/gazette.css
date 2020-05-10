@@ -69,6 +69,8 @@ body {
   --color-nav-text-hover: #333333;
   --color-links: #0000dd;
   --color-link-disabled: rgba(255, 0, 0, 0.2);
+  --color-form: rgba(0, 0, 0, 0.1);
+  --color-form-strong: rgba(0, 0, 0, 0.2);
   
   /* Variables (thème sombre) */
   --color-dark-main: rgb(28, 30, 34);
@@ -83,6 +85,8 @@ body {
   --color-dark-nav-text-hover: #333333;
   --color-dark-links: #ff0000;
   --color-dark-link-disabled: rgba(21, 143, 245, 0.3);
+  --color-dark-form: rgba(255, 255, 255, 0.1);
+  --color-dark-form-strong: rgba(255, 255, 255, 0.2);
   
   /* Propriétés */
   font-family: Trebuchet, arial, verdana, sans-serif;
@@ -479,14 +483,14 @@ form td[colspan] label {
 form input[type=text], form input[type=email], form input[type=password] {
   width: 200px;
   border: none;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--color-form);
   padding: 7px 12px;
   font-size: 14px;
   border-radius: 2px;
 }
 
 body#dark form input[type=text], body#dark form input[type=email], body#dark form input[type=password] {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--color-dark-form);
   color: var(--color-dark-opposite);
 }
 
@@ -513,13 +517,13 @@ form input[type=checkbox] + label:before {
   display: inline-block;
   width: 14px;
   height: 14px;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--color-form);
   border-radius: 2px;
   margin-right: 5px;
 }
 
 body#dark form input[type=checkbox] + label:before {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--color-dark-form);
 }
 
 form input[type=checkbox]:checked + label:after {
@@ -545,11 +549,11 @@ body#dark form input[type=checkbox]:checked + label:before {
 }
 
 form input[type=checkbox]:hover + label:before {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--color-form-strong);
 }
 
 body#dark form input[type=checkbox]:hover + label:before {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--color-dark-form);
 }
 
 form input[type=checkbox]:checked:hover + label:before {
@@ -578,21 +582,21 @@ form input[type=radio] + label:before {
   display: inline-block;
   width: 14px;
   height: 14px;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--color-form);
   border-radius: 100%;
   margin-right: 5px;
 }
 
 body#dark form input[type=radio] + label:before {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--color-dark-form);
 }
 
 form input[type=radio]:hover + label:before {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--color-form-strong);
 }
 
 body#dark form input[type=radio]:hover + label:before {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--color-dark-form);
 }
 
 form input[type=radio]:checked:hover + label:before {
@@ -632,14 +636,14 @@ body#dark form input[type=radio]:checked + label:after {
 
 form textarea {
   font-size: 16px;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--color-form);
   border: none;
   border-radius: 2px;
   padding: 4px 7px;
 }
 
 body#dark form textarea {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--color-dark-form);
   color: var(--color-dark-opposite);
 }
 
