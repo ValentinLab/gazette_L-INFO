@@ -70,6 +70,12 @@ function vpacl_print_customization() {
       vpacl_print_preview('light', 'clair');
       vpacl_print_preview('dark', 'sombre');
     echo '</figure>',
+    '<form action="compte.php" method="post">',
+      '<table>';
+      vpac_print_table_form_select('Thème du site', 'theme', array('Thème clair', 'Thème sombre'), 'Thème clair');
+      vpac_print_table_form_button(array('submit'), array('Enregistrer'), array('btnTheme'));
+      echo '</table>',
+    '</form>',
   '</section>';
 }
 
