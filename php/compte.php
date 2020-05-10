@@ -20,6 +20,7 @@ vpac_get_header('Mon compte');
 // Page
 vpacl_print_datas();
 vpacl_print_password();
+vpacl_print_customization();
 
 // Footer
 vpac_get_footer();
@@ -59,5 +60,25 @@ function vpacl_print_password() {
       echo '</table>',
     '</form>',
   '</section>';
+}
+
+function vpacl_print_customization() {
+  echo '<section>',
+    '<h2>Personnalisation du style</h2>',
+    '<p>Vous pouvez modifier l\'apparence du  site internet.</p>',
+    '<figure>',
+      vpacl_print_preview('light', 'clair');
+      vpacl_print_preview('dark', 'sombre');
+    echo '</figure>',
+  '</section>';
+}
+
+function vpacl_print_preview($theme, $name) {
+  echo '<div class="preview" id="prev-', $theme,'">',
+    '<nav></nav>',
+    '<header></header>',
+    '<section></section>',
+    '<section></section>',
+  '</div>';
 }
 ?>

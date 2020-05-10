@@ -51,7 +51,7 @@ function vpac_get_head($title, $path = '..') {
             '<link rel="stylesheet" type="text/css" href="', $path,'/styles/gazette.css">',
             '<script src="', $path, '/js/a-little-bit-of.js"></script>',
         '</head>',
-        '<body id="dark">';
+        '<body>';
 }
 
 /**
