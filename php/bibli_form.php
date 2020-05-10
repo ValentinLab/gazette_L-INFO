@@ -120,7 +120,7 @@ $default_year  = 0, $step = -1) {
 function  vpac_print_table_form_checkbox($names, $values, $checked, $labels, $required) {
   $radio_numbers = count($names);
 
-  echo '<tr><td colspan="', $radio_numbers, '">';
+  echo '<tr><td colspan="2">';
     vpac_print_checkbox($radio_numbers, $names, $values, $checked, $labels, $required);
   echo '</td></tr>';
 }

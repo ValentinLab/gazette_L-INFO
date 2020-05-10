@@ -82,7 +82,7 @@ function vpacl_print_form($errors) {
           vpac_print_table_form_date('Votre date de naissance', 'naissance', $current_year, $current_year - DIFF_ANNEE, $naissance_j, $naissance_m, $naissance_a);
           vpac_print_table_form_input('Votre email', 'email', vpac_protect_data($email), true);
           vpac_print_table_form_input('Choisissez un mot de passe', 'passe1', '', true, 'password');
-          vpac_print_table_form_input('Répétez le  mot de passe', 'passe2', '', true, 'password');
+          vpac_print_table_form_input('Répétez le mot de passe', 'passe2', '', true, 'password');
           vpac_print_table_form_checkbox(array('cbCGU', 'cbSpam'), array(1, 1), array(0, $mails_pourris), array('J\'ai lu et j\'accepte les conditions générales d\'utilisation', 'J\'accepte de recevoir des tonnes de mails pourris'), array(false, false));
           vpac_print_table_form_button(array('submit', 'reset'), array('S\'inscrire', 'Réinitialiser'), array('btnInscription', ''));
         echo '</table>',
