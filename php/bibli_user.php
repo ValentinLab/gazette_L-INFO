@@ -9,11 +9,15 @@
  * @param string $pseudo Pseudo de l'utilisateur
  * @param int    $statut Statut de l'utilisateur dans l'intervalle [0, 3]
  */
-function vpac_connect_user($pseudo, $statut) {
+function vpac_connect_user($pseudo, $statut, $theme = CUSTOM_LIGHT) {
   $writer = ($statut == 1 || $statut == 3);
   $administrator = ($statut == 2 || $statut == 3);
 
-  $_SESSION['user'] = array('pseudo' => $pseudo, 'writer' => $writer, 'administrator' => $administrator);
+  $_SESSION['user'] = array('pseudo' => $pseudo,
+                            'writer' => $writer,
+                            'administrator' => $administrator,
+                            'theme' => $theme
+                           );
 }
 
 /**

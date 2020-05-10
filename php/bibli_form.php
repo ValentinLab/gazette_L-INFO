@@ -253,7 +253,7 @@ function vpac_print_checkbox($radio_numbers, $names, $values, $checked, $labels,
 }
 
 /**
- * Affihcer plusieurs boutons radio
+ * Afficher plusieurs boutons radio
  * 
  * @param string  $name     Nom des boutons radio
  * @param array   $values   Tableau contenant les valeurs des boutons radio
@@ -294,14 +294,6 @@ function vpac_print_input_btn($type, $value, $name) {
   echo '<input type="', $type, '" value="',  $value, '"', $name, '>';
 }
 
-function vpac_print_form_status($status, $text_err = '', $full_size = false) {
-  if(isset($status['stderr'])) {
-    vpac_print_form_errors($status['stderr'], $text_err, $full_size);
-  } elseif(isset($status['stdout'])) {
-    vpac_print_form_success($status['stdout'], $full_size);
-  }
-}
-
 /**
  * Afficher un sélecteur d'image à upload
  * 
@@ -314,6 +306,16 @@ function vpac_print_input_image($label,$id,$maxSize=0) {
     echo'<input type="hidden" name="MAX_FILE_SIZE" ', 'value="',$maxSize,'">';
   }
   echo'<input type="file" name="',$id,'">';
+}
+
+// ----- Affichage du traitement -----
+
+function vpac_print_form_status($status, $text_err = '', $full_size = false) {
+  if(isset($status['stderr'])) {
+    vpac_print_form_errors($status['stderr'], $text_err, $full_size);
+  } elseif(isset($status['stdout'])) {
+    vpac_print_form_success($status['stdout'], $full_size);
+  }
 }
 
 /**

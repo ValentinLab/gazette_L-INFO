@@ -123,8 +123,15 @@ function vpacl_form_processing() {
     return $errors;
   }
 
+  // Obtenir le thème
+  if(isset($_COOKIE["theme_user_{$pseudo}"])) {
+    $theme = $_COOKIE["theme_user_{$pseudo}"];
+  } else {
+    $theme = CUSTOM_LIGHT;
+  }
+
   // Mémoriser dans la variable de session
-  vpac_connect_user($pseudo, $data['utStatut']);
+  vpac_connect_user($pseudo, $data['utStatut'], $theme);
 
   header("Location: {$referer}");
 }

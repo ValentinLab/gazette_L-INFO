@@ -19,6 +19,10 @@ define('ALL_U', 0b00);
 define('WRITER_U', 0b01);
 define('ADMINISTRATOR_U', 0b10);
 
+// Thèmes
+define('CUSTOM_LIGHT', 0);
+define('CUSTOM_DARK', 1);
+
 //Inscription
 define('LMIN_PSEUDO', 4);
 define('LMAX_PSEUDO', 20);
@@ -27,7 +31,7 @@ define('LMAX_NOM', 50);
 define('LMAX_EMAIL', 255);
 define('DIFF_ANNEE', 100);
 
-// Commentaire
+// Commentaires
 define('LMAX_COMMENTAIRE', 256);
 
 // ----------------------------------------
@@ -42,6 +46,7 @@ define('LMAX_COMMENTAIRE', 256);
  */
 function vpac_get_head($title, $path = '..') {
   $page_title = (!empty($title)) ? "$title | La gazette de L-INFO" : 'La gazette de L-INFO';
+  $theme = (isset($_SESSION['user']) && $_SESSION['user']['theme'] == CUSTOM_DARK) ? ' id="dark"' : '';
 
   echo '<!doctype html>',
         '<html lang="fr">',
@@ -51,7 +56,7 @@ function vpac_get_head($title, $path = '..') {
             '<link rel="stylesheet" type="text/css" href="', $path,'/styles/gazette.css">',
             '<script src="', $path, '/js/a-little-bit-of.js"></script>',
         '</head>',
-        '<body>';
+        '<body', $theme, '>';
 }
 
 /**
