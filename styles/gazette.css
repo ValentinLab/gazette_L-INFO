@@ -773,15 +773,16 @@ body#dark input[type=checkbox]:focus:invalid + label:before, body#dark input[typ
   border: 2px solid;
   margin: auto;
   padding: 10px 6px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: bold;
 }
 
 .statusBox p {
   margin: 0 0;
+  font-size: 15px;
 }
 
-#errors, #succes {
+#errors, #success {
   width: 705px;
 }
 
@@ -792,13 +793,8 @@ body#dark input[type=checkbox]:focus:invalid + label:before, body#dark input[typ
 /* Erreurs du formulaire */
 
 #errors, #errors-full-size {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-body#dark #errors, body#dark #errors-full-size {
-  color: var(--color-dark-accent);
-  border-color: var(--color-dark-accent);
+  color: #c0392b;
+  border-color: #c0392b;
 }
 
 #errors p:before, #errors-full-size p:before {
@@ -810,8 +806,8 @@ body#dark #errors, body#dark #errors-full-size {
 /* Succès du formulaire */
 
 #success, #success-full-size {
-  color: green;
-  border-color: green;
+  color: #27ae60;
+  border-color: #27ae60;
 }
 
 #success p:before, #success-full-size p:before {

@@ -67,7 +67,7 @@ function vpacl_get_user_datas() {
 function vpacl_print_datas($user_datas, $status) {
   echo '<section>',
     '<h2>Informations personnelles</h2>';
-    vpac_print_form_status($status);
+    vpac_print_form_status($status, 'Les erreurs suivantes ont été relevées');
     echo '<p>Vous pouvez modifier les informations suivantes.</p>',
     '<form action="compte.php" method="post">',
         '<table>';
@@ -76,8 +76,8 @@ function vpacl_print_datas($user_datas, $status) {
           vpac_print_table_form_radio('Votre civilité', 'radSexe', array(1, 2), $civilite, array('Monsieur', 'Madame'),
             false);
 
-          vpac_print_table_form_input('Votre nom', 'nom', vpac_protect_data($user_datas['utNom']), true);
-          vpac_print_table_form_input('Votre prénom', 'prenom', vpac_protect_data($user_datas['utPrenom']), true);
+          vpac_print_table_form_input('Votre nom', 'nom', vpac_protect_data($user_datas['utNom']), TRUE);
+          vpac_print_table_form_input('Votre prénom', 'prenom', vpac_protect_data($user_datas['utPrenom']), TRUE);
 
           $current_year = date('Y');
           $birth = array(
@@ -88,7 +88,7 @@ function vpacl_print_datas($user_datas, $status) {
           vpac_print_table_form_date('Votre date de naissance', 'naissance', $current_year, $current_year - DIFF_ANNEE,
             $birth['day'], $birth['month'], $birth['year']);
 
-          vpac_print_table_form_input('Votre email', 'email', vpac_protect_data($user_datas['utEmail']), true);
+          vpac_print_table_form_input('Votre email', 'email', vpac_protect_data($user_datas['utEmail']), TRUE);
 
           vpac_print_table_form_checkbox(array('cbSpam'), array(1), array((bool)$user_datas['utMailsPourris']),
             array('J\'accepte de recevoir des tonnes de mails pourris'), array(FALSE));
