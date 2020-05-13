@@ -16,7 +16,7 @@ $status_datas = $status_passwd = $status_custom = array();
 if(isset($_POST['btnCustom'])) {
   $status_custom = vpacl_form_processing_customization();
 } else if(isset($_POST['btnDatas'])) {
-  $status_datas = array();
+  $status_datas = vpacl_form_processing_datas();
 } else if (isset($_POST['btnPassword'])) {
   $status_passwd = array();
 }
@@ -31,7 +31,8 @@ vpac_get_nav();
 vpac_get_header('Mon compte');
 
 // Page
-vpacl_print_datas();
+$datas = vpacl_get_user_datas();
+vpacl_print_datas($datas, $status_datas);
 vpacl_print_password();
 vpacl_print_customization($status_custom);
 
@@ -43,19 +44,57 @@ ob_end_flush();
 // Fonctions
 // ----------------------------------------
 
-function vpacl_print_datas() {
+// ----- Récupération des données
+
+function vpacl_get_user_datas() {
+  $db = vpac_db_connect();
+  $current_user = mysqli_real_escape_string($db, $_SESSION['user']['pseudo']);
+  $sql = "SELECT utCivilite, utNom, utPrenom, utDateNaissance, utEmail, utMailsPourris, reBio, reCategorie, reFonction
+          FROM utilisateur LEFT OUTER JOIN redacteur ON utPseudo = rePseudo
+          WHERE utPseudo='$current_user'";
+  $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
+
+  $datas = mysqli_fetch_assoc($res);
+
+  mysqli_free_result($res);
+  mysqli_close($db);
+
+  return $datas;
+}
+
+// ----- Affichage des sections
+
+function vpacl_print_datas($user_datas, $status) {
   echo '<section>',
-    '<h2>Informations personnelles</h2>',
-    '<p>Vous pouvez modifier les informations suivantes.</p>',
+    '<h2>Informations personnelles</h2>';
+    vpac_print_form_status($status);
+    echo '<p>Vous pouvez modifier les informations suivantes.</p>',
     '<form action="compte.php" method="post">',
         '<table>';
-          vpac_print_table_form_radio('Votre civilité', 'radSexe', array(1, 2), 1, array('Monsieur', 'Madame'), false);
-          vpac_print_table_form_input('Votre nom', 'nom', '', true);
-          vpac_print_table_form_input('Votre prénom', 'prenom', '', true);
-          vpac_print_table_form_date('Votre date de naissance', 'naissance', 2020, 2020 - DIFF_ANNEE, 11, 06, 2000);
-          vpac_print_table_form_input('Votre email', 'email', '', true);
-          vpac_print_table_form_checkbox(array('cbSpam'), array(1), array(FALSE), array('J\'accepte de recevoir des tonnes de mails pourris'), array(FALSE));
-          vpac_print_table_form_button(array('submit', 'reset'), array('Enregistrer', 'Réinitialiser'), array('btnDatas', ''));
+
+          $civilite = ($user_datas['utCivilite'] == 'h') ? 1 : 2;
+          vpac_print_table_form_radio('Votre civilité', 'radSexe', array(1, 2), $civilite, array('Monsieur', 'Madame'),
+            false);
+
+          vpac_print_table_form_input('Votre nom', 'nom', vpac_protect_data($user_datas['utNom']), true);
+          vpac_print_table_form_input('Votre prénom', 'prenom', vpac_protect_data($user_datas['utPrenom']), true);
+
+          $current_year = date('Y');
+          $birth = array(
+            'year' => (int)substr($user_datas['utDateNaissance'], 0, 4),
+            'month' => (int)substr($user_datas['utDateNaissance'], 4, 2),
+            'day' => (int)substr($user_datas['utDateNaissance'], 6)
+          );
+          vpac_print_table_form_date('Votre date de naissance', 'naissance', $current_year, $current_year - DIFF_ANNEE,
+            $birth['day'], $birth['month'], $birth['year']);
+
+          vpac_print_table_form_input('Votre email', 'email', vpac_protect_data($user_datas['utEmail']), true);
+
+          vpac_print_table_form_checkbox(array('cbSpam'), array(1), array((bool)$user_datas['utMailsPourris']),
+            array('J\'accepte de recevoir des tonnes de mails pourris'), array(FALSE));
+
+          vpac_print_table_form_button(array('submit', 'reset'), array('Enregistrer', 'Réinitialiser'),
+            array('btnDatas', ''));
         echo '</table>',
       '</form>',
   '</section>';
@@ -90,12 +129,14 @@ function vpacl_print_customization($status) {
     echo '</figure>',
     '<form action="compte.php" method="post">',
       '<table>';
-      vpac_print_table_form_select('Thème du site', 'theme', array('Thème clair', 'Thème sombre'), $theme);
+      vpac_print_table_form_select('Thème du site', 'theme', array('Thème clair', 'Thème sombre'), $theme, array());
       vpac_print_table_form_button(array('submit'), array('Enregistrer'), array('btnCustom'));
       echo '</table>',
     '</form>',
   '</section>';
 }
+
+// ----- Affichage autre
 
 function vpacl_print_preview($theme) {
   echo '<div class="preview" id="prev-', $theme,'">',
@@ -104,6 +145,98 @@ function vpacl_print_preview($theme) {
     '<section></section>',
     '<section></section>',
   '</div>';
+}
+
+// ----- Traitement des formulaires
+
+function vpacl_form_processing_datas() {
+  // vérifier les clés présentes dans $_POST
+  if(
+    !vpac_parametres_controle('post',
+      array('nom', 'prenom', 'naissance_j', 'naissance_m', 'naissance_a', 'email', 'btnDatas'),
+      array('radSexe', 'cbSpam')
+    )
+  ) {
+    vpac_session_exit();
+  }
+
+  // Vérification de la civilité
+  if(!vpac_is_number($_POST['radSexe'])) {
+    vpac_session_exit();
+  }
+  vpac_check_between($_POST['radSexe'], 1, 2);
+  if($_POST['radSexe'] == 1) {
+    $civilite = 'h';
+  } else {
+    $civilite = 'f';
+  }
+
+  // Vérification du nom et du prénom
+  $nom = trim($_POST['nom']);
+  vpac_check_name($errors, $nom, 'prenom', LMAX_PRENOM);
+  $prenom = trim($_POST['prenom']);
+  vpac_check_name($errors, $prenom, 'nom', LMAX_NOM);
+
+  // Vérification du jour/mois/année de naissance
+  $current_year = date('Y');
+  $day = (int)$_POST['naissance_j'];
+  $month = (int)$_POST['naissance_m'];
+  $year = (int)$_POST['naissance_a'];
+  vpac_check_between($day, 1, 31);
+  vpac_check_between($month, 1, 12);
+  vpac_check_between($year, $current_year - DIFF_ANNEE, $current_year);
+  // Vérification de l'âge
+  if(!checkdate($month, $day, $year)) {
+    $errors[] = 'La date de naissance n\'est pas valide.';
+  } elseif(mktime(0, 0, 0, $month, $day, $year+18) > time()) {
+    $errors[] = 'Vous devez avoir au moins 18 ans pour vous inscrire.';
+  }
+  // Format de la date
+  $month = ($month < 10) ? "0{$month}" : $month;
+  $day = ($day < 10) ? "0{$day}" : $day;
+  $naissance = "{$year}{$month}{$day}";
+
+  // Vérification de l'adresse mail
+  $email = trim($_POST['email']);
+  $email_len = mb_strlen($email, 'UTF-8');
+  if($email_len == 0) {
+    $errors[] = 'L\'adresse mail ne peut pas être vide.';
+  } elseif($email_len > LMAX_EMAIL) {
+    $errors[] = 'L\'adresse mail ne peut pas contenir plus de 255 caractères.';
+  }
+  // Vérification de la validité de l'adresse
+  if(filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+    $errors[] = 'L\'adresse mail n\'est pas valide.';
+  }
+
+  // Vérification des spams
+  if(isset($_POST['cbSpam'])) {
+    if($_POST['cbSpam'] != 1) {
+      vpac_session_exit();
+    } else {
+      $mails_pourris = 1;
+    }
+  } else {
+    $mails_pourris = 0;
+  }
+
+  if(!empty($errors)) {
+    return array('stderr' => $errors);
+  }
+
+  // Modification des données de l'utilisateur
+  $db = vpac_db_connect();
+  $user = mysqli_real_escape_string($db, $_SESSION['user']['pseudo']);
+  $nom = mysqli_real_escape_string($db, $nom);
+  $prenom = mysqli_real_escape_string($db, $prenom);
+  $email = mysqli_real_escape_string($db, $email);
+  $sql = "UPDATE utilisateur
+          SET utNom='{$nom}', utPrenom='{$prenom}', utEmail='{$email}', utDateNaissance={$naissance},
+            utCivilite='{$civilite}', utMailsPourris={$mails_pourris}
+          WHERE utPseudo='{$user}'";
+  mysqli_query($db, $sql) or vpac_db_error($db, $sql);
+
+  return array('stdout' => 'Vos données ont été modifiées');
 }
 
 function vpacl_form_processing_customization() {

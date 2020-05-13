@@ -1,11 +1,9 @@
 // Attendre que le DOM soit prêt
-document.addEventListener("DOMContentLoaded", isReady);
+document.addEventListener("DOMContentLoaded", start);
 
-/**
- * Fonctions à réaliser lorsque le DOM est prêt
- */
-function isReady() {
+function start() {
   toStatusBox();
+  changeStyleLive();
 }
 
 /**

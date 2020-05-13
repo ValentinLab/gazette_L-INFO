@@ -64,10 +64,10 @@ function vpac_print_table_form_textarea($label, $name, $rows = 10, $cols = 60, $
  * @param array  $values      Valeurs du select
  * @param mixed  $default_day Valeur sélectionnée par défaut
  */
-function vpac_print_table_form_select($label, $name, $values, $default_value) {
+function vpac_print_table_form_select($label, $name, $values, $default_value, $disabled = array(), $id = '') {
   echo '<tr>',
     '<td>', $label, ' :</td>',
-    '<td>', vpac_print_list($name, $values, $default_value), '</td>',
+    '<td>', vpac_print_list($name, $values, $default_value, $disabled, $id), '</td>',
   '</tr>';
 }
 
@@ -167,8 +167,9 @@ function vpac_print_table_form_button($types, $values, $names) {
  * @param array  $values      Valeurs du select
  * @param mixed  $default_day Valeur sélectionnée par défaut
  */
-function vpac_print_list($name, $values, $default_value, $disabled = array()) {
-  echo '<select name="', $name, '">';
+function vpac_print_list($name, $values, $default_value, $disabled = array(), $id = '') {
+  $id = (empty($id))? '' : "id=\"$id\"";
+  echo '<select name="', $name, '"', $id,'>';
     foreach($values as $key => $val) {
       $selected = ($default_value == $val) ? ' selected' : '';
       $dsbld = (in_array($val, $disabled)) ? ' disabled' : '';
@@ -306,6 +307,37 @@ function vpac_print_input_image($label,$id,$maxSize=0) {
     echo'<input type="hidden" name="MAX_FILE_SIZE" ', 'value="',$maxSize,'">';
   }
   echo'<input type="file" name="',$id,'">';
+}
+
+// ----- Traitement -----
+
+/**
+ * Vérifier la validité d'un champ numérique
+ * 
+ * @param int $value Valeur à vérifier
+ * @param int $min   Valeur minimum possible
+ * @param int $max   Valeur maximum possible
+ */
+function vpac_check_between($value, $min, $max) {
+  if($value < $min || $value > $max) {
+    vpac_session_exit();
+  }
+}
+
+/**
+ * Vérifier la validité d'une châine de type nom/prénom
+ * 
+ * @param array  $errors     Tableau contenant toutes les erreurs
+ * @param string $value      Valeur à vérifier
+ * @param string $field_name Nom du champ
+ * @param int    $length     Longueur maximum du champ
+ */
+function vpac_check_name(&$errors, $value, $field_name, $length) {
+  if(empty($value)) {
+    $errors[] = "Le $field_name ne peut pas être vide.";
+  } else if(!preg_match("/^[a-zéèêëàâäùçôö\-]{1,$length}$/i", $value)) {
+    $errors[] = "Le $field_name ne peut pas contenir plus de $length caractères et doit être composé de caractères alphabétiques.";
+  }
 }
 
 // ----- Affichage du traitement -----

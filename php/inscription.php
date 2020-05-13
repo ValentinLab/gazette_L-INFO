@@ -108,7 +108,7 @@ function vpacl_form_processing() {
   // Valeurs à récuperer dans le formulaire
   $pseudo = $civilite = $nom = $prenom = $email = $passe = '';
   $naissance = '';
-  $mails_pourris = true;
+  $mails_pourris = 0;
 
   // Vérification du pseudo
   $pseudo = trim($_POST['pseudo']);
@@ -123,7 +123,7 @@ function vpacl_form_processing() {
     if(!vpac_is_number($_POST['radSexe'])) {
       vpac_session_exit();
     }
-    vpacl_check_between($_POST['radSexe'], 1, 2);
+    vpac_check_between($_POST['radSexe'], 1, 2);
     switch($_POST['radSexe']) {
       case 1:
         $civilite = 'h';
@@ -136,24 +136,27 @@ function vpacl_form_processing() {
 
   // Vérification du nom et du prénom
   $nom = trim($_POST['nom']);
-  vpacl_check_name($errors, $nom, 'prenom', LMAX_PRENOM);
+  vpac_check_name($errors, $nom, 'prenom', LMAX_PRENOM);
   $prenom = trim($_POST['prenom']);
-  vpacl_check_name($errors, $prenom, 'nom', LMAX_NOM);
+  vpac_check_name($errors, $prenom, 'nom', LMAX_NOM);
 
   // Vérification du jour/mois/année de naissance
   $current_year = date('Y');
   $day = (int)$_POST['naissance_j'];
   $month = (int)$_POST['naissance_m'];
   $year = (int)$_POST['naissance_a'];
-  vpacl_check_between($day, 1, 31);
-  vpacl_check_between($month, 1, 12);
-  vpacl_check_between($year, $current_year - DIFF_ANNEE, $current_year);
+  vpac_check_between($day, 1, 31);
+  vpac_check_between($month, 1, 12);
+  vpac_check_between($year, $current_year - DIFF_ANNEE, $current_year);
   // Vérification de l'âge
   if(!checkdate($month, $day, $year)) {
     $errors[] = 'La date de naissance n\'est pas valide.';
   } elseif(mktime(0, 0, 0, $month, $day, $year+18) > time()) {
     $errors[] = 'Vous devez avoir au moins 18 ans pour vous inscrire.';
   }
+  // Format de la date
+  $month = ($month < 10) ? "0{$month}" : $month;
+  $day = ($day < 10) ? "0{$day}" : $day;
   $naissance = "{$year}{$month}{$day}";
 
   // Vérification de l'adresse mail
@@ -184,10 +187,14 @@ function vpacl_form_processing() {
   }
 
   // Vérification des spams
-  if(isset($_POST['cbSpam']) && $_POST['cbSpam'] != 1) {
-    vpac_session_exit();
+  if(isset($_POST['cbSpam'])) {
+    if($_POST['cbSpam'] != 1) {
+      vpac_session_exit();
+    } else {
+      $mails_pourris = 1;
+    }
   } else {
-    $mails_pourris = false;
+    $mails_pourris = 0;
   }
 
   // Vérification des CGU
@@ -228,6 +235,7 @@ function vpacl_form_processing() {
   // Inscription d'un nouvel utilisateur
   $nom = mysqli_real_escape_string($db, $nom);
   $prenom = mysqli_real_escape_string($db, $prenom);
+  $email = mysqli_real_escape_string($db, $email);
   $passe = password_hash($passe, PASSWORD_DEFAULT);
   $sql = "INSERT INTO utilisateur
           VALUES ('{$pseudo_e}', '{$nom}', '{$prenom}', '{$email}', '{$passe}', {$naissance}, 0, '{$civilite}', {$mails_pourris})";
@@ -248,24 +256,11 @@ function vpacl_form_processing() {
  * @param string $field_name Nom du champ
  * @param int    $length     Longueur maximum du champ
  */
-function vpacl_check_name(&$errors, $value, $field_name, $length) {
+function vpac_check_name(&$errors, $value, $field_name, $length) {
   if(empty($value)) {
     $errors[] = "Le $field_name ne peut pas être vide.";
   } else if(!preg_match("/^[a-zéèêëàâäùçôö\-]{1,$length}$/i", $value)) {
     $errors[] = "Le $field_name ne peut pas contenir plus de $length caractères et doit être composé de caractères alphabétiques.";
-  }
-}
-
-/**
- * Vérifier la validité d'un champ numérique
- * 
- * @param int $value Valeur à vérifier
- * @param int $min   Valeur minimum possible
- * @param int $max   Valeur maximum possible
- */
-function vpacl_check_between($value, $min, $max) {
-  if($value < $min || $value > $max) {
-    vpac_session_exit();
   }
 }
 ?>

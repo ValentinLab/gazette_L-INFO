@@ -101,6 +101,10 @@ body#dark {
   background: var(--color-dark-background);
 }
 
+body, section {
+  transition: background 0.2s linear;
+}
+
 i, em {
   font-style: italic;
 }
@@ -553,7 +557,7 @@ form input[type=checkbox]:hover + label:before {
 }
 
 body#dark form input[type=checkbox]:hover + label:before {
-  background-color: var(--color-dark-form);
+  background-color: var(--color-dark-form-strong);
 }
 
 form input[type=checkbox]:checked:hover + label:before {
@@ -596,7 +600,7 @@ form input[type=radio]:hover + label:before {
 }
 
 body#dark form input[type=radio]:hover + label:before {
-  background-color: var(--color-dark-form);
+  background-color: var(--color-dark-form-strong);
 }
 
 form input[type=radio]:checked:hover + label:before {
