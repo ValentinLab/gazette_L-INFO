@@ -18,7 +18,7 @@ if(isset($_POST['btnCustom'])) {
 } else if(isset($_POST['btnDatas'])) {
   $status_datas = vpacl_form_processing_datas();
 } else if (isset($_POST['btnPassword'])) {
-  $status_passwd = array();
+  $status_passwd = vpacl_form_processing_password();
 }
 
 // ----------------------------------------
@@ -33,7 +33,7 @@ vpac_get_header('Mon compte');
 // Page
 $datas = vpacl_get_user_datas();
 vpacl_print_datas($datas, $status_datas);
-vpacl_print_password();
+vpacl_print_password($status_passwd);
 vpacl_print_customization($status_custom);
 
 // Footer
@@ -100,10 +100,11 @@ function vpacl_print_datas($user_datas, $status) {
   '</section>';
 }
 
-function vpacl_print_password() {
+function vpacl_print_password($status) {
   echo '<section>',
-    '<h2>Authentification</h2>',
-    '<p>Vous pouvez modifier votre mot de passe ci-dessous.</p>',
+    '<h2>Authentification</h2>';
+    vpac_print_form_status($status);
+    echo '<p>Vous pouvez modifier votre mot de passe ci-dessous.</p>',
     '<form action="compte.php" method="post">',
       '<table>';
         vpac_print_table_form_input('Choisissez un mot de passe', 'passe1', '', true, 'password');
@@ -150,7 +151,7 @@ function vpacl_print_preview($theme) {
 // ----- Traitement des formulaires
 
 function vpacl_form_processing_datas() {
-  // vérifier les clés présentes dans $_POST
+  // Vérification des clés présentes dans $_POST
   if(
     !vpac_parametres_controle('post',
       array('nom', 'prenom', 'naissance_j', 'naissance_m', 'naissance_a', 'email', 'btnDatas'),
@@ -159,6 +160,9 @@ function vpacl_form_processing_datas() {
   ) {
     vpac_session_exit();
   }
+
+  // Erreurs de traitement
+  $errors = array();
 
   // Vérification de la civilité
   if(!vpac_is_number($_POST['radSexe'])) {
@@ -237,6 +241,45 @@ function vpacl_form_processing_datas() {
   mysqli_query($db, $sql) or vpac_db_error($db, $sql);
 
   return array('stdout' => 'Vos données ont été modifiées');
+}
+
+function vpacl_form_processing_password() {
+  // Vérification des clés présentes dans $_POST
+  if(!vpac_parametres_controle('post', array('passe1', 'passe2', 'btnPassword'))) {
+    vpac_session_exit();
+  }
+
+  // Erreurs de traitement
+  $errors = array();
+
+  // Vérification du mot de passe 1
+  $passe = $_POST['passe1'];
+  $passe_len = mb_strlen($passe, 'UTF-8');
+  if($passe_len == 0) {
+    $errors[] = 'Le mot de passe ne peut pas être vide.';
+  } elseif($passe_len > 255) {
+    $errors[] = "Le mot de passe ne peut pas contenir plus de 255 caractères. Actuellement $passe_len";
+  }
+
+  // Vérification du mot de passe 2
+  if($passe !== $_POST['passe2']) {
+    $errors[] = 'Les mots de passe doivent être identiques.';
+  }
+
+  if(!empty($errors)) {
+    return array('stderr' => $errors);
+  }
+
+  // Requête SQL
+  $db = vpac_db_connect();
+  $user = mysqli_real_escape_string($db, $_SESSION['user']['pseudo']);
+  $passe = password_hash($passe, PASSWORD_DEFAULT);
+  $sql = "UPDATE utilisateur
+          SET utPasse='$passe'
+          WHERE utPseudo='$user'";
+  mysqli_query($db, $sql) or vpac_db_error($db, $sql);
+
+  return array('stdout' => 'Le mot de passe a été changé avec succès');
 }
 
 function vpacl_form_processing_customization() {
