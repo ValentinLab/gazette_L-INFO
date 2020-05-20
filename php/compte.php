@@ -344,4 +344,13 @@ function vpacl_form_processing_customization() {
   $status['stdout'] = 'Changement de thème effectué';
   return $status;
 }
+
+function vpacl_form_processing_writer() {
+  // Vérifier les clés de $_POST
+  if(!vpac_parametres_controle('post', array('bio', 'categorie', 'fonction', 'btnWriter'))) {
+    vpac_session_exit();
+  }
+
+  // Vérifier la biographie
+}
 ?>
