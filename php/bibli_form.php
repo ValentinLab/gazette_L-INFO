@@ -46,12 +46,12 @@ function vpac_print_table_form_invisible_input($name, $value) {
  * @param int $rows Nombre de lignes du textarea
  * @param int $cols Nombre de lignes du  textarea
  */
-function vpac_print_table_form_textarea($label, $name, $rows = 10, $cols = 60, $required = false) {
+function vpac_print_table_form_textarea($label, $name, $rows = 10, $cols = 60, $required = false,$default='') {
   $required_val = ($required) ? ' required' : '';
   $label = (!empty($label)) ? "<label>$label</label>" : '';
   echo '<tr>',
           '<td colspan="2">', $label,
-            '<textarea name="', $name, '" rows="', $rows, '" cols="', $cols,'" ', $required_val, '></textarea>',
+            '<textarea name="', $name, '" rows="', $rows,'" cols="',  $cols,'" ', $required_val,'>',$default,'</textarea>',
           '</td>',
         '</tr>';
 }
@@ -305,12 +305,14 @@ function vpac_print_form_status($status, $text_err = '', $full_size = false) {
  * @param mixed  $id        id du champ
  */
 function vpac_print_input_image($label,$id,$maxSize=0) {
-  echo'<label for="',$id,'">',$label,'</label>';
+  echo'<tr>',
+  '<td><label for="',$id,'">',$label,'</label></td>';
   if($maxSize>0){
     echo'<input type="hidden" name="MAX_FILE_SIZE" ',
 			'value="',$maxSize,'">';
   }
-  echo'<input type="file" name="',$id,'">';
+  echo'<td><input type="file" name="',$id,'"></td>',
+  '</tr>';
 }
 
 /**

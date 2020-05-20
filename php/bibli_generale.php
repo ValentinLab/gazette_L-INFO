@@ -178,6 +178,18 @@ function vpac_parse_bbcode_unicode(&$text) {
 }
 
 /**
+   * Ajoute la balise [p] à une string si elle n'est pas présente
+   * 
+   * @param string $string chaîne à transformer
+   */
+  function vpac_string_to_bbcode(&$string){
+    //ajout de la balise paragraphe
+    if(strcmp(substr($string,0,3),'[p]')!=0){
+      $string='[p]'.$string.'[/p]';
+    }
+  }
+
+/**
  * Mettre la première lettre d'une châine de caractères en majuscule
  * et les suivantes en minuscule
  * 
@@ -205,4 +217,35 @@ function vpac_get_months() {
   array_push($months, 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aôut', 'septembre', 'octobre', 'novembre', 'décembre');
   return $months;
 }
+
+/**
+   * renvoie la date à laquelle l'article est posté dans le bon format
+   * 
+   * @return int date au format AAAAMMJJhhmm pour l'insérer dans la bdd
+   */
+  function vpac_date_array_to_int(){
+    $date=getDate();
+    $datePublication=$date['year'];
+    if($date['mon']<10){
+      $datePublication.='0'.$date['mon'];
+    }else{
+      $datePublication.=$date['mon'];
+    }
+    if($date['mday']<10){
+      $datePublication.='0'.$date['mday'];
+    }else{
+      $datePublication.=$date['mday'];
+    }
+    if($date['hours']<10){
+      $datePublication.='0'.$date['hours'];
+    }else{
+      $datePublication.=$date['hours'];
+    }
+    if($date['minutes']<10){
+      $datePublication.='0'.$date['minutes'];
+    }else{
+      $datePublication.=$date['minutes'];
+    }
+    return $datePublication;
+  }
 ?>

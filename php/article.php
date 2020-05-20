@@ -109,7 +109,7 @@ function vpacl_print_edit($res) {
   }
 
   echo '<section id="banner">',
-    '<p>Vous êtes l\'auteur de cet article, <a href="edition.php">cliquez ici pour le modifier ou le supprimer</a></p>',
+    '<p>Vous êtes l\'auteur de cet article, <a href="edition.php?arID=',urlencode($_GET['id']),'">cliquez ici pour le modifier ou le supprimer</a></p>',
   '</section>';
 }
 

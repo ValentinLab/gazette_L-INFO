@@ -921,3 +921,13 @@ administration.php
 #user_articles:checked + label + ul {
   display: block;
 }
+
+/****************************************************************************************
+edition.php
+****************************************************************************************/
+#edition_image{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100px;
+}
