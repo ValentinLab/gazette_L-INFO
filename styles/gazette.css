@@ -1350,3 +1350,12 @@ div#prev-light section {
   content: '';
   background: var(--color-dark-accent);
 }
+/****************************************************************************************
+  edition.php
+****************************************************************************************/
+#edition_image{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100px;
+}

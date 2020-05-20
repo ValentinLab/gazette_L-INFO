@@ -44,7 +44,7 @@ ob_end_flush();
     
           vpac_print_form_errors($errors, 'Les erreurs suivantes ont été relevées lors de la rédaction de l\'article :');
     
-          // Valeurs du formulaire*/
+          // Valeurs du formulaire
           $titre=$resume=$contenu='';
           if(isset($_POST['btnPublication'])) {
             $titre=vpac_protect_data($_POST['titre']);
@@ -119,29 +119,30 @@ ob_end_flush();
       }
     
       //Publication de l'article
-      $bd = vpac_bd_connecter();
+      $bd = vpac_db_connect();
       
       $titre = mysqli_real_escape_string($bd, $titre);
       $resume = mysqli_real_escape_string($bd,$resume);
       $contenu = mysqli_real_escape_string($bd,$contenu);
       
-      string_to_bbcode($contenu);
+      vpac_string_to_bbcode($contenu);
       
       $date=getdate();
-      $datePublication=date_array_to_int($date);  
+      $datePublication=vpac_date_array_to_int($date);  
 
       $auteur=mysqli_real_escape_string($bd, $_SESSION['user']['pseudo']);
       $sql = "INSERT INTO article (arTitre,arResume,arTexte,arDatePublication,arDateModification,arAuteur)
             VALUES ('{$titre}', '{$resume}', '{$contenu}', '{$datePublication}', NULL, '{$auteur}')";
-      mysqli_query($bd, $sql) or vpac_bd_erreur($bd, $sql);
+      mysqli_query($bd, $sql) or vpac_db_error($bd, $sql);
       $insert_id=mysqli_insert_id($bd);
+      
       mysqli_close($bd);
       header('Location: ./nouveau.php?id='.vpac_encrypt_url($insert_id));
       exit();
     }//deuxième formulaire : upload de l'image
     else{
       if (isset($_POST['btnValidationImage'])) {
-        if(isset($_FILES['image'])){
+        if($_FILES['image']['name']!=''){
           $errors=array();
           //vérification des erreurs
           $f = $_FILES['image'];
@@ -159,16 +160,12 @@ ob_end_flush();
           case 4:
             $errors[] = $f['name'].' introuvable.';
           }
-          var_dump(vpac_decrypt_url($_GET['id']));
-          var_dump($f);
           if(!empty($errors)) {
             return;
           }
-          var_dump($f);
           if (! @is_uploaded_file($f['tmp_name'])) {
             $errors[]='Erreur interne de transfert';
           }
-          var_dump(vpac_decrypt_url($_GET['id']));
           $place = realpath('..').'\\upload\\'.vpac_decrypt_url($_GET['id']).'.'.pathinfo($f['name'])['extension'];
           if (!@move_uploaded_file($f['tmp_name'], $place)) {
             $errors[] = 'Erreur interne de transfert';
@@ -176,96 +173,12 @@ ob_end_flush();
           if(!empty($errors)) {
             return;
           }
-          var_dump($f);
         }
-        header('Location: ./article.php?id='.$_GET['id']);
+      header('Location: ./article.php?id='.$_GET['id']);
         exit();
       }
     }
 
   }
 
-  /**
-   * renvoie la date à laquelle l'article est posté dans le bon format
-   * 
-   * @return int date au format AAAAMMJJhhmm pour l'insérer dans la bdd
-   */
-  function date_array_to_int(){
-    $date=getDate();
-    $datePublication=$date['year'];
-    if($date['mon']<10){
-      $datePublication.='0'.$date['mon'];
-    }else{
-      $datePublication.=$date['mon'];
-    }
-    if($date['mday']<10){
-      $datePublication.='0'.$date['mday'];
-    }else{
-      $datePublication.=$date['mday'];
-    }
-    if($date['hours']<10){
-      $datePublication.='0'.$date['hours'];
-    }else{
-      $datePublication.=$date['hours'];
-    }
-    if($date['minutes']<10){
-      $datePublication.='0'.$date['minutes'];
-    }else{
-      $datePublication.=$date['minutes'];
-    }
-    return $datePublication;
-  }
-
-  /**
-   * Ajoute la balise [p] à une string si elle n'est pas présente
-   * 
-   * @param string $string chaîne à transformer
-   */
-  function string_to_bbcode(&$string){
-    //ajout de la balise paragraphe
-    if(strcmp(substr($string,0,3),'[p]')!=0){
-      $string='[p]'.$string.'[/p]';
-    }
-  }
-
-  //Publication de l'article
-  $bd = vpac_db_connect();
-  
-  $titre = mysqli_real_escape_string($bd, $titre);
-  $resume = mysqli_real_escape_string($bd, $resume);
-  $contenu = mysqli_real_escape_string($bd, $contenu);
-
-  $date=getDate();
-  $datePublication=$date['year'];
-  
-  //mise au bon format du mois, jour, heure et minutes
-  if($date['mon']<10){
-    $datePublication.='0'.$date['mon'];
-  }else{
-    $datePublication.=$date['mon'];
-  }
-  if($date['mday']<10){
-    $datePublication.='0'.$date['mday'];
-  }else{
-    $datePublication.=$date['mday'];
-  }
-  if($date['hours']<10){
-    $datePublication.='0'.$date['hours'];
-  }else{
-    $datePublication.=$date['hours'];
-  }
-  if($date['minutes']<10){
-    $datePublication.='0'.$date['minutes'];
-  }else{
-    $datePublication.=$date['minutes'];
-  }
-  var_dump($datePublication);
-
-  $auteur=mysqli_real_escape_string($bd, $_SESSION['user']['pseudo']);
-  $sql = "INSERT INTO article (arTitre,arResume,arTexte,arDatePublication,arDateModification,arAuteur)
-        VALUES ('{$titre}', '{$resume}', '{$contenu}', '{$datePublication}', NULL, '{$auteur}')";
-  mysqli_query($bd, $sql) or vpac_db_error($bd, $sql);
-  mysqli_close($bd);
-  header('Location: ../index.php');
-}
 ?>
