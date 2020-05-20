@@ -46,12 +46,12 @@ function vpac_print_table_form_invisible_input($name, $value) {
  * @param int $rows Nombre de lignes du textarea
  * @param int $cols Nombre de lignes du  textarea
  */
-function vpac_print_table_form_textarea($label, $name, $rows = 10, $cols = 60, $required = false) {
+function vpac_print_table_form_textarea($label, $name, $rows = 10, $cols = 60, $required = false, $value = '') {
   $required_val = ($required) ? ' required' : '';
-  $label = (!empty($label)) ? "<label>$label</label>" : '';
+  $label = (!empty($label)) ? "<td><label>$label :</label></td><td>" : '<td colspan="2">';
   echo '<tr>',
-          '<td colspan="2">', $label,
-            '<textarea name="', $name, '" rows="', $rows, '" cols="', $cols,'" ', $required_val, '></textarea>',
+          $label,
+            '<textarea name="', $name, '" rows="', $rows, '" cols="', $cols,'" ', $required_val, '>', $value, '</textarea>',
           '</td>',
         '</tr>';
 }
@@ -156,6 +156,20 @@ function vpac_print_table_form_button($types, $values, $names) {
       vpac_print_input_btn($types[$i], $values[$i], $names[$i]);
     }
   echo '</td></tr>';
+}
+
+/**
+ * Afficher un sélecteur d'image à upload
+ * 
+ * @param string $label Label du champ
+ * @param mixed  $name  Nom du champ
+ */
+function vpac_print_table_form_image($label, $name, $maxSize = 0) {
+  echo '<tr><td><label for="',$name,'">',$label,'</label></td><td>';
+  if($maxSize > 0){
+    echo'<input type="hidden" name="MAX_FILE_SIZE" ', 'value="', $maxSize, '">';
+  }
+  echo'<input type="file" name="',$name,'"></td>';
 }
 
 // ----- Affichage des élements -----

@@ -35,6 +35,10 @@ $datas = vpacl_get_user_datas();
 vpacl_print_datas($datas, $status_datas);
 vpacl_print_password($status_passwd);
 vpacl_print_customization($status_custom);
+if($_SESSION['user']['writer']) {
+  vpacl_print_writer($datas);
+  vpacl_print_writer_pic();
+}
 
 // Footer
 vpac_get_footer();
@@ -132,6 +136,46 @@ function vpacl_print_customization($status) {
       '<table>';
       vpac_print_table_form_select('Thème du site', 'theme', array('Thème clair', 'Thème sombre'), $theme, array());
       vpac_print_table_form_button(array('submit'), array('Enregistrer'), array('btnCustom'));
+      echo '</table>',
+    '</form>',
+  '</section>';
+}
+
+function vpacl_print_writer($writer_datas) {
+  $db = vpac_db_connect();
+  $sql = "SELECT catLibelle
+          FROM categorie";
+  $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
+  $categories = array();
+  while($data = mysqli_fetch_assoc($res)) {
+    $categories[] = $data['catLibelle'];
+  }
+  mysqli_free_result($res);
+  mysqli_close($db);
+
+  echo '<section>',
+    '<h2>Informations de rédacteur</h2>',
+    '<p>Vous pouvez modifier vos informations affichées sur la page de <a href="redaction.php">la rédaction</a>.</p>',
+    '<form action="compte.php" method="post">',
+      '<table>';
+        vpac_print_table_form_textarea('Biographie', 'bio', 10, 50, TRUE, $writer_datas['reBio']);
+        vpac_print_table_form_select('Catégorie', 'categorie', $categories, $categories[$writer_datas['reCategorie']-1]);
+        vpac_print_table_form_input('Fonction', 'fonction', $writer_datas['reFonction'], TRUE);
+        vpac_print_table_form_button(array('submit', 'reset'), array('Enregistrer', 'Réinitialiser'),
+            array('btnWriter', ''));
+      echo '</table>',
+    '</form>',
+  '</section>';
+}
+
+function vpacl_print_writer_pic() {
+  echo '<section>',
+    '<h2>Photo de profile</h2>',
+    '<p>Vous pouvez modifier votre photo de rédacteur.</p>',
+    '<form action="" method="post">',
+      '<table>';
+        vpac_print_table_form_image('Image de profile', 'picRedacteur', 0);
+        vpac_print_table_form_button(array('submit'), array('Enregistrer'), array('btnPic'));
       echo '</table>',
     '</form>',
   '</section>';

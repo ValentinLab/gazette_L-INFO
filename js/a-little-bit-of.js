@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", start);
 
 function start() {
   toStatusBox();
-  changeStyleLive();
 }
 
 /**
