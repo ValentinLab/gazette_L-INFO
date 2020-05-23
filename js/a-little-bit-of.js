@@ -11,8 +11,23 @@ function start() {
 function toStatusBox() {
   var statusBox = document.getElementsByClassName('statusBox');
   if(statusBox.length > 0) {
-    if(statusBox[0].getBoundingClientRect().y > window.innerHeight) {
-      window.scroll(0, statusBox[0].getBoundingClientRect().y + 40)
-    }
+    window.scroll(0, statusBox[0].getBoundingClientRect().y - 90)
+  }
+}
+
+/**
+ * Afficher un aperçu de l'image qui sera téléchargé
+ * 
+ * @param {*} event Événement
+ */
+function preview_upload(event) {
+  var reader = new FileReader();
+  reader.onload = function() {
+    var output = document.getElementById('upload_pic_row').getElementsByTagName('td')[0].getElementsByTagName('img')[0];
+    output.src = reader.result;
+  }
+
+  if(event.target.files[0].type == "image/jpeg") {
+    reader.readAsDataURL(event.target.files[0]);
   }
 }

@@ -12,7 +12,7 @@ vpac_check_authentication(ALL_U);
 // Traitement des formulaires
 // ----------------------------------------
 
-$status_datas = $status_passwd = $status_custom = $status_writer = array();
+$status_datas = $status_passwd = $status_custom = $status_writer = $status_pic = array();
 if(isset($_POST['btnCustom'])) {
   $status_custom = vpacl_form_processing_customization();
 } else if(isset($_POST['btnDatas'])) {
@@ -21,6 +21,8 @@ if(isset($_POST['btnCustom'])) {
   $status_passwd = vpacl_form_processing_password();
 } else if(isset($_POST['btnWriter'])) {
   $status_writer = vpacl_form_processing_writer();
+} else if(isset($_POST['btnPic'])) {
+  $status_pic = vpacl_form_processing_writer_pic();
 }
 
 // ----------------------------------------
@@ -39,7 +41,7 @@ vpacl_print_password($status_passwd);
 vpacl_print_customization($status_custom);
 if($_SESSION['user']['writer']) {
   vpacl_print_writer($datas, $status_writer);
-  vpacl_print_writer_pic();
+  vpacl_print_writer_pic($status_pic);
 }
 
 // Footer
@@ -179,13 +181,21 @@ function vpacl_print_writer($writer_datas, $status) {
   '</section>';
 }
 
-function vpacl_print_writer_pic() {
+function vpacl_print_writer_pic($status) {
+  $imagePath = file_exists("../upload/{$_SESSION['user']['pseudo']}.jpg") ? "../upload/{$_SESSION['user']['pseudo']}.jpg" : '../images/anonyme.jpg';
+
   echo '<section>',
-    '<h2>Photo de profile</h2>',
-    '<p>Vous pouvez modifier votre photo de rédacteur.</p>',
-    '<form action="" method="post">',
-      '<table>';
-        vpac_print_table_form_image('Image de profile', 'picRedacteur', 0);
+    '<h2>Photo de profile</h2>';
+    vpac_print_form_status($status);
+    echo '<p>Vous pouvez modifier votre photo de rédacteur.</p>',
+    '<form action="compte.php" method="post" enctype="multipart/form-data">',
+      '<table>',
+        '<tr id="upload_pic_row">',
+          '<td><img src="', $imagePath, '" alt="photo de profile de ', htmlentities($_SESSION['user']['pseudo']), '" width="150" height="200"></td>',
+          '<td>',
+            '<input type="file" name="picRedacteur" id="pidRedacteur" onchange="preview_upload(event)" accept="image/jpeg" required>',
+          '</td>',
+        '</tr>';
         vpac_print_table_form_button(array('submit'), array('Enregistrer'), array('btnPic'));
       echo '</table>',
     '</form>',
@@ -428,5 +438,49 @@ function vpacl_form_processing_writer() {
   mysqli_close($db);
 
   return array('stdout' => 'It\'s okay.');
+}
+
+function vpacl_form_processing_writer_pic() {
+  // Erreurs du formulaire
+  $errors = array();
+
+  $file = $_FILES['picRedacteur'];
+
+  // Vérifier s'il y a des erreurs
+  switch($file['error']) {
+    case 1:
+    case 2:
+      $errors[] = 'Le ficher "' . $file['name'] . '" est trop volumineux';
+      break;
+    case 3:
+      $errors[] = 'Erreur de transfert du fichier "' . $file['name'] . '"';
+      break;
+    case 4:
+      $errors[] = 'Le fichier "' . $file['name'] . '" est introuvable';
+      break;
+  }
+
+  // Vérifier le type de l'image
+  if($file['type'] != 'image/jpeg') {
+    $errors[] = 'L\'image doit être de type jpeg.';
+  }
+
+  if(!empty($errors)) {
+    return array('stderr' => $errors);
+  }
+
+  // Placer le fichier
+  if(!@is_uploaded_file($file['tmp_name'])) {
+    $errors[] = 'Erreur interne de transfert 1';
+    return array('stderr' => $errors);
+  }
+
+  $path = realpath('..') . '/upload/' . $_SESSION['user']['pseudo'] . '.' . pathinfo($file['name'])['extension'];
+  if(!@move_uploaded_file($file['tmp_name'], $path)) {
+    $errors[] = 'Erreur interne de transfert 2';
+    return array('stderr' => $errors);
+  }
+
+  return array('stdout' => 'Votre image de profile a été téléchargé avec succès');
 }
 ?>

@@ -258,7 +258,7 @@ nav a[href], nav a[href]:visited {
   display: inline-block;
   font-weight: bold;
   color: var(--color-nav-text);
-  transition: background 0.4s linear 0s;
+  transition: background 0.3s linear 0s;
   padding: 0 20px;
   height: 40px;
   line-height: 40px;
@@ -280,6 +280,20 @@ body#dark nav a[href]:hover {
   background: var(--color-dark-nav-text-hover);
 }
 
+nav > ul > li:last-child:hover {
+  background-color: var(--color-nav-text-hover);
+  transition: background 0.3s linear 0s;
+}
+
+nav > ul > li:last-child:hover > a {
+  color: var(--color-main);
+}
+
+body#dark nav > ul > li:last-child:hover {
+  background-color: var(--color-dark-nav-text-hover);
+  color: var(var(--color-dark-main));
+}
+
 nav > ul > li > ul {
   position: absolute;
   top: 37px;
@@ -295,6 +309,7 @@ nav > ul > li > ul {
 
 body#dark nav > ul > li > ul {
   background-color: var(--color-dark-nav-hover);
+  box-shadow: 0 0 20px 3px rgba(30, 30, 30,0.65);
 }
 
 nav > ul > li > ul:before {
@@ -678,6 +693,12 @@ form #form_uncentered {
 
 form #form_uncentered td[colspan] {
   text-align: left;
+}
+
+/* Upload d'images */
+
+form #upload_pic_row > td:nth-child(2) {
+  vertical-align: middle;
 }
 
 /* Boutons */
