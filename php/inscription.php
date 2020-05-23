@@ -247,20 +247,4 @@ function vpacl_form_processing() {
 
   header('Location: ../index.php');
 }
-
-/**
- * Vérifier la validité d'une châine de type nom/prénom
- * 
- * @param array  $errors     Tableau contenant toutes les erreurs
- * @param string $value      Valeur à vérifier
- * @param string $field_name Nom du champ
- * @param int    $length     Longueur maximum du champ
- */
-function vpac_check_name(&$errors, $value, $field_name, $length) {
-  if(empty($value)) {
-    $errors[] = "Le $field_name ne peut pas être vide.";
-  } else if(!preg_match("/^[a-zéèêëàâäùçôö\-]{1,$length}$/i", $value)) {
-    $errors[] = "Le $field_name ne peut pas contenir plus de $length caractères et doit être composé de caractères alphabétiques.";
-  }
-}
 ?>

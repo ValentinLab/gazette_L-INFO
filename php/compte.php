@@ -12,13 +12,15 @@ vpac_check_authentication(ALL_U);
 // Traitement des formulaires
 // ----------------------------------------
 
-$status_datas = $status_passwd = $status_custom = array();
+$status_datas = $status_passwd = $status_custom = $status_writer = array();
 if(isset($_POST['btnCustom'])) {
   $status_custom = vpacl_form_processing_customization();
 } else if(isset($_POST['btnDatas'])) {
   $status_datas = vpacl_form_processing_datas();
-} else if (isset($_POST['btnPassword'])) {
+} else if(isset($_POST['btnPassword'])) {
   $status_passwd = vpacl_form_processing_password();
+} else if(isset($_POST['btnWriter'])) {
+  $status_writer = vpacl_form_processing_writer();
 }
 
 // ----------------------------------------
@@ -36,7 +38,7 @@ vpacl_print_datas($datas, $status_datas);
 vpacl_print_password($status_passwd);
 vpacl_print_customization($status_custom);
 if($_SESSION['user']['writer']) {
-  vpacl_print_writer($datas);
+  vpacl_print_writer($datas, $status_writer);
   vpacl_print_writer_pic();
 }
 
@@ -141,26 +143,35 @@ function vpacl_print_customization($status) {
   '</section>';
 }
 
-function vpacl_print_writer($writer_datas) {
+function vpacl_print_writer($writer_datas, $status) {
   $db = vpac_db_connect();
   $sql = "SELECT catLibelle
           FROM categorie";
   $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
   $categories = array();
+  $categories[] = '-- choisir une catégorie --';
   while($data = mysqli_fetch_assoc($res)) {
     $categories[] = $data['catLibelle'];
   }
   mysqli_free_result($res);
   mysqli_close($db);
 
+  // Informations
+  $bio = vpac_protect_data($writer_datas['reBio']);
+  $categorie = empty($writer_datas['reCategorie']) ? $categories[0] : $categories[$writer_datas['reCategorie']];
+  $fonction = vpac_protect_data($writer_datas['reFonction']);
+  $is_registrated = vpac_encrypt_url((int)!empty($bio));
+
   echo '<section>',
-    '<h2>Informations de rédacteur</h2>',
-    '<p>Vous pouvez modifier vos informations affichées sur la page de <a href="redaction.php">la rédaction</a>.</p>',
+    '<h2>Informations de rédacteur</h2>';
+    vpac_print_form_status($status, 'Les erreurs suivantes ont été relevées');
+    echo '<p>Vous pouvez modifier vos informations affichées sur la page de <a href="redaction.php">la rédaction</a>.</p>',
     '<form action="compte.php" method="post">',
       '<table>';
-        vpac_print_table_form_textarea('Biographie', 'bio', 10, 50, TRUE, $writer_datas['reBio']);
-        vpac_print_table_form_select('Catégorie', 'categorie', $categories, $categories[$writer_datas['reCategorie']-1]);
-        vpac_print_table_form_input('Fonction', 'fonction', $writer_datas['reFonction'], TRUE);
+        vpac_print_table_form_textarea('Biographie', 'bio', 10, 50, TRUE, $bio);
+        vpac_print_table_form_select('Catégorie', 'categorie', $categories, $categorie);
+        vpac_print_table_form_input('Fonction', 'fonction', $fonction, FALSE);
+        vpac_print_table_form_invisible_input('registrated', $is_registrated);
         vpac_print_table_form_button(array('submit', 'reset'), array('Enregistrer', 'Réinitialiser'),
             array('btnWriter', ''));
       echo '</table>',
@@ -347,10 +358,75 @@ function vpacl_form_processing_customization() {
 
 function vpacl_form_processing_writer() {
   // Vérifier les clés de $_POST
-  if(!vpac_parametres_controle('post', array('bio', 'categorie', 'fonction', 'btnWriter'))) {
+  if(!vpac_parametres_controle('post', array('bio', 'categorie', 'fonction', 'registrated', 'btnWriter'))) {
     vpac_session_exit();
   }
 
+  // Erreurs de traitement
+  $errors = array();
+
   // Vérifier la biographie
+  $bio = trim($_POST['bio']);
+  if(empty($bio)) {
+    $errors[] = 'Votre biographie ne peut pas être vide';
+  }
+  if(!preg_match('/\A\[p\]/', $bio)) {
+    $bio = "[p]{$bio}";
+  }
+  if(!preg_match('/\[\/p\]\Z/', $bio)) {
+    $bio = "{$bio}[/p]";
+  }
+
+  // Vérifier la catégorie
+  if(!vpac_is_number($_POST['categorie'])) {
+    vpac_session_exit();
+  }
+  $categorie = (int)$_POST['categorie'];
+  if($categorie == 0) {
+    $errors[] = 'Vous devez choisir une catégorie';
+  } else {
+    vpac_check_between($categorie, 1, 3);
+  }
+
+  // Vérifier la fonction
+  $fonction = trim($_POST['fonction']);
+  if(!empty($fonction)) {
+    if(!preg_match('/[a-zA-Zéèêëôöîïà\- ]/', $fonction)) {
+      $errors[] = 'La fonction ne doit contenir que des caractères alphabétiques.';
+    }
+    if(strlen($fonction) > 100) {
+      // strlen plutôt que mb_strlen car les caractères accentués sont stockés sur plus d'un octet
+      $errors[] = 'La chaîne ne doit pas dépasser 100 caractères.';
+    }
+  }
+
+  // Vérifier si l'utilisateur est déjà présent dans la db
+  $is_registrated = vpac_decrypt_url(urldecode($_POST['registrated']));
+  if($is_registrated === FALSE) {
+    vpac_session_exit();
+  }
+
+  // Afficher les erreurs
+  if(!empty($errors)) {
+    return array('stderr' => $errors);
+  }
+
+  // Requête de modification
+  $db = vpac_db_connect();
+  $user_e = mysqli_real_escape_string($db, $_SESSION['user']['pseudo']);
+  $bio_e = mysqli_real_escape_string($db, $bio);
+  $fonction_e = mysqli_real_escape_string($db, $fonction);
+  if($is_registrated) {
+    $sql = "UPDATE redacteur
+            SET reBio = '$bio_e', reCategorie = $categorie, reFonction = '$fonction_e'
+            WHERE rePseudo = '$user_e'";
+  } else {
+    $sql = "INSERT INTO redacteur
+            VALUES ('$user_e', '$bio_e', $categorie, '$fonction_e')";
+  }
+  mysqli_query($db, $sql) or vpac_db_error($db, $sql);
+  mysqli_close($db);
+
+  return array('stdout' => 'It\'s okay.');
 }
 ?>
