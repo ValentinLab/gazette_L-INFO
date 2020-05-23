@@ -81,11 +81,16 @@ ob_end_flush();
                 echo'<form action="edition.php?arID=',urlencode($_GET['arID']),'" method="post" enctype="multipart/form-data">',
                     '<table>';
                         vpac_print_table_form_input('Titre de l\'article', 'titre', vpac_protect_data($titre), true);
-                        vpac_print_table_form_textarea('Résumé','resume',5, 80, true,vpac_protect_data($resume));
-                        vpac_print_table_form_textarea('texte de l\'article','texte',40,80, true,vpac_protect_data($texte));
-                        vpac_print_input_image('Vous pouvez changer l\'image','image');
-                        $image = (file_exists("../upload/{$data['arID']}.jpg")) ? "<img id=\"edition_image\" src=\"../upload/{$data['arID']}.jpg\">" : '';
-                        echo "<td>$image</td>";
+                        vpac_print_table_form_textarea('Résumé','resume',5, 60, true,vpac_protect_data($resume));
+                        vpac_print_table_form_textarea('texte de l\'article','texte',35,60, true,vpac_protect_data($texte));
+                        vpac_print_table_form_image(
+                          'image',
+                          '../images/none.jpg',
+                          "../upload/{$data['arID']}.jpg",
+                          'image d\'illustration',
+                          250,
+                          187
+                        );
                         vpac_print_table_form_button(array('submit', 'reset'), array('Valider', 'Réinitialiser'), array('btnValidation', ''));
                     echo '</table>',
                 '</form>',

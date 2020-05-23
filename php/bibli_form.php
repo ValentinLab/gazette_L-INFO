@@ -164,12 +164,18 @@ function vpac_print_table_form_button($types, $values, $names) {
  * @param string $label Label du champ
  * @param mixed  $name  Nom du champ
  */
-function vpac_print_table_form_image($label, $name, $maxSize = 0) {
-  echo '<tr><td><label for="',$name,'">',$label,'</label></td><td>';
-  if($maxSize > 0){
-    echo'<input type="hidden" name="MAX_FILE_SIZE" ', 'value="', $maxSize, '">';
-  }
-  echo'<input type="file" name="',$name,'"></td>';
+function vpac_print_table_form_image($id, $default_pic, $set_pic, $alt, $width, $height, $maxSize = 0) {
+  $imagePath = file_exists($set_pic) ? $set_pic : $default_pic;
+
+  echo '<tr id="upload_pic_row">',
+    '<td><img src="', $imagePath, '" alt="', $alt, '" width="', $width, '" height="', $height, '"></td>',
+    '<td>';
+      if($maxSize > 0){
+        echo'<input type="hidden" name="MAX_FILE_SIZE" ', 'value="', $maxSize, '">';
+      }
+      echo '<input type="file" id="', $id,'" onchange="preview_upload(event)" accept="image/jpeg" required>',
+    '</td>',
+  '</tr>';
 }
 
 // ----- Affichage des élements -----

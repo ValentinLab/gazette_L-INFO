@@ -68,7 +68,14 @@ ob_end_flush();
           vpac_print_form_errors($errors, 'Les erreurs suivantes ont été relevées lors de l\'upload de la photo de l\'article :');
         echo '<form action="nouveau.php?id=',$_GET['id'],'" method="post" enctype="multipart/form-data">',
             '<table>';
-              vpac_print_input_image('Sélectionnez une image (JPG) : ','image');
+              vpac_print_table_form_image(
+                'image',
+                '../images/none.jpg',
+                '',
+                'image d\'illustration',
+                250,
+                187
+              );
               vpac_print_table_form_button(array('submit', 'reset'), array('Valider', 'Réinitialiser'), array('btnValidationImage', ''));
             echo '</table>',
           '</form>',

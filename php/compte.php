@@ -189,13 +189,15 @@ function vpacl_print_writer_pic($status) {
     vpac_print_form_status($status);
     echo '<p>Vous pouvez modifier votre photo de rédacteur.</p>',
     '<form action="compte.php" method="post" enctype="multipart/form-data">',
-      '<table>',
-        '<tr id="upload_pic_row">',
-          '<td><img src="', $imagePath, '" alt="photo de profile de ', htmlentities($_SESSION['user']['pseudo']), '" width="150" height="200"></td>',
-          '<td>',
-            '<input type="file" name="picRedacteur" id="pidRedacteur" onchange="preview_upload(event)" accept="image/jpeg" required>',
-          '</td>',
-        '</tr>';
+      '<table>';
+        vpac_print_table_form_image(
+          'pidRedacteur',
+          '../images/anonyme.jpg',
+          "../upload/{$_SESSION['user']['pseudo']}.jpg",
+          "photo de profile de " . htmlentities($_SESSION['user']['pseudo']),
+          150,
+          200
+        );
         vpac_print_table_form_button(array('submit'), array('Enregistrer'), array('btnPic'));
       echo '</table>',
     '</form>',
