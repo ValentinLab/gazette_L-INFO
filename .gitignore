@@ -1,2 +1,9 @@
+## Script ##
 .updatedb.txt
+
+## Pictures ##
+images/*
+upload/*
+
+## OS Files ##
 .DS_Store
