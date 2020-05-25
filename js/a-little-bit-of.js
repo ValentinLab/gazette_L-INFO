@@ -11,7 +11,7 @@ function start() {
 function toStatusBox() {
   var statusBox = document.getElementsByClassName('statusBox');
   if(statusBox.length > 0) {
-    window.scroll(0, statusBox[0].getBoundingClientRect().y - 90)
+    window.scroll(0, statusBox[0].getBoundingClientRect().y - 110)
   }
 }
 

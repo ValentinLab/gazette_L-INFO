@@ -185,7 +185,7 @@ ul {
 
 section > figure {
   width: max-content;
-  margin: auto;
+  margin: 10px auto 0 auto;
 }
 
 article > figure {
@@ -369,7 +369,7 @@ Pied de page
 
 body > footer {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 body#dark > footer {
@@ -851,6 +851,10 @@ Boîtes de dialogue
   font-size: 14px;
   font-style: italic;
   cursor: help;
+}
+
+#dialog_btn + label:before, #dialog_btn + label:after {
+  display: none;
 }
 
 #dialog {
