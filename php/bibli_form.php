@@ -173,7 +173,7 @@ function vpac_print_table_form_image($id, $default_pic, $set_pic, $alt, $width, 
       if($maxSize > 0){
         echo'<input type="hidden" name="MAX_FILE_SIZE" ', 'value="', $maxSize, '">';
       }
-      echo '<input type="file" name="', $id,'" onchange="preview_upload(event)" accept="image/jpeg" required>',
+      echo '<input type="file" name="', $id,'" onchange="preview_upload(event)" accept="image/jpeg">',
     '</td>',
   '</tr>';
 }

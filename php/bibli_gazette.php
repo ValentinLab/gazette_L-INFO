@@ -149,34 +149,36 @@ function vpac_print_error($content) {
 
 function vpac_print_bbcode_dialog($all = TRUE) {
   // Bouton d'affichage
-  echo '<input type="checkbox" id="dialog_btn"><label for="dialog_btn">Comment utiliser le BBCode ?</label>';
+  echo '<input type="checkbox" class="dialog_btn" id="dialog_bbcode"><label for="dialog_bbcode">Comment utiliser le BBCode ?</label>';
 
   // Boîte de dialogue
-  echo '<div id="dialog">',
+  echo '<div class="dialog">',
     '<header>',
       '<h2><span>BBCode</span> : cheatsheet</h2>',
-      '<label for="dialog_btn">&#x2715;</label>',
-    '</header>';
-    if($all == TRUE) {
-      echo '<h3>Mise en forme du texte</h3>',
-      '<ul>',
-        '<li><span>[p]contenu[/p]</span> : paragraphe</li>',
-        '<li><span>[gras]contenu[/gras]</span> : contenu en gras</li>',
-        '<li><span>[it]contenu[/it]</span> : contenu en italique</li>',
-        '<li><span>[citation]contenu[/citation]</span> : citation</li>',
-        '<li><span>[liste]contenu[/liste]</span> : liste</li>',
-        '<li><span>[item]contenu[/item]</span> : item dans une liste</li>',
-        '<li><span>[a:url]contenu[/a]</span> : lien pointant vers <span>url</span></li>',
-        '<li><span>[br]</span> : saut de ligne</li>',
-        '<li><span>[youtube:w:h:url]</span> : vidéo youtube de taille <span>w</span> et <span>h</span></li>',
-        '<li><span>[youtube:w:h:url legende]</span> : vidéo youtube avec légende</li>',
-      '</ul>';
-    }
-    echo '<h3>Ajout de codes unicode</h3>',
-      '<ul>',
-        '<li><span>[#NNN]</span> : code unicode décimal</li>',
-        '<li><span>[#xNNN]</span> : code unicode héxadécimal</li>',
-      '</ul>',
+      '<label for="dialog_bbcode">&#x2715;</label>',
+    '</header>',
+    '<main>';
+      if($all == TRUE) {
+        echo '<h3>Mise en forme du texte</h3>',
+        '<ul>',
+          '<li><span>[p]contenu[/p]</span> : paragraphe</li>',
+          '<li><span>[gras]contenu[/gras]</span> : contenu en gras</li>',
+          '<li><span>[it]contenu[/it]</span> : contenu en italique</li>',
+          '<li><span>[citation]contenu[/citation]</span> : citation</li>',
+          '<li><span>[liste]contenu[/liste]</span> : liste</li>',
+          '<li><span>[item]contenu[/item]</span> : item dans une liste</li>',
+          '<li><span>[a:url]contenu[/a]</span> : lien pointant vers <span>url</span></li>',
+          '<li><span>[br]</span> : saut de ligne</li>',
+          '<li><span>[youtube:w:h:url]</span> : vidéo youtube de taille <span>w</span> et <span>h</span></li>',
+          '<li><span>[youtube:w:h:url legende]</span> : vidéo youtube avec légende</li>',
+        '</ul>';
+      }
+      echo '<h3>Ajout de codes unicode</h3>',
+        '<ul>',
+          '<li><span>[#NNN]</span> : code unicode décimal</li>',
+          '<li><span>[#xNNN]</span> : code unicode héxadécimal</li>',
+        '</ul>',
+    '</main>',
   '</div>';
 }
 ?>

@@ -82,11 +82,9 @@ function vpacl_print_form($errors,$data){
                 '<table>';
                     vpac_print_table_form_input('Titre de l\'article', 'titre', vpac_protect_data($titre), true);
                     vpac_print_table_form_textarea('Résumé','resume',5, 60, true,vpac_protect_data($resume));
-                    echo '<tr>',
-                    '<td></td>',
-                    '<td>';
+                    echo '<tr><td></td><td>';
                       vpac_print_bbcode_dialog();
-                    echo '</td>';
+                    echo '</td></tr>';
                     vpac_print_table_form_textarea('Texte de l\'article','texte',20,60, true,vpac_protect_data($texte));
                     vpac_print_table_form_image(
                       'image',
@@ -96,8 +94,11 @@ function vpacl_print_form($errors,$data){
                       250,
                       187
                     );
-                    vpac_print_table_form_button(array('submit', 'reset'), array('Valider', 'Réinitialiser'), array('btnValidation', ''));
-                echo '</table>',
+                    echo '<tr><td colspan="2">';
+                      vpac_print_input_btn('submit', 'Enregistrer', 'btnValidation');
+                      vpacl_print_remove_dialog();
+                    echo '</td></tr>',
+                '</table>',
             '</form>',
         '</section>';
     vpac_print_form_errors($errors, 'Les erreurs suivantes ont été relevées lors de l\'édition de l\'article :');
@@ -189,5 +190,24 @@ function vpacl_form_processing(){
             }
         }
     exit();
+}
+
+function vpacl_print_remove_dialog() {
+  // Bouton d'affichage
+  echo '<input type="checkbox" class="dialog_btn" id="dialog_rm"><label for="dialog_rm">Supprimer cet article</label>';
+
+  // Boîte de dialogue
+  echo '<div class="dialog">',
+    '<header>',
+      '<h2><span>Zone de danger</span></h2>',
+      '<label for="dialog_rm">&#x2715;</label>',
+    '</header>',
+    '<main>',
+      '<h3>Souhaitez-vous supprimer cet article ?</h3>',
+      '<p>Vous ne pourrez pas restaurer l\'article après l\'avoir supprimé.</p>';
+      vpac_print_input_btn('submit', 'Supprimer', 'btnRemove');
+      echo '<label for="dialog_rm">Annuler</label>',
+    '</main>';
+  '</div>';
 }
 ?>
