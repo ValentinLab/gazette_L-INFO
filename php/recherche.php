@@ -7,6 +7,21 @@ require_once 'bibli_generale.php';
 
 
 // ----------------------------------------
+// Traitement du formulaire
+// ----------------------------------------
+
+$errors = array();
+if(isset($_POST['btnRecherche'])) {
+    $result = vpacl_form_processing();
+    //$result est le tableau des erreurs
+    if(isset($result[0])){
+        $errors = $result;
+    }else{//$result est le tableau des articles, classés par mois
+        $data = $result;
+    }
+}
+
+// ----------------------------------------
 // Page
 // ----------------------------------------
 
@@ -14,12 +29,11 @@ require_once 'bibli_generale.php';
 vpac_get_head('L\'actu');
 vpac_get_nav();
 vpac_get_header('L\'actu');
-
 // Formulaire
-$errors = array();
+
 vpacl_print_form($errors);
-if(isset($_POST['btnRecherche'])) {
-    $errors = vpacl_form_processing();
+if(isset($data)){
+    vpac_print_articles($data);
 }
 
 // Footer
@@ -32,25 +46,22 @@ ob_end_flush();
 
 function vpacl_print_form($errors) {
     echo '<section>',
-        '<h2>Rechercher des articles</h2>',
-        '<p>Les critères de recherche doivent faire au moins 3 caractères pour être pris en compte</p>';
+        '<h2>Rechercher des articles</h2>';
 
-        vpac_print_form_errors($errors, 'Les erreurs suivantes ont été relevées lors de votre recherche :');
+        vpac_print_form_errors($errors);
 
+        echo '<p>Les critères de recherche doivent faire au moins 3 caractères pour être pris en compte</p>';
         $criteres='';
-          if(isset($_POST['btnRecherche'])) {
-            $criteres=vpac_protect_data($_POST['criteres']);
-          }
+        if(isset($_POST['btnRecherche'])) {
+        $criteres=vpac_protect_data($_POST['criteres']);
+        }
         echo '<form action="recherche.php" method="post">',
-        '<table>',
-            '<input type="input" name="criteres" id="criteres"';  
-            if(isset($_POST['criteres'])){
-                echo ' value="',$_POST['criteres'],'"';
-            }
-            echo '>',
-            '<input type="submit" name="btnRecherche">',
-            '<input type="reset" name="btnReset">',
-        '</table>',
+        '<input type="text" name="criteres" id="criteres"';  
+        if(isset($_POST['criteres'])){
+            echo ' value="',$_POST['criteres'],'"';
+        }
+        echo '>',
+        '<input type="submit" name="btnRecherche">',
         '</form>',
     '</section>';
 }
@@ -81,10 +92,11 @@ function vpacl_form_processing() {
 
     $sql="SELECT * FROM article WHERE";
     foreach($criteres as $val){
-        $sql.=" arTitre LIKE '%$val%' OR arResume LIKE '%$val%' AND";
+        $sql.=" (arTitre LIKE '%$val%' OR arResume LIKE '%$val%') AND";
     }
     $sql=substr($sql,0,-3);
     $sql.= " ORDER BY arDatePublication DESC";
+
     $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
     if(mysqli_num_rows($res) > 0) {
         $data=array();
@@ -94,29 +106,13 @@ function vpacl_form_processing() {
     }
     
     //Affichage des articles
-    if(isset ($data)){
-        foreach($data as $article){
-            vpacl_print_article($article);
-        }
+    if(isset($data)){ 
+        $data_by_month=vpac_classer_articles_par_mois($data);
+        return $data_by_month;
+    }else{
+        $errors[]='Aucun article ne correspond à votre recherche';
+        return $errors;
     }
-    
-}
-
-/**
- * Afficher un article
- * 
- * @param array $article Tableau contenant les informations de l'article en question
- */
-function vpacl_print_article($article){
-    $image = (file_exists("../upload/{$article['arID']}.jpg")) ? "<img src=\"../upload/{$article['arID']}.jpg\" alt=\"{$article['arTitre']}\">" : '';
-    echo'<article class="resume">',
-            $image,
-            '<h3>',$article['arTitre'],'</h3>',
-            '<p>',
-            $article['arResume'],
-            '</p>',
-            '<footer><a href="../php/article.php?id=',vpac_encrypt_url($article['arID']),'">Lire l\'article</a></footer>',
-        '</article>';
 }
 
 ?>

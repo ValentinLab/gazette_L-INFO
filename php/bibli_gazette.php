@@ -5,9 +5,9 @@
 
 // Base de données
 define('BD_SERVER','localhost');
-define('BD_NAME','gazette_bd');
-define('BD_USER','perignon_u');
-define('BD_PASS','perignon_p');
+define('BD_NAME','claudel_gazette');
+define('BD_USER','claudel_u');
+define('BD_PASS','claudel_p');
 
 // URL
 define('CIPHER', 'aes-128-gcm');
@@ -178,5 +178,83 @@ function vpac_print_bbcode_dialog($all = TRUE) {
         '<li><span>[#xNNN]</span> : code unicode héxadécimal</li>',
       '</ul>',
   '</div>';
+}
+
+/**
+ * Couper une date pour ne retenir que l'année et le mois
+ *
+ * @param string $date Date au format YYYYMMDDhhmm
+ * @return string Date au format YYYYDD
+ */
+function vpac_get_month_and_year($date){
+    return substr($date,0,6);
+}
+
+/**
+ * Obtenir un tableau contenant les articles correspondant au numéro de la page, classés par mois
+ *
+ * @param array $data Tableau contenant tous les articles de la page
+ * @return array Tableau contenant les 4 articles de la page, indexé par mois
+ */
+function vpac_classer_articles_par_mois($data){
+    //$page = (isset($_GET['page'])) ? vpac_decrypt_url($_GET['page']) : 1;;
+
+    $return=array();
+    for($i=0;$i<count($data);++$i){
+        if(!array_key_exists(vpac_get_month_and_year($data[$i]['arDatePublication']),$return)){
+            $return[vpac_get_month_and_year($data[$i]['arDatePublication'])][0]=$data[$i];
+        }else{
+            array_push($return[vpac_get_month_and_year($data[$i]['arDatePublication'])],$data[$i]);
+        }
+    }
+    return $return;
+}
+
+/**
+ * Transformer une date dans le format
+ * Month Year
+ * 
+ * @param int $date Date à transformer
+ */
+function vpac_month_and_year_to_string($date) {
+    $month = (int)substr($date, -8, 2);
+    $year = substr($date, 0, -8);
+  
+    $months = vpac_get_months();
+  
+    return mb_strtolower($months[$month], 'UTF-8') . ' ' . $year;
+}
+
+/**
+ * Afficher le contenu principal de la page, 4 articles classés par mois
+ *
+ * @param array $data_by_month Tableau indexé par mois, contenant les 4 articles
+ */
+function vpac_print_articles($data_by_month){
+    foreach($data_by_month as &$value){
+        echo'<section>',
+            '<h2>',vpac_month_and_year_to_string($value[0]['arDatePublication']),'</h2>';
+            foreach($value as &$article) { 
+                vpac_print_article($article);
+            }
+        echo'</section>';
+    } 
+}
+
+/**
+ * Afficher un article
+ * 
+ * @param array $article Tableau contenant les informations de l'article en question
+ */
+function vpac_print_article($article){
+    $image = (file_exists("../upload/{$article['arID']}.jpg")) ? "<img src=\"../upload/{$article['arID']}.jpg\" alt=\"{$article['arTitre']}\">" : "<img src=\"../images/none.jpg\" alt=\"{$article['arTitre']}\">";
+    echo'<article class="resume">',
+            $image,
+            '<h3>',$article['arTitre'],'</h3>',
+            '<p>',
+            $article['arResume'],
+            '</p>',
+            '<footer><a href="../php/article.php?id=',vpac_encrypt_url($article['arID']),'">Lire l\'article</a></footer>',
+        '</article>';
 }
 ?>
