@@ -227,7 +227,7 @@ function vpacl_form_processing(&$db) {
   $db = vpac_db_connect();
     $current_user = mysqli_real_escape_string($db, $current_user);
     $new_rights = (int)$_POST['rights'];
-  $sql = "UPDATE Utilisateur
+  $sql = "UPDATE utilisateur
           SET utStatut={$new_rights}
           WHERE utPseudo='{$current_user}'";
   mysqli_query($db, $sql) or vpac_db_error($db, $sql);

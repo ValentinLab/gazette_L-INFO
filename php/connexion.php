@@ -106,7 +106,7 @@ function vpacl_form_processing() {
   // Requête à la bd
   $db = vpac_db_connect();
   $pseudo_e = mysqli_real_escape_string($db, $pseudo);
-  $sql = "SELECT utPseudo, utStatut
+  $sql = "SELECT utPseudo, utStatut, utPasse
           FROM utilisateur
           WHERE utPseudo='{$pseudo_e}'";
   $res = mysqli_query($db, $sql) or vpac_db_error($db, $sql);
@@ -114,8 +114,7 @@ function vpacl_form_processing() {
   mysqli_free_result($res);
   mysqli_close($db);
 
-  $hash = password_hash($_POST['passe'], PASSWORD_DEFAULT);
-  if($data == NULL || !password_verify($_POST['passe'], $hash)) {
+  if($data == NULL || !password_verify($_POST['passe'], $data['utPasse'])) {
     $errors[] = "Échec d'authentification. Utilisateur inconnu ou mot de passe incorrect.";
   }
 

@@ -190,7 +190,7 @@ function vpacl_form_processing(){
             if (! @is_uploaded_file($f['tmp_name'])) {
                 $errors[]='Erreur interne de transfert';
             }
-            $place = realpath('..').'\\upload\\'.vpac_decrypt_url($_GET['arID']).'.'.pathinfo($f['name'])['extension'];
+            $place = realpath('..').'/upload/'.vpac_decrypt_url($_GET['arID']).'.'.pathinfo($f['name'])['extension'];
             unlink($place);
             if (!@move_uploaded_file($f['tmp_name'], $place)) {
                 $errors[] = 'Erreur interne de transfert';
@@ -249,7 +249,7 @@ function vpacl_print_remove_dialog() {
       '<p>Vous ne pourrez pas restaurer l\'article après l\'avoir supprimé.</p>';
       vpac_print_input_btn('submit', 'Supprimer', 'btnRemove');
       echo '<label for="dialog_rm">Annuler</label>',
-    '</div>';
+    '</div>',
   '</div>';
 }
 ?>

@@ -109,7 +109,7 @@ function vpacl_form_processing() {
   }
   
   if(!empty($errors)) {
-    return;
+    return $errors;
   }
 
   //Publication de l'article
@@ -155,12 +155,12 @@ function vpacl_form_processing() {
     if (! @is_uploaded_file($f['tmp_name'])) {
       $errors[]='Erreur interne de transfert';
     }
-    $place = realpath('..').'\\upload\\'.$insert_id.'.'.pathinfo($f['name'])['extension'];
+    $place = '../upload/'.$insert_id.'.'.pathinfo($f['name'])['extension'];
     if (!@move_uploaded_file($f['tmp_name'], $place)) {
       $errors[] = 'Erreur interne de transfert';
     }
     if(!empty($errors)) {
-      return;
+      return $errors;
     }
   }
   header('Location: ./actus.php?');
