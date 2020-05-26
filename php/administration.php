@@ -41,6 +41,8 @@ ob_end_flush();
 
 /**
  * Afficher le tableau contenant tous les utilisateurs
+ * 
+ * @param object $db Lien avec la base de données
  */
 function vpacl_print_users(&$db) {
   // Requête SQL
@@ -83,6 +85,9 @@ function vpacl_print_users(&$db) {
 
 /**
  * Afficher une section avec l'ensemble des informations sur l'utilisateur
+ * 
+ * @param object $db     Lien avec la base de données
+ * @param int    $status Retour du traitement du formulaire
  */
 function vpacl_print_user_datas(&$db, $status) {
   if(!isset($_GET['user'])) {
@@ -157,6 +162,8 @@ function vpacl_print_user_datas(&$db, $status) {
 
 /**
  * Afficher un utilisateur dans une ligne de tableau
+ * 
+ * @param array $data Informations sur l'utilisateur
  */
 function vpacl_print_user_tr($data) {
   // Données
@@ -180,6 +187,9 @@ function vpacl_print_user_tr($data) {
 
 /**
  * Traitement du formulaire de changement de droits d'un utilisateur
+ * 
+ * @param object $db Lien avec la base de données
+ * @return array Résultat du traitement du formulaire
  */
 function vpacl_form_processing(&$db) {
   // Erreurs du formulaire

@@ -18,11 +18,11 @@
 function vpac_print_table_form_input($label, $name, $value, $required = false, $type = 'text', $placeholder = '') {
   $placeholder_val = (!empty($placeholder)) ? " placeholder=\"{$placeholder}\"" : '';
   $required_val = ($required) ?  ' required' : '';
-
+  
   echo '<tr>',
-         '<td><label for="', $name, '">', $label, ' :</label></td>',
-         '<td><input type="', $type, '" name="', $name, '" id="', $name, '" value="', $value, '"', $placeholder_val, $required_val, '></td>',
-       '</tr>';
+  '<td><label for="', $name, '">', $label, ' :</label></td>',
+  '<td><input type="', $type, '" name="', $name, '" id="', $name, '" value="', $value, '"', $placeholder_val, $required_val, '></td>',
+  '</tr>';
 }
 
 /**
@@ -33,10 +33,10 @@ function vpac_print_table_form_input($label, $name, $value, $required = false, $
  */
 function vpac_print_table_form_invisible_input($name, $value) {
   echo '<tr style="display: none">',
-         '<td colspan="2">';
-           vpac_print_invisible_input($name, $value);
-         echo '</td>',
-       '</tr>';
+  '<td colspan="2">';
+  vpac_print_invisible_input($name, $value);
+  echo '</td>',
+  '</tr>';
 }
 
 /**
@@ -50,10 +50,10 @@ function vpac_print_table_form_textarea($label, $name, $rows = 10, $cols = 60, $
   $required_val = ($required) ? ' required' : '';
   $label = (!empty($label)) ? "<td><label>$label :</label></td><td>" : "<td colspan=\"$colspan\">";
   echo '<tr>',
-          $label,
-            '<textarea name="', $name, '" rows="', $rows, '" cols="', $cols,'" ', $required_val, '>', $value, '</textarea>',
-          '</td>',
-        '</tr>';
+  $label,
+  '<textarea name="', $name, '" rows="', $rows, '" cols="', $cols,'" ', $required_val, '>', $value, '</textarea>',
+  '</td>',
+  '</tr>';
 }
 
 /**
@@ -66,8 +66,8 @@ function vpac_print_table_form_textarea($label, $name, $rows = 10, $cols = 60, $
  */
 function vpac_print_table_form_select($label, $name, $values, $default_value, $disabled = array(), $id = '') {
   echo '<tr>',
-    '<td>', $label, ' :</td>',
-    '<td>', vpac_print_list($name, $values, $default_value, $disabled, $id), '</td>',
+  '<td>', $label, ' :</td>',
+  '<td>', vpac_print_list($name, $values, $default_value, $disabled, $id), '</td>',
   '</tr>';
 }
 
@@ -83,8 +83,8 @@ function vpac_print_table_form_select($label, $name, $values, $default_value, $d
  */
 function vpac_print_table_form_select_number($label, $name, $start, $end, $step, $default_value) {
   echo '<tr>',
-    '<td>', $label, ' :</td>',
-    '<td>', vpac_print_list_number($name, $start, $end, $step, $default_value), '<td>',
+  '<td>', $label, ' :</td>',
+  '<td>', vpac_print_list_number($name, $start, $end, $step, $default_value), '<td>',
   '</tr>';
 }
 
@@ -120,7 +120,7 @@ $default_year  = 0, $step = -1) {
 function  vpac_print_table_form_checkbox($names, $values, $checked, $labels, $required) {
   $radio_numbers = count($names);
   echo '<tr><td colspan="2">';
-    vpac_print_checkbox($radio_numbers, $names, $values, $checked, $labels, $required);
+  vpac_print_checkbox($radio_numbers, $names, $values, $checked, $labels, $required);
   echo '</td></tr>';
 }
 
@@ -136,9 +136,9 @@ function  vpac_print_table_form_checkbox($names, $values, $checked, $labels, $re
  */
 function vpac_print_table_form_radio($main_label, $name, $values, $default, $labels, $required) {
   echo '<tr>',
-          '<td>', $main_label, '</td>',
-          '<td>';
-            vpac_print_radio($name, $values, $default, $labels, $required);
+  '<td>', $main_label, '</td>',
+  '<td>';
+  vpac_print_radio($name, $values, $default, $labels, $required);
   echo '</td></tr>';
 }
 
@@ -151,9 +151,9 @@ function vpac_print_table_form_radio($main_label, $name, $values, $default, $lab
  */
 function vpac_print_table_form_button($types, $values, $names, $colspan = 2) {
   echo '<tr><td colspan="', $colspan, '">';
-    for($i = 0, $btn_number = count($types); $i < $btn_number; ++$i) {
-      vpac_print_input_btn($types[$i], $values[$i], $names[$i]);
-    }
+  for($i = 0, $btn_number = count($types); $i < $btn_number; ++$i) {
+    vpac_print_input_btn($types[$i], $values[$i], $names[$i]);
+  }
   echo '</td></tr>';
 }
 
@@ -165,15 +165,15 @@ function vpac_print_table_form_button($types, $values, $names, $colspan = 2) {
  */
 function vpac_print_table_form_image($id, $default_pic, $set_pic, $alt, $width, $height, $maxSize = 0) {
   $imagePath = file_exists($set_pic) ? $set_pic : $default_pic;
-
+  
   echo '<tr id="upload_pic_row">',
-    '<td><img src="', $imagePath, '" alt="', $alt, '" width="', $width, '" height="', $height, '"></td>',
-    '<td>';
-      if($maxSize > 0){
-        echo'<input type="hidden" name="MAX_FILE_SIZE" ', 'value="', $maxSize, '">';
-      }
-      echo '<input type="file" name="', $id,'" onchange="preview_upload(event)" accept="image/jpeg">',
-    '</td>',
+  '<td><img src="', $imagePath, '" alt="', $alt, '" width="', $width, '" height="', $height, '"></td>',
+  '<td>';
+  if($maxSize > 0){
+    echo'<input type="hidden" name="MAX_FILE_SIZE" ', 'value="', $maxSize, '">';
+  }
+  echo '<input type="file" name="', $id,'" onchange="preview_upload(event)" accept="image/jpeg">',
+  '</td>',
   '</tr>';
 }
 
@@ -189,11 +189,11 @@ function vpac_print_table_form_image($id, $default_pic, $set_pic, $alt, $width, 
 function vpac_print_list($name, $values, $default_value, $disabled = array(), $id = '') {
   $id = (empty($id))? '' : "id=\"$id\"";
   echo '<select name="', $name, '"', $id,'>';
-    foreach($values as $key => $val) {
-      $selected = ($default_value == $val) ? ' selected' : '';
-      $dsbld = (in_array($val, $disabled)) ? ' disabled' : '';
-      echo '<option value="', $key, '"', $selected, $dsbld, '>', $val, '</option>';
-    }
+  foreach($values as $key => $val) {
+    $selected = ($default_value == $val) ? ' selected' : '';
+    $dsbld = (in_array($val, $disabled)) ? ' disabled' : '';
+    echo '<option value="', $key, '"', $selected, $dsbld, '>', $val, '</option>';
+  }
   echo '</select>';
 }
 
@@ -247,7 +247,7 @@ $step = -1) {
       $default_year = $current_date['year'];
     }
   }
-
+  
   vpac_print_list_number("{$name}_j", 1, 31, 1, $default_day);
   vpac_print_list_months("{$name}_m", $default_month);
   vpac_print_list_number("{$name}_a", $start_year, $end_year, -1, $default_year);
@@ -347,6 +347,14 @@ function vpac_check_name(&$errors, $value, $field_name, $length) {
 
 // ----- Affichage du traitement -----
 
+/**
+ * Affichage du traitemrnt du formulaire
+ * Affichage soit d'une erreur, soit du succès
+ * 
+ * @param array  $status    Tableau contenant stderr[] les erreurs ou stdout le succès
+ * @param string $text_er   Message à afficher avant les erreurs
+ * @param bool   $full_size Le message aura une taille de 100% et non 705px
+ */
 function vpac_print_form_status($status, $text_err = '', $full_size = false) {
   if(isset($status['stderr'])) {
     vpac_print_form_errors($status['stderr'], $text_err, $full_size);
@@ -356,7 +364,7 @@ function vpac_print_form_status($status, $text_err = '', $full_size = false) {
 }
 
 /**
- * Afficher les erreurs d'un forrmulaire
+ * Afficher les erreurs d'un formulaire
  * 
  * @param array  $errors    Tableau contenant les erreurs du formulaire
  * @param string $text      Message à afficher avant les erreurs
@@ -365,14 +373,14 @@ function vpac_print_form_status($status, $text_err = '', $full_size = false) {
 function vpac_print_form_errors($errors, $text = '', $full_size = false) {
   $text = (!empty($text)) ? "<p>$text</p>" : '';
   $errors_id = ($full_size) ? 'errors-full-size' : 'errors';
-
+  
   if(!empty($errors)) {
     echo '<div id="', $errors_id, '" class="statusBox">', $text;
     if(!empty($text)) {
       echo '<ul>';
-        foreach($errors as $err) {
-          echo '<li>', $err, '</li>';
-        }
+      foreach($errors as $err) {
+        echo '<li>', $err, '</li>';
+      }
       echo '</ul>';
     } else {
       echo '<p>',$errors[0], '</p>';
@@ -381,12 +389,18 @@ function vpac_print_form_errors($errors, $text = '', $full_size = false) {
   }
 }
 
+/**
+ * Afficher du succès de traitement d'un formulaire
+ * 
+ * @param string $success      Message à afficher
+ * @param bool   $full_size Le message aura une taille de 100% et non 705px
+ */
 function vpac_print_form_success($success, $full_size = false) {
   $success_id = ($full_size) ? 'success-full-size' : 'success';
-
+  
   if(!empty($success)) {
     echo '<div id="', $success_id, '" class="statusBox">',
-      '<p>',$success, '</p>',
+    '<p>',$success, '</p>',
     '</div>';
   }
 }

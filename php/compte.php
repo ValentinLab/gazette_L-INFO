@@ -59,6 +59,11 @@ mysqli_close($db);
 
 // ----- Récupération des données
 
+/**
+ * Obtenir toutes les informations sur l'utilisateur
+ * 
+ * @param object $db Lien avec la base de données
+ */
 function vpacl_get_user_datas(&$db) {
   if($db == null) {
     $db = vpac_db_connect();
@@ -78,6 +83,12 @@ function vpacl_get_user_datas(&$db) {
 
 // ----- Affichage des sections
 
+/**
+ * Afficher les informations de l'utilisateur dans un formulaire
+ * 
+ * @param array $user_datas Informations sur l'utilisateur
+ * @param array $status Résultat du traitement du formulaire
+ */
 function vpacl_print_datas($user_datas, $status) {
   echo '<section>',
     '<h2>Informations personnelles</h2>',
@@ -114,6 +125,11 @@ function vpacl_print_datas($user_datas, $status) {
   '</section>';
 }
 
+/**
+ * Affichage du formulaire pour le changement de mot de passe
+ * 
+ * @param array $status Résultat du traitement du formulaire
+ */
 function vpacl_print_password($status) {
   echo '<section>',
     '<h2>Authentification</h2>',
@@ -129,6 +145,11 @@ function vpacl_print_password($status) {
   '</section>';
 }
 
+/**
+ * Affichage du formulaire pour le changement de thème
+ * 
+ * @param array $status Résultat du traitement du formulaire
+ */
 function vpacl_print_customization($status) {
   // Obtenir le thème choisie par l'utilisateur
   $theme = ($_SESSION['user']['theme'] == CUSTOM_LIGHT) ? 'Thème claire' : 'Thème sombre';
@@ -151,6 +172,13 @@ function vpacl_print_customization($status) {
   '</section>';
 }
 
+/**
+ * Affichage du formulaire pour l'édition des données de rédacteur
+ * 
+ * @param array $writer_datas Données du rédacteur
+ * @param array $status Résultat du traitement du formulaire
+ * @param object $db Lien avec la base de données
+ */
 function vpacl_print_writer($writer_datas, $status, &$db) {
   $sql = "SELECT catLibelle
           FROM categorie";
@@ -190,6 +218,11 @@ function vpacl_print_writer($writer_datas, $status, &$db) {
   '</section>';
 }
 
+/**
+ * Affichage du formulaire pour le changement de photo de rédacteur
+ * 
+ * @param array $status Résultat du traitement du formulaire
+ */
 function vpacl_print_writer_pic($status) {
   echo '<section>',
     '<h2>Photo de profile</h2>',
@@ -213,6 +246,11 @@ function vpacl_print_writer_pic($status) {
 
 // ----- Affichage autre
 
+/**
+ * Affichage des preview pour le thème
+ * 
+ * @param string $theme Thème de la preview à afficher
+ */
 function vpacl_print_preview($theme) {
   echo '<div class="preview" id="prev-', $theme,'">',
     '<nav></nav>',
@@ -224,6 +262,12 @@ function vpacl_print_preview($theme) {
 
 // ----- Traitement des formulaires
 
+/**
+ * Traitement du formulaire de changement de données
+ * 
+ * @param object $db Lien avec la base de données
+ * @return array Résultat du traitement
+ */
 function vpacl_form_processing_datas(&$db) {
   // Vérification des clés présentes dans $_POST
   if(
@@ -317,6 +361,12 @@ function vpacl_form_processing_datas(&$db) {
   return array('stdout' => 'Vos données ont été modifiées');
 }
 
+/**
+ * Traitement du formulaire de changement de mot de passe
+ * 
+ * @param object $db Lien avec la base de données
+ * @return array Résultat du traitement
+ */
 function vpacl_form_processing_password(&$db) {
   // Vérification des clés présentes dans $_POST
   if(!vpac_parametres_controle('post', array('passe1', 'passe2', 'btnPassword'))) {
@@ -356,6 +406,12 @@ function vpacl_form_processing_password(&$db) {
   return array('stdout' => 'Le mot de passe a été changé avec succès');
 }
 
+/**
+ * Traitement du formulaire de changement de thème
+ * 
+ * @param object $db Lien avec la base de données
+ * @return array Résultat du traitement
+ */
 function vpacl_form_processing_customization() {
   // Vérifier les clés de $_POST
   if(!vpac_parametres_controle('post', array('theme', 'btnCustom'))) {
@@ -375,6 +431,12 @@ function vpacl_form_processing_customization() {
   return $status;
 }
 
+/**
+ * Traitement du formulaire de changement de données de rédacteur
+ * 
+ * @param object $db Lien avec la base de données
+ * @return array Résultat du traitement
+ */
 function vpacl_form_processing_writer(&$db) {
   // Vérifier les clés de $_POST
   if(!vpac_parametres_controle('post', array('bio', 'categorie', 'fonction', 'registrated', 'btnWriter'))) {
@@ -448,6 +510,12 @@ function vpacl_form_processing_writer(&$db) {
   return array('stdout' => 'Vos données ont été mises à jour');
 }
 
+/**
+ * Traitement du formulaire de changement de photo de rédacteur
+ * 
+ * @param object $db Lien avec la base de données
+ * @return array Résultat du traitement
+ */
 function vpacl_form_processing_writer_pic() {
   // Erreurs du formulaire
   $errors = array();

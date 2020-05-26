@@ -47,16 +47,16 @@ define('LMAX_COMMENTAIRE', 256);
 function vpac_get_head($title, $path = '..') {
   $page_title = (!empty($title)) ? "$title | La gazette de L-INFO" : 'La gazette de L-INFO';
   $theme = (isset($_SESSION['user']) && $_SESSION['user']['theme'] == CUSTOM_DARK) ? ' id="dark"' : '';
-
+  
   echo '<!doctype html>',
-        '<html lang="fr">',
-        '<head>',
-            '<meta charset="UTF-8">',
-            '<title>', $page_title, '</title>',
-            '<link rel="stylesheet" type="text/css" href="', $path,'/styles/gazette.css">',
-            '<script src="', $path, '/js/a-little-bit-of.js"></script>',
-        '</head>',
-        '<body', $theme, '>';
+  '<html lang="fr">',
+  '<head>',
+  '<meta charset="UTF-8">',
+  '<title>', $page_title, '</title>',
+  '<link rel="stylesheet" type="text/css" href="', $path,'/styles/gazette.css">',
+  '<script src="', $path, '/js/a-little-bit-of.js"></script>',
+  '</head>',
+  '<body', $theme, '>';
 }
 
 /**
@@ -66,28 +66,28 @@ function vpac_get_head($title, $path = '..') {
  */
 function vpac_get_nav($path = '..') {
   echo '<nav>',
-          '<ul>',
-              '<li><a href="', $path, '/">Accueil</a></li>',
-              '<li><a href="', $path, '/php/actus.php">Toute l\'actu</a></li>',
-              '<li><a href="', $path, '/php/recherche.php">Recherche</a></li>',
-              '<li><a href="', $path, '/php/redaction.php">La rédac\'</a></li>',
-              '<li>';
-              if(isset($_SESSION['user'])) {
-                echo '<a href="#">', htmlentities($_SESSION['user']['pseudo']), '</a>',
-                        '<ul>',
-                          '<li><a href="', $path, '/php/compte.php">Mon profil</a></li>',
-                          ($_SESSION['user']['writer']) ? 
-                            "<li><a href=\"{$path}/php/nouveau.php\">Nouvel article</a></li>" : '',
-                          ($_SESSION['user']['administrator']) ? 
-                            "<li><a href=\"{$path}/php/administration.php\">Administration</a></li>" : '',
-                          '<li><a href="', $path, '/php/deconnexion.php">Se déconnecter</a></li>',
-                        '</ul>';
-              } else {
-                echo '<a href="', $path, '/php/connexion.php">Se connecter</a>';
-              }
-              echo '</li>',
-          '</ul>',
-      '</nav>';
+  '<ul>',
+  '<li><a href="', $path, '/">Accueil</a></li>',
+  '<li><a href="', $path, '/php/actus.php">Toute l\'actu</a></li>',
+  '<li><a href="', $path, '/php/recherche.php">Recherche</a></li>',
+  '<li><a href="', $path, '/php/redaction.php">La rédac\'</a></li>',
+  '<li>';
+  if(isset($_SESSION['user'])) {
+    echo '<a href="#">', htmlentities($_SESSION['user']['pseudo']), '</a>',
+    '<ul>',
+    '<li><a href="', $path, '/php/compte.php">Mon profil</a></li>',
+    ($_SESSION['user']['writer']) ? 
+    "<li><a href=\"{$path}/php/nouveau.php\">Nouvel article</a></li>" : '',
+    ($_SESSION['user']['administrator']) ? 
+    "<li><a href=\"{$path}/php/administration.php\">Administration</a></li>" : '',
+    '<li><a href="', $path, '/php/deconnexion.php">Se déconnecter</a></li>',
+    '</ul>';
+  } else {
+    echo '<a href="', $path, '/php/connexion.php">Se connecter</a>';
+  }
+  echo '</li>',
+  '</ul>',
+  '</nav>';
 }
 
 /**
@@ -97,9 +97,9 @@ function vpac_get_nav($path = '..') {
  */
 function vpac_get_header($title, $path = '..') {
   echo '<header>',
-          '<img src="', $path, '/images/titre.png" alt="La gazette de L-INFO" width="780" height="83">',
-          '<h1>', $title, '</h1>',
-        '</header><main>';
+  '<img src="', $path, '/images/titre.png" alt="La gazette de L-INFO" width="780" height="83">',
+  '<h1>', $title, '</h1>',
+  '</header><main>';
 }
 
 // ----------------------------------------
@@ -130,7 +130,7 @@ function vpac_get_article_image($id, $path = '..') {
   if(!file_exists($image)) {
     $image = "{$path}/images/none.jpg";
   }
-
+  
   return $image;
 }
 
@@ -141,44 +141,49 @@ function vpac_get_article_image($id, $path = '..') {
  */
 function vpac_print_error($content) {
   echo '<section>',
-         '<h2>Oups, il y a une erreur ...</h2>',
-         '<p>La page que vous avez demandée a terminé son exécution avec le message d\'erreur suivant :',
-         '<blockquote>', $content, '</blockquote>',
-       '</section>';
+  '<h2>Oups, il y a une erreur ...</h2>',
+  '<p>La page que vous avez demandée a terminé son exécution avec le message d\'erreur suivant :',
+  '<blockquote>', $content, '</blockquote>',
+  '</section>';
 }
 
+/**
+ * Affichage d'une boîte de dialogue pour expliquer comment fonctionne le BBCode
+ * 
+ * @param boolean $all TRUE s'il faut afficher toutes les règles
+ */
 function vpac_print_bbcode_dialog($all = TRUE) {
   // Bouton d'affichage
   echo '<input type="checkbox" class="dialog_btn" id="dialog_bbcode"><label for="dialog_bbcode">Comment utiliser le BBCode ?</label>';
-
+  
   // Boîte de dialogue
   echo '<div class="dialog">',
-    '<header>',
-      '<h2><span>BBCode</span> : cheatsheet</h2>',
-      '<label for="dialog_bbcode">&#x2715;</label>',
-    '</header>',
-    '<div>';
-      if($all == TRUE) {
-        echo '<h3>Mise en forme du texte</h3>',
-        '<ul>',
-          '<li><span>[p]contenu[/p]</span> : paragraphe</li>',
-          '<li><span>[gras]contenu[/gras]</span> : contenu en gras</li>',
-          '<li><span>[it]contenu[/it]</span> : contenu en italique</li>',
-          '<li><span>[citation]contenu[/citation]</span> : citation</li>',
-          '<li><span>[liste]contenu[/liste]</span> : liste</li>',
-          '<li><span>[item]contenu[/item]</span> : item dans une liste</li>',
-          '<li><span>[a:url]contenu[/a]</span> : lien pointant vers <span>url</span></li>',
-          '<li><span>[br]</span> : saut de ligne</li>',
-          '<li><span>[youtube:w:h:url]</span> : vidéo youtube de taille <span>w</span> et <span>h</span></li>',
-          '<li><span>[youtube:w:h:url legende]</span> : vidéo youtube avec légende</li>',
-        '</ul>';
-      }
-      echo '<h3>Ajout de codes unicode</h3>',
-        '<ul>',
-          '<li><span>[#NNN]</span> : code unicode décimal</li>',
-          '<li><span>[#xNNN]</span> : code unicode héxadécimal</li>',
-        '</ul>',
-    '</div>',
+  '<header>',
+  '<h2><span>BBCode</span> : cheatsheet</h2>',
+  '<label for="dialog_bbcode">&#x2715;</label>',
+  '</header>',
+  '<div>';
+  if($all == TRUE) {
+    echo '<h3>Mise en forme du texte</h3>',
+    '<ul>',
+    '<li><span>[p]contenu[/p]</span> : paragraphe</li>',
+    '<li><span>[gras]contenu[/gras]</span> : contenu en gras</li>',
+    '<li><span>[it]contenu[/it]</span> : contenu en italique</li>',
+    '<li><span>[citation]contenu[/citation]</span> : citation</li>',
+    '<li><span>[liste]contenu[/liste]</span> : liste</li>',
+    '<li><span>[item]contenu[/item]</span> : item dans une liste</li>',
+    '<li><span>[a:url]contenu[/a]</span> : lien pointant vers <span>url</span></li>',
+    '<li><span>[br]</span> : saut de ligne</li>',
+    '<li><span>[youtube:w:h:url]</span> : vidéo youtube de taille <span>w</span> et <span>h</span></li>',
+    '<li><span>[youtube:w:h:url legende]</span> : vidéo youtube avec légende</li>',
+    '</ul>';
+  }
+  echo '<h3>Ajout de codes unicode</h3>',
+  '<ul>',
+  '<li><span>[#NNN]</span> : code unicode décimal</li>',
+  '<li><span>[#xNNN]</span> : code unicode héxadécimal</li>',
+  '</ul>',
+  '</div>',
   '</div>';
 }
 
@@ -189,7 +194,7 @@ function vpac_print_bbcode_dialog($all = TRUE) {
  * @return string Date au format YYYYDD
  */
 function vpac_get_month_and_year($date){
-    return substr($date,0,6);
+  return substr($date,0,6);
 }
 
 /**
@@ -199,17 +204,17 @@ function vpac_get_month_and_year($date){
  * @return array Tableau contenant les 4 articles de la page, indexé par mois
  */
 function vpac_classer_articles_par_mois($data){
-    //$page = (isset($_GET['page'])) ? vpac_decrypt_url($_GET['page']) : 1;;
-
-    $return=array();
-    for($i=0;$i<count($data);++$i){
-        if(!array_key_exists(vpac_get_month_and_year($data[$i]['arDatePublication']),$return)){
-            $return[vpac_get_month_and_year($data[$i]['arDatePublication'])][0]=$data[$i];
-        }else{
-            array_push($return[vpac_get_month_and_year($data[$i]['arDatePublication'])],$data[$i]);
-        }
+  //$page = (isset($_GET['page'])) ? vpac_decrypt_url($_GET['page']) : 1;;
+  
+  $return=array();
+  for($i=0;$i<count($data);++$i){
+    if(!array_key_exists(vpac_get_month_and_year($data[$i]['arDatePublication']),$return)){
+      $return[vpac_get_month_and_year($data[$i]['arDatePublication'])][0]=$data[$i];
+    }else{
+      array_push($return[vpac_get_month_and_year($data[$i]['arDatePublication'])],$data[$i]);
     }
-    return $return;
+  }
+  return $return;
 }
 
 /**
@@ -219,12 +224,12 @@ function vpac_classer_articles_par_mois($data){
  * @param int $date Date à transformer
  */
 function vpac_month_and_year_to_string($date) {
-    $month = (int)substr($date, -8, 2);
-    $year = substr($date, 0, -8);
+  $month = (int)substr($date, -8, 2);
+  $year = substr($date, 0, -8);
   
-    $months = vpac_get_months();
+  $months = vpac_get_months();
   
-    return mb_strtolower($months[$month], 'UTF-8') . ' ' . $year;
+  return mb_strtolower($months[$month], 'UTF-8') . ' ' . $year;
 }
 
 /**
@@ -233,14 +238,14 @@ function vpac_month_and_year_to_string($date) {
  * @param array $data_by_month Tableau indexé par mois, contenant les 4 articles
  */
 function vpac_print_articles($data_by_month){
-    foreach($data_by_month as &$value){
-        echo'<section>',
-            '<h2>',vpac_month_and_year_to_string($value[0]['arDatePublication']),'</h2>';
-            foreach($value as &$article) { 
-                vpac_print_article($article);
-            }
-        echo'</section>';
-    } 
+  foreach($data_by_month as &$value){
+    echo'<section>',
+    '<h2>',vpac_month_and_year_to_string($value[0]['arDatePublication']),'</h2>';
+    foreach($value as &$article) { 
+      vpac_print_article($article);
+    }
+    echo'</section>';
+  } 
 }
 
 /**
@@ -249,14 +254,14 @@ function vpac_print_articles($data_by_month){
  * @param array $article Tableau contenant les informations de l'article en question
  */
 function vpac_print_article($article){
-    $image = (file_exists("../upload/{$article['arID']}.jpg")) ? "<img src=\"../upload/{$article['arID']}.jpg\" alt=\"{$article['arTitre']}\">" : "<img src=\"../images/none.jpg\" alt=\"{$article['arTitre']}\">";
-    echo'<article class="resume">',
-            $image,
-            '<h3>',$article['arTitre'],'</h3>',
-            '<p>',
-            $article['arResume'],
-            '</p>',
-            '<footer><a href="../php/article.php?id=',vpac_encrypt_url($article['arID']),'">Lire l\'article</a></footer>',
-        '</article>';
+  $image = (file_exists("../upload/{$article['arID']}.jpg")) ? "<img src=\"../upload/{$article['arID']}.jpg\" alt=\"{$article['arTitre']}\">" : "<img src=\"../images/none.jpg\" alt=\"{$article['arTitre']}\">";
+  echo'<article class="resume">',
+  $image,
+  '<h3>',$article['arTitre'],'</h3>',
+  '<p>',
+  $article['arResume'],
+  '</p>',
+  '<footer><a href="../php/article.php?id=',vpac_encrypt_url($article['arID']),'">Lire l\'article</a></footer>',
+  '</article>';
 }
 ?>

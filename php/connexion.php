@@ -72,7 +72,7 @@ function vpacl_print_form($errors) {
 /**
  * Traitement du formulaire
  * 
- * @return array Tableau à remplir avec les erreurs de saisie
+ * @return array Résultat du traitement du formulaire
  */
 function vpacl_form_processing() {
   // Vérifier les clés présentes dans $_POST

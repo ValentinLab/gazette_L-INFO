@@ -16,7 +16,7 @@ if(isset($_POST['btnRecherche'])) {
     //$result est le tableau des erreurs
     if(isset($result[0])){
         $errors = $result;
-    }else{//$result est le tableau des articles, classés par mois
+    } else { //$result est le tableau des articles, classés par mois
         $data = $result;
     }
 }
@@ -44,6 +44,11 @@ ob_end_flush();
 // Fonctions
 // ----------------------------------------
 
+/**
+ * Affichage du formulaire de recherche
+ * 
+ * @param array $errors Erreur lors du traitement du formulaire
+ */
 function vpacl_print_form($errors) {
     echo '<section>',
         '<h2>Rechercher des articles</h2>';
@@ -66,6 +71,11 @@ function vpacl_print_form($errors) {
     '</section>';
 }
 
+/**
+ * Traitement du formulaire
+ * 
+ * @return array Résultat du traitement
+ */
 function vpacl_form_processing() {
     if(!isset($_POST['criteres'])){
         vpac_session_exit();
@@ -114,5 +124,4 @@ function vpacl_form_processing() {
         return $errors;
     }
 }
-
 ?>

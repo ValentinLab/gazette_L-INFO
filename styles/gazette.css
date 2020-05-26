@@ -871,6 +871,7 @@ input[type=checkbox].dialog_btn + label:before, .dialog_btn + label:after {
   padding-bottom: 20px;
   transition: top 1s ease;
   text-align: left;
+  z-index: 2;
 }
 
 body#dark .dialog {

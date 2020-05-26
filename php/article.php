@@ -48,6 +48,9 @@ ob_end_flush();
 
 /**
  * Afficher un article et ses commentaires
+ * 
+ * @param object $db     Lien avec la base de données
+ * @param array  $status Résultat du traitement du formulaire
  */
 function vpacl_print_article(&$db, $status) {
   // Vérifier le paramètre id dans l'URL
@@ -150,6 +153,7 @@ function vpacl_print_article_part($res) {
  * Afficher les commentaires d'un article
  * 
  * @param object $res Résultat d'une requête sql permettant d'obtenir les commentaires
+ * @param array  $status Résultat du traitement du formulaire
  */
 function vpacl_print_comments($res, $status) {
   echo '<section id="commentaires"><h2>Réactions</h2>';
@@ -211,6 +215,7 @@ function vpacl_print_comments($res, $status) {
 /**
  * Traitement du formulaire pour l'ajout d'un commentaire
  * 
+ * @param object $db Lien avec la base de données
  * @return array Tableau contenant les erreurs de saisie
  */
 function vpacl_form_processing_add(&$db) {
@@ -260,6 +265,7 @@ function vpacl_form_processing_add(&$db) {
 /**
  * Traitement du formulaire pour la suppression d'un commentaire
  * 
+ * @param object $db Lien avec la base de données
  * @return array Tableau contenant les erreurs de saisie
  */
 function vpacl_form_processing_remove(&$db) {
@@ -303,6 +309,7 @@ function vpacl_form_processing_remove(&$db) {
  * dd MMM YYYY à HHhMM
  * 
  * @param int $time Heure à transformer
+ * @return string Date formatée
  */
 function vpacl_time_to_string($date) {
   $min = substr($date, -2);

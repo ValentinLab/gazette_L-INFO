@@ -70,7 +70,10 @@ function vpacl_get_article($db){
 }
 
 /**
+ * Affichage du formulaire
  * 
+ * @param array $errors Erreur du traitement
+ * @param array $data   Données pour le formulaire
  */
 function vpacl_print_form($errors,$data){
     $titre=$data['arTitre'];
@@ -106,6 +109,11 @@ function vpacl_print_form($errors,$data){
     vpac_print_form_errors($errors, 'Les erreurs suivantes ont été relevées lors de l\'édition de l\'article :');
 }
 
+/**
+ * Traitement du formulaire pour l'édition
+ * 
+ * @return array Traitement du formulaire
+ */
 function vpacl_form_processing(){
     // Vérifier les clés présentes dans $_POST
     if(!vpac_parametres_controle('post',array('titre', 'resume', 'texte','btnValidation'))) {
@@ -194,6 +202,11 @@ function vpacl_form_processing(){
     exit();
 }
 
+/**
+ * Traitement du formulaire pour la suppression
+ * 
+ * @return array Traitement du formulaire
+ */
 function vpacl_form_processing_rm() {
   // Vérifier les clés présentes dans $_POST
   if(!vpac_parametres_controle('post',array('titre', 'resume', 'texte', 'btnRemove'))) {
@@ -218,6 +231,9 @@ function vpacl_form_processing_rm() {
   header('Location: ../index.php');
 }
 
+/**
+ * Affichage de la boîte de dialogue pour la suppression de l'article
+ */
 function vpacl_print_remove_dialog() {
   // Bouton d'affichage
   echo '<input type="checkbox" class="dialog_btn" id="dialog_rm"><label for="dialog_rm">Supprimer cet article</label>';

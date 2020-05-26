@@ -1,6 +1,9 @@
 // Attendre que le DOM soit prêt
 document.addEventListener("DOMContentLoaded", start);
 
+/**
+ * Fonctions à lancer quand le DOM est chargé
+ */
 function start() {
   toStatusBox();
 }
