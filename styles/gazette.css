@@ -1416,7 +1416,7 @@ div#prev-light .section {
 #criteres {
   width : 668px;
   margin-right : 20px;
-  margin: 5px 20px 0 0;
+  margin: 5px 20px 5px 0;
   padding-right: 12px;
   padding-left: 32px;
   background-image: url("data:image/svg+xml;charset=utf8,%3C?xml version='1.0' encoding='UTF-8'?%3E%3Csvg xmlns='http://www.w3.org/2000/svg' width='490' height='490'%3E%3Cpath fill='none' stroke='%23000' stroke-width='36' stroke-linecap='round' d='m280,278a153,153 0 1,0-2,2l170,170m-91-117 110,110-26,26-110-110'/%3E%3C/svg%3E");
