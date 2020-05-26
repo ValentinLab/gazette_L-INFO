@@ -108,9 +108,9 @@ function vpacl_print_edit($res) {
     return;
   }
 
-  echo '<section id="banner">',
+  echo '<div id="banner">',
     '<p>Vous êtes l\'auteur de cet article, <a href="edition.php?arID=',urlencode($_GET['id']),'">cliquez ici pour le modifier ou le supprimer</a></p>',
-  '</section>';
+  '</div>';
 }
 
 /**
@@ -199,8 +199,8 @@ function vpacl_print_comments($res, $status) {
           '<fieldset>',
             '<legend>Ajoutez un commentaire</legend>',
             '<table id="form_uncentered">';
-              vpac_print_table_form_textarea('', 'commentaire', 8, 45, true);
-              vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnAjouterCommentaire'));
+              vpac_print_table_form_textarea('', 'commentaire', 8, 45, true, '', 1);
+              vpac_print_table_form_button(array('submit'), array('Publier ce commentaire'), array('btnAjouterCommentaire'), 1);
             echo '</table>',
           '</fieldset>',
         '</form>',

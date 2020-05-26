@@ -380,7 +380,7 @@ body#dark > footer {
 Sections
 *******************************************************************/
 
-section {
+section, #banner {
   position: relative;
   margin: 50px 0 60px 0;
   background-color: var(--color-main);
@@ -389,7 +389,7 @@ section {
   box-shadow: 10px 10px 10px #000;;
 }
 
-body#dark section {
+body#dark section, #banner {
   background-color: var(--color-dark-main);
   color: var(--color-dark-opposite);
 }
@@ -912,7 +912,7 @@ body#dark .dialog > header {
   font-weight: bold;
 }
 
-.dialog > main {
+.dialog > div {
   padding: 0 20px;
 }
 
@@ -1361,7 +1361,7 @@ compte.php
   background-color: #000000;
 }
 
-.preview section {
+.preview .section {
   position: relative;
   width: 130px;
   height: 35px;
@@ -1371,15 +1371,15 @@ compte.php
   padding: 0;
 }
 
-div#prev-light section {
+div#prev-light .section {
   background: var(--color-main);
 }
 
-#prev-dark section {
+#prev-dark .section {
   background: var(--color-dark-main);
 }
 
-.preview section:before {
+.preview .section:before {
   content: '';
   position: absolute;
   width: 20px;
@@ -1388,12 +1388,12 @@ div#prev-light section {
   border-radius: 0 2px 0 0;
 }
 
-#prev-light section:before {
+#prev-light .section:before {
   content: '';
   background: var(--color-accent);
 }
 
-#prev-dark section:before {
+#prev-dark .section:before {
   content: '';
   background: var(--color-dark-accent);
 }

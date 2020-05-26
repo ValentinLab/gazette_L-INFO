@@ -46,9 +46,9 @@ function vpac_print_table_form_invisible_input($name, $value) {
  * @param int $rows Nombre de lignes du textarea
  * @param int $cols Nombre de lignes du  textarea
  */
-function vpac_print_table_form_textarea($label, $name, $rows = 10, $cols = 60, $required = false, $value = '') {
+function vpac_print_table_form_textarea($label, $name, $rows = 10, $cols = 60, $required = false, $value = '', $colspan = 2) {
   $required_val = ($required) ? ' required' : '';
-  $label = (!empty($label)) ? "<td><label>$label :</label></td><td>" : '<td colspan="2">';
+  $label = (!empty($label)) ? "<td><label>$label :</label></td><td>" : "<td colspan=\"$colspan\">";
   echo '<tr>',
           $label,
             '<textarea name="', $name, '" rows="', $rows, '" cols="', $cols,'" ', $required_val, '>', $value, '</textarea>',
@@ -150,8 +150,8 @@ function vpac_print_table_form_radio($main_label, $name, $values, $default, $lab
  * @param array $values Tableau contenant les valeurs des boutons
  * @param array $names  Tableau contenant le nom des boutons
  */
-function vpac_print_table_form_button($types, $values, $names) {
-  echo '<tr><td colspan="2">';
+function vpac_print_table_form_button($types, $values, $names, $colspan = 2) {
+  echo '<tr><td colspan="', $colspan, '">';
     for($i = 0, $btn_number = count($types); $i < $btn_number; ++$i) {
       vpac_print_input_btn($types[$i], $values[$i], $names[$i]);
     }

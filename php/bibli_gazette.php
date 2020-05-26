@@ -157,7 +157,7 @@ function vpac_print_bbcode_dialog($all = TRUE) {
       '<h2><span>BBCode</span> : cheatsheet</h2>',
       '<label for="dialog_bbcode">&#x2715;</label>',
     '</header>',
-    '<main>';
+    '<div>';
       if($all == TRUE) {
         echo '<h3>Mise en forme du texte</h3>',
         '<ul>',
@@ -178,7 +178,7 @@ function vpac_print_bbcode_dialog($all = TRUE) {
           '<li><span>[#NNN]</span> : code unicode décimal</li>',
           '<li><span>[#xNNN]</span> : code unicode héxadécimal</li>',
         '</ul>',
-    '</main>',
+    '</div>',
   '</div>';
 }
 ?>

@@ -128,7 +128,7 @@ function vpacl_print_user_datas(&$db, $status) {
     '<p><strong>Spam</strong> : ', $spam,'</p>',
 
     '<h3>Modification des droits</h3>',
-    '<form action="administration.php?user=', urlencode($_GET['user']), '", method="post" id="admin_rights">';
+    '<form action="administration.php?user=', urlencode($_GET['user']), '" method="post" id="admin_rights">';
       $rights = array('aucun droit', 'rédacteur', 'administrateur', 'rédacteur et administrateur');
       $disabled = array();
       if($current_user == $_SESSION['user']['pseudo']) {

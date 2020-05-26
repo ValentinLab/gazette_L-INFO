@@ -228,12 +228,12 @@ function vpacl_print_remove_dialog() {
       '<h2><span>Zone de danger</span></h2>',
       '<label for="dialog_rm">&#x2715;</label>',
     '</header>',
-    '<main>',
+    '<div>',
       '<h3>Souhaitez-vous supprimer cet article ?</h3>',
       '<p>Vous ne pourrez pas restaurer l\'article après l\'avoir supprimé.</p>';
       vpac_print_input_btn('submit', 'Supprimer', 'btnRemove');
       echo '<label for="dialog_rm">Annuler</label>',
-    '</main>';
+    '</div>';
   '</div>';
 }
 ?>

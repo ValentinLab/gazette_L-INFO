@@ -217,8 +217,8 @@ function vpacl_print_preview($theme) {
   echo '<div class="preview" id="prev-', $theme,'">',
     '<nav></nav>',
     '<header></header>',
-    '<section></section>',
-    '<section></section>',
+    '<div class="section"></div>',
+    '<div class="section"></div>',
   '</div>';
 }
 
