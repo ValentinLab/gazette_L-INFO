@@ -380,7 +380,7 @@ body#dark > footer {
 Sections
 *******************************************************************/
 
-section, #banner {
+section, #banner, #page_selector {
   position: relative;
   margin: 50px 0 60px 0;
   background-color: var(--color-main);
@@ -389,7 +389,7 @@ section, #banner {
   box-shadow: 10px 10px 10px #000;;
 }
 
-body#dark section, #banner {
+body#dark section, body#dark #banner, body#dark #page_selector {
   background-color: var(--color-dark-main);
   color: var(--color-dark-opposite);
 }
@@ -1221,19 +1221,19 @@ section article.resume footer {
   clear: left;
 }
 
-article#page_selector {
+#page_selector {
   margin-top: 15px;
   margin-bottom: 25px;
   padding: 8px 20px;
-  border-radius: 10px 10px 10px 10px;
+  border-radius: 10px;
 }
 
-article#page_selector h2 {
+#page_selector p {
   display: inline;
   margin-right: 7px;
 }
 
-article#page_selector a:last-child {
+#page_selector a:last-child {
   transform: rotate(180deg);
 }
 
