@@ -26,9 +26,9 @@ if(isset($_POST['btnRecherche'])) {
 // ----------------------------------------
 
 // Header
-vpac_get_head('L\'actu');
+vpac_get_head('Rechercher');
 vpac_get_nav();
-vpac_get_header('L\'actu');
+vpac_get_header('Rechercher un article');
 // Formulaire
 
 vpacl_print_form($errors);
@@ -60,9 +60,9 @@ function vpacl_print_form($errors) {
         if(isset($_POST['criteres'])){
             echo ' value="',$_POST['criteres'],'"';
         }
-        echo '>',
-        '<input type="submit" name="btnRecherche">',
-        '</form>',
+        echo '>';
+        vpac_print_input_btn('submit', 'Rechercher', 'btnRecherche');
+        echo '</form>',
     '</section>';
 }
 

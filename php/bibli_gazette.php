@@ -5,9 +5,9 @@
 
 // Base de données
 define('BD_SERVER','localhost');
-define('BD_NAME','claudel_gazette');
-define('BD_USER','claudel_u');
-define('BD_PASS','claudel_p');
+define('BD_NAME','gazette_bd');
+define('BD_USER','perignon_u');
+define('BD_PASS','perignon_p');
 
 // URL
 define('CIPHER', 'aes-128-gcm');
