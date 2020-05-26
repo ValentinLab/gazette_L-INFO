@@ -80,10 +80,10 @@ function vpacl_get_user_datas(&$db) {
 
 function vpacl_print_datas($user_datas, $status) {
   echo '<section>',
-    '<h2>Informations personnelles</h2>';
+    '<h2>Informations personnelles</h2>',
+    '<p>Vous pouvez modifier les informations suivantes.</p>';
     vpac_print_form_status($status, 'Les erreurs suivantes ont été relevées');
-    echo '<p>Vous pouvez modifier les informations suivantes.</p>',
-    '<form action="compte.php" method="post">',
+    echo '<form action="compte.php" method="post">',
         '<table>';
 
           $civilite = ($user_datas['utCivilite'] == 'h') ? 1 : 2;
@@ -116,10 +116,10 @@ function vpacl_print_datas($user_datas, $status) {
 
 function vpacl_print_password($status) {
   echo '<section>',
-    '<h2>Authentification</h2>';
+    '<h2>Authentification</h2>',
+    '<p>Vous pouvez modifier votre mot de passe ci-dessous.</p>';
     vpac_print_form_status($status);
-    echo '<p>Vous pouvez modifier votre mot de passe ci-dessous.</p>',
-    '<form action="compte.php" method="post">',
+    echo '<form action="compte.php" method="post">',
       '<table>';
         vpac_print_table_form_input('Choisissez un mot de passe', 'passe1', '', true, 'password');
         vpac_print_table_form_input('Répétez le mot de passe', 'passe2', '', true, 'password');
@@ -135,10 +135,10 @@ function vpacl_print_customization($status) {
 
   // Affichage du formulaire
   echo '<section>',
-    '<h2>Personnalisation du style</h2>';
+    '<h2>Personnalisation du style</h2>',
+    '<p>Vous pouvez modifier l\'apparence du  site internet.</p>';
     vpac_print_form_status($status);
-    echo '<p>Vous pouvez modifier l\'apparence du  site internet.</p>',
-    '<figure>',
+    echo '<figure>',
       vpacl_print_preview('light');
       vpacl_print_preview('dark');
     echo '</figure>',
@@ -169,11 +169,16 @@ function vpacl_print_writer($writer_datas, $status, &$db) {
   $is_registrated = vpac_encrypt_url((int)!empty($bio));
 
   echo '<section>',
-    '<h2>Informations de rédacteur</h2>';
+    '<h2>Informations de rédacteur</h2>',
+    '<p>Vous pouvez modifier vos informations affichées sur la page de <a href="redaction.php">la rédaction</a>.</p>';
     vpac_print_form_status($status, 'Les erreurs suivantes ont été relevées');
-    echo '<p>Vous pouvez modifier vos informations affichées sur la page de <a href="redaction.php">la rédaction</a>.</p>',
-    '<form action="compte.php" method="post">',
-      '<table>';
+    echo '<form action="compte.php" method="post">',
+      '<table>',
+        '<tr>',
+          '<td></td><td>';
+            vpac_print_bbcode_dialog();
+          echo '</td>',
+        '</tr>';
         vpac_print_table_form_textarea('Biographie', 'bio', 10, 50, TRUE, $bio);
         vpac_print_table_form_select('Catégorie', 'categorie', $categories, $categorie);
         vpac_print_table_form_input('Fonction', 'fonction', $fonction, FALSE);
@@ -187,13 +192,13 @@ function vpacl_print_writer($writer_datas, $status, &$db) {
 
 function vpacl_print_writer_pic($status) {
   echo '<section>',
-    '<h2>Photo de profile</h2>';
+    '<h2>Photo de profile</h2>',
+    '<p>Vous pouvez modifier votre photo de rédacteur.</p>';
     vpac_print_form_status($status);
-    echo '<p>Vous pouvez modifier votre photo de rédacteur.</p>',
-    '<form action="compte.php" method="post" enctype="multipart/form-data">',
+    echo '<form action="compte.php" method="post" enctype="multipart/form-data">',
       '<table>';
         vpac_print_table_form_image(
-          'pidRedacteur',
+          'picRedacteur',
           '../images/anonyme.jpg',
           "../upload/{$_SESSION['user']['pseudo']}.jpg",
           "photo de profile de " . htmlentities($_SESSION['user']['pseudo']),
@@ -440,7 +445,7 @@ function vpacl_form_processing_writer(&$db) {
   }
   mysqli_query($db, $sql) or vpac_db_error($db, $sql);
 
-  return array('stdout' => 'It\'s okay.');
+  return array('stdout' => 'Vos données ont été mises à jour');
 }
 
 function vpacl_form_processing_writer_pic() {
