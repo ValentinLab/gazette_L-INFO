@@ -348,11 +348,18 @@ function vpac_check_name(&$errors, $value, $field_name, $length) {
 // ----- Affichage du traitement -----
 
 /**
+<<<<<<< HEAD
  * Affichage du traitemrnt du formulaire
  * Affichage soit d'une erreur, soit du succès
  * 
  * @param array  $status    Tableau contenant stderr[] les erreurs ou stdout le succès
  * @param string $text_er   Message à afficher avant les erreurs
+=======
+ * Affichqge du status d'un formulaire (message d'erreur ou de succes)
+ * 
+ * @param array  $status    Tableau contenant les erreurs du formulaire
+ * @param string $text_err  Message à afficher avant les erreurs
+>>>>>>> 181f98479de239b69e8210c51ae08cd142301e19
  * @param bool   $full_size Le message aura une taille de 100% et non 705px
  */
 function vpac_print_form_status($status, $text_err = '', $full_size = false) {
@@ -366,8 +373,8 @@ function vpac_print_form_status($status, $text_err = '', $full_size = false) {
 /**
  * Afficher les erreurs d'un formulaire
  * 
- * @param array  $errors    Tableau contenant les erreurs du formulaire
- * @param string $text      Message à afficher avant les erreurs
+ * @param array  $errors    Tableau contenant les erreurs/succes du formulaire
+ * @param string $text      Message à afficher avant les erreurs/succes
  * @param bool   $full_size Le message aura une taille de 100% et non 705px
  */
 function vpac_print_form_errors($errors, $text = '', $full_size = false) {

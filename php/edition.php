@@ -249,7 +249,7 @@ function vpacl_print_remove_dialog() {
       '<p>Vous ne pourrez pas restaurer l\'article après l\'avoir supprimé.</p>';
       vpac_print_input_btn('submit', 'Supprimer', 'btnRemove');
       echo '<label for="dialog_rm">Annuler</label>',
-    '</div>';
+    '</div>',
   '</div>';
 }
 ?>

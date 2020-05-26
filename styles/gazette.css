@@ -928,11 +928,11 @@ body#dark .dialog > header {
   margin: 0;
 }
 
-.dialog > main > ul li {
+.dialog > div > ul li {
   margin-bottom: 4px;
 }
 
-.dialog > main > ul span {
+.dialog > div > ul span {
   font-family: monospace;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
