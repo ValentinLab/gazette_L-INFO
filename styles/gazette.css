@@ -185,7 +185,7 @@ ul {
 
 section > figure {
   width: max-content;
-  margin: auto;
+  margin: 10px auto 0 auto;
 }
 
 article > figure {
@@ -369,7 +369,7 @@ Pied de page
 
 body > footer {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 body#dark > footer {
@@ -843,17 +843,23 @@ body#dark input[type=checkbox]:focus:invalid + label:before, body#dark input[typ
 Boîtes de dialogue
 ****************************************************************/
 
-#dialog_btn {
+.dialog_btn {
   display: none;
 }
 
-#dialog_btn + label {
+input[type=checkbox].dialog_btn + label {
+  display: inline;
   font-size: 14px;
   font-style: italic;
   cursor: help;
+  margin: 0;
 }
 
-#dialog {
+input[type=checkbox].dialog_btn + label:before, .dialog_btn + label:after {
+  display: none;
+}
+
+.dialog {
   position: fixed;
   top: -50%;
   left: 50%;
@@ -864,17 +870,18 @@ Boîtes de dialogue
   width: 500px;
   padding-bottom: 20px;
   transition: top 1s ease;
+  text-align: left;
 }
 
-body#dark #dialog {
+body#dark .dialog {
   background-color: var(--color-dark-main);
 }
 
-input[type=checkbox]:checked + label + #dialog {
+input[type=checkbox]:checked + label + .dialog {
   top: 50%;
 }
 
-#dialog > header {
+.dialog > header {
   position: relative;
   background-color: var(--color-accent);
   color: var(--color-main);
@@ -882,12 +889,12 @@ input[type=checkbox]:checked + label + #dialog {
   padding: 20px 30px;
 }
 
-body#dark #dialog > header {
+body#dark .dialog > header {
   background-color: var(--color-dark-accent);
   color: var(--color-dark-opposite);
 }
 
-#dialog > header label {
+.dialog > header label {
   content: '\2715';
   position: absolute;
   top: 15px;
@@ -895,41 +902,60 @@ body#dark #dialog > header {
   cursor: pointer;
 }
 
-#dialog > header > h2 {
+.dialog > header > h2 {
   text-transform: uppercase;
   font-weight: normal;
   font-size: 24px;
 }
 
-#dialog > header > h2 span {
+.dialog > header > h2 span {
   font-weight: bold;
 }
 
-#dialog h3 {
-  padding: 10px 30px 7px 30px;
+.dialog > main {
+  padding: 0 20px;
+}
+
+.dialog h3 {
+  padding: 10px 0 7px 0;
   font-weight: bold;
   text-decoration: none;
 }
 
-#dialog p {
-  padding-left: 30px;
-  padding-right: 30px;
-}
-
-#dialog ul {
+.dialog ul {
   list-style: none;
-  margin: 0 30px;
+  margin: 0;
 }
 
-#dialog > ul li {
+.dialog > main > ul li {
   margin-bottom: 4px;
 }
 
-#dialog > ul span {
+.dialog > main > ul span {
   font-family: monospace;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
   padding: 0 2px 3px 2px;
+}
+
+.dialog input {
+  margin: 20px 0;
+}
+
+input[type=checkbox] + label[for=dialog_rm], input[type=submit] + label[for=dialog_rm] {
+  display: inline;
+  cursor: pointer;
+  margin-left: 10px;
+  color: #ff0000;
+  transition: text-shadow 0.2s ease;
+}
+
+input[type=checkbox] + label[for=dialog_rm]:hover {
+  text-shadow: 0 0 10px #ff0000;
+}
+
+body#dark input[type=submit] + label[for=dialog_rm] {
+  color: var(--color-dark-accent);
 }
 
 /****************************************************************************************

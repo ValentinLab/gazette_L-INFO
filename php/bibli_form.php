@@ -172,7 +172,7 @@ function vpac_print_table_form_image($id, $default_pic, $set_pic, $alt, $width, 
       if($maxSize > 0){
         echo'<input type="hidden" name="MAX_FILE_SIZE" ', 'value="', $maxSize, '">';
       }
-      echo '<input type="file" id="', $id,'" onchange="preview_upload(event)" accept="image/jpeg" required>',
+      echo '<input type="file" name="', $id,'" onchange="preview_upload(event)" accept="image/jpeg">',
     '</td>',
   '</tr>';
 }
@@ -312,22 +312,6 @@ function vpac_print_invisible_input($name, $value) {
 function vpac_print_input_btn($type, $value, $name) {
   $name = (!empty($name)) ? " name=\"$name\"" : '';
   echo '<input type="', $type, '" value="',  $value, '"', $name, '>';
-}
-
-/**
- * Afficher un sélecteur d'image à upload
- * 
- * @param string $label     label du champ
- * @param mixed  $id        id du champ
- */
-function vpac_print_input_image($label,$id,$maxSize=0) {
-  echo'<tr>',
-  '<td><label for="',$id,'">',$label,'</label></td>';
-  if($maxSize>0){
-    echo'<input type="hidden" name="MAX_FILE_SIZE" ', 'value="',$maxSize,'">';
-  }
-  echo'<td><input type="file" name="',$id,'"></td>',
-  '</tr>';
 }
 
 // ----- Traitement -----

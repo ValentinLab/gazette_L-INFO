@@ -53,8 +53,11 @@ ob_end_flush();
         echo '<form action="nouveau.php" method="post" enctype="multipart/form-data">',
           '<table>';
             vpac_print_table_form_input('Titre de l\'article', 'titre', vpac_protect_data($titre), true);
-            vpac_print_table_form_textarea('Résumé','resume',5, 80, true);
-            vpac_print_table_form_textarea('Contenu de l\'article','contenu',40,80, true);
+            vpac_print_table_form_textarea('Résumé','resume',5, 60, true);
+            echo '<tr><td></td><td>';
+            vpac_print_bbcode_dialog();
+            echo '</td></tr>';
+            vpac_print_table_form_textarea('Contenu de l\'article','contenu',20,60, true);
             vpac_print_table_form_image(
               'image',
               '../images/none.jpg',
@@ -63,7 +66,7 @@ ob_end_flush();
               250,
               187
             );
-            vpac_print_table_form_button(array('submit', 'reset'), array('Publier', 'Réinitialiser'), array('btnPublication', ''));
+            vpac_print_table_form_button(array('submit'), array('Publier'), array('btnPublication'));
           echo '</table>',
         '</form>',
       '</section>';
