@@ -954,6 +954,10 @@ input[type=checkbox] + label[for=dialog_rm]:hover {
   text-shadow: 0 0 10px #ff0000;
 }
 
+body#dark input[type=submit] + label[for=dialog_rm] {
+  color: var(--color-dark-accent);
+}
+
 /****************************************************************************************
 index.php
 ****************************************************************************************/

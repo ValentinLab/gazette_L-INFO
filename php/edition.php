@@ -6,8 +6,10 @@ require_once 'bibli_gazette.php';
 require_once 'bibli_generale.php';
 
 $errors = array();
-if(isset($_POST['btnValidation'])||isset($_POST['btnValidationImage'])) {
+if(isset($_POST['btnValidation'])) {
   $errors = vpacl_form_processing();
+} else if(isset($_POST['btnRemove'])) {
+  vpacl_form_processing_rm();
 }
 
 // ----------------------------------------
@@ -190,6 +192,30 @@ function vpacl_form_processing(){
             }
         }
     exit();
+}
+
+function vpacl_form_processing_rm() {
+  // Vérifier les clés présentes dans $_POST
+  if(!vpac_parametres_controle('post',array('titre', 'resume', 'texte', 'btnRemove'))) {
+    vpac_session_exit();
+  }
+
+  // Vérifier l'ID de l'article
+  $article_id = vpac_decrypt_url($_GET['arID']);
+  if($article_id === FALSE) {
+    vpac_session_exit();
+  }
+
+  // Supprimer l'article
+  $db = vpac_db_connect();
+    $current_user = mysqli_real_escape_string($db, $_SESSION['user']['pseudo']);
+  $sql = "DELETE FROM article
+          WHERE arID = '$article_id' AND arAuteur = '$current_user'";
+  var_dump($sql);
+  mysqli_query($db, $sql) or vpac_db_error($db, $sql);
+
+  // Redirection
+  header('Location: ../index.php');
 }
 
 function vpacl_print_remove_dialog() {
