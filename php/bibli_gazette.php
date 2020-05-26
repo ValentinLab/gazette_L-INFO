@@ -147,6 +147,11 @@ function vpac_print_error($content) {
        '</section>';
 }
 
+/**
+ * Affichage d'une boite d'aide pour le bbcode
+ * 
+ * @param bool $all affichage ou non d'aide détaillée
+ */
 function vpac_print_bbcode_dialog($all = TRUE) {
   // Bouton d'affichage
   echo '<input type="checkbox" class="dialog_btn" id="dialog_bbcode"><label for="dialog_bbcode">Comment utiliser le BBCode ?</label>';

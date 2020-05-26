@@ -347,6 +347,13 @@ function vpac_check_name(&$errors, $value, $field_name, $length) {
 
 // ----- Affichage du traitement -----
 
+/**
+ * Affichqge du status d'un formulaire (message d'erreur ou de succes)
+ * 
+ * @param array  $status    Tableau contenant les erreurs du formulaire
+ * @param string $text_err  Message à afficher avant les erreurs
+ * @param bool   $full_size Le message aura une taille de 100% et non 705px
+ */
 function vpac_print_form_status($status, $text_err = '', $full_size = false) {
   if(isset($status['stderr'])) {
     vpac_print_form_errors($status['stderr'], $text_err, $full_size);
@@ -358,8 +365,8 @@ function vpac_print_form_status($status, $text_err = '', $full_size = false) {
 /**
  * Afficher les erreurs d'un forrmulaire
  * 
- * @param array  $errors    Tableau contenant les erreurs du formulaire
- * @param string $text      Message à afficher avant les erreurs
+ * @param array  $errors    Tableau contenant les erreurs/succes du formulaire
+ * @param string $text      Message à afficher avant les erreurs/succes
  * @param bool   $full_size Le message aura une taille de 100% et non 705px
  */
 function vpac_print_form_errors($errors, $text = '', $full_size = false) {
@@ -381,6 +388,12 @@ function vpac_print_form_errors($errors, $text = '', $full_size = false) {
   }
 }
 
+/**
+ * Afficher le succes d'un forrmulaire
+ * 
+ * @param array  $success   Tableau contenant les succes du formulaire
+ * @param bool   $full_size Le message aura une taille de 100% et non 705px
+ */
 function vpac_print_form_success($success, $full_size = false) {
   $success_id = ($full_size) ? 'success-full-size' : 'success';
 
