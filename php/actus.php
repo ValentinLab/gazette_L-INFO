@@ -73,87 +73,8 @@ function vpacl_print_actus() {
     }
 
     vpacl_print_page_selector($numberOfPages);
-
-    $data_by_month=vpacl_classer_articles_par_mois($data);
-    vpacl_print_articles($data_by_month);
-}
-
-/**
- * Couper une date pour ne retenir que l'année et le mois
- *
- * @param string $date Date au format YYYYMMDDhhmm
- * @return string Date au format YYYYDD
- */
-function vpacl_get_month_and_year($date){
-    return substr($date,0,6);
-}
-
-/**
- * Obtenir un tableau contenant les articles correspondant au numéro de la page, classés par mois
- *
- * @param array $data Tableau contenant tous les articles de la page
- * @return array Tableau contenant les 4 articles de la page, indexé par mois
- */
-function vpacl_classer_articles_par_mois($data){
-    $page = (isset($_GET['page'])) ? vpac_decrypt_url($_GET['page']) : 1;;
-
-    $return=array();
-    for($i=0;$i<count($data);++$i){
-        if(!array_key_exists(vpacl_get_month_and_year($data[$i]['arDatePublication']),$return)){
-            $return[vpacl_get_month_and_year($data[$i]['arDatePublication'])][0]=$data[$i];
-        }else{
-            array_push($return[vpacl_get_month_and_year($data[$i]['arDatePublication'])],$data[$i]);
-        }
-    }
-    return $return;
-}
-
-/**
- * Transformer une date dans le format
- * Month Year
- * 
- * @param int $date Date à transformer
- */
-function vpacl_month_and_year_to_string($date) {
-    $month = (int)substr($date, -8, 2);
-    $year = substr($date, 0, -8);
-  
-    $months = vpac_get_months();
-  
-    return mb_strtolower($months[$month], 'UTF-8') . ' ' . $year;
-}
-
-/**
- * Afficher le contenu principal de la page, 4 articles classés par mois
- *
- * @param array $data_by_month Tableau indexé par mois, contenant les 4 articles
- */
-function vpacl_print_articles($data_by_month){
-    foreach($data_by_month as &$value){
-        echo'<section>',
-            '<h2>',vpacl_month_and_year_to_string($value[0]['arDatePublication']),'</h2>';
-            foreach($value as &$article) { 
-                vpacl_print_article($article);
-            }
-        echo'</section>';
-    } 
-}
-
-/**
- * Afficher un article
- * 
- * @param array $article Tableau contenant les informations de l'article en question
- */
-function vpacl_print_article($article){
-    $image = (file_exists("../upload/{$article['arID']}.jpg")) ? "<img src=\"../upload/{$article['arID']}.jpg\" alt=\"{$article['arTitre']}\">" : '';
-    echo'<article class="resume">',
-            $image,
-            '<h3>',$article['arTitre'],'</h3>',
-            '<p>',
-            $article['arResume'],
-            '</p>',
-            '<footer><a href="../php/article.php?id=',vpac_encrypt_url($article['arID']),'">Lire l\'article</a></footer>',
-        '</article>';
+    $data_by_month=vpac_classer_articles_par_mois($data);
+    vpac_print_articles($data_by_month);
 }
 
 /**
@@ -165,7 +86,7 @@ function vpacl_print_page_selector($numberOfPages) {
     $page = (isset($_GET['page'])) ? vpac_decrypt_url($_GET['page']) : 1;
 
     echo'<article id="page_selector">',
-            '<p>Pages :</p>';
+            '<h2>Pages :</h2>';
             // Précédent
             $disabled = ($page == 1) ? ' button_disabled' : '';
             echo'<a href="../php/actus.php?page=',vpac_encrypt_url($page - 1),'" class="button', $disabled,

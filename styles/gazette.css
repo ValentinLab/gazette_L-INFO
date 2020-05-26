@@ -1228,7 +1228,7 @@ article#page_selector {
   border-radius: 10px 10px 10px 10px;
 }
 
-article#page_selector p {
+article#page_selector h2 {
   display: inline;
   margin-right: 7px;
 }
@@ -1398,14 +1398,16 @@ div#prev-light .section {
   background: var(--color-dark-accent);
 }
 /****************************************************************************************
-  edition.php
+  edition.php, nouveau.php
 ****************************************************************************************/
-#edition_image{
+#edition_image,
+#upload_pic_row{
   display: block;
   margin-left: auto;
   margin-right: auto;
   width: 100px;
 }
+
 
 /****************************************************************************************
   Recherche.php
