@@ -1,12 +1,18 @@
-# Language du web - Projet
+# Gazette de L-INFO
 
-## Groupe de travail
- - @Antax1
- - @ValentinLab
+University newspaper website.
 
-## Infos
-Variable `$_SESSION` :
- - user :
-   - pseudo
-   - redacteur
-   - administrateur
+As prestigious as the Crimson *(Languages du Web - L2, S4)*.
+
+## Features
+
+ - **User** account
+   - Post comments
+   - Customize the site theme (dark or light)
+
+ - **Writer** management
+   - Post and update articles
+   - Delete comments
+
+ - **Admin** management
+   - Change user rights
